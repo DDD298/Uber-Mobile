@@ -86,7 +86,7 @@ const CashPaymentModal: React.FC<CashPaymentModalProps> = ({
 
           {cashStep === 2 && (
             <>
-              <View className="flex justify-center items-center mb-4 w-16 h-16 bg-blue-100 rounded-full">
+              <View className="flex justify-center items-center mb-4 w-16 h-16 bg-green-100 rounded-full">
                 <Text className="text-3xl">💰</Text>
               </View>
               <Text className="mb-2 text-xl text-center font-JakartaBold">
@@ -111,7 +111,7 @@ const CashPaymentModal: React.FC<CashPaymentModalProps> = ({
                       const newAmount = (currentAmount + 10000).toString();
                       onCashAmountChange(newAmount);
                     }}
-                    className="px-4 py-1 bg-blue-500 rounded"
+                    className="px-4 py-1 bg-green-500 rounded"
                   >
                     <Text className="text-sm text-white font-JakartaSemiBold">+10k</Text>
                   </TouchableOpacity>
@@ -183,7 +183,7 @@ const CashPaymentModal: React.FC<CashPaymentModalProps> = ({
               </Text>
               <View className="overflow-hidden w-full h-2 bg-gray-200 rounded-full">
                 <Animated.View
-                  className="h-full bg-blue-500 rounded-full"
+                  className="h-full bg-green-500 rounded-full"
                   style={{
                     width: qrScanAnim.interpolate({
                       inputRange: [0, 1],

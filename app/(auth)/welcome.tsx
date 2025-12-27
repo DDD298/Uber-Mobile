@@ -5,10 +5,12 @@ import { Dimensions, Image, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import SwiperFlatList from 'react-native-swiper-flatlist';
 import { onboarding } from "../../constants";
+import { useTranslation } from 'react-i18next';
 
 const { width: screenWidth } = Dimensions.get('window');
 
 const Onboarding = () => {
+    const { t } = useTranslation();
     const swiperRef = useRef<SwiperFlatList>(null);
     const [activeIndex, setActiveIndex] = useState(0);
     const isLastSlide = activeIndex === onboarding.length - 1;
@@ -20,7 +22,7 @@ const Onboarding = () => {
             }}
                 className='flex justify-end items-end p-5 w-full'
             >
-                <Text className='text-black text-md font-JakartaBold'>Bỏ qua</Text>
+                <Text className='text-black text-md font-JakartaBold'>{t('common.cancel')}</Text>
             </TouchableOpacity>
 
             <SwiperFlatList 
@@ -68,7 +70,7 @@ const Onboarding = () => {
             />
             <View className='px-4 my-10 w-full'>  
                 <CustomButton
-                title={isLastSlide ? "Bắt Đầu Thôi" : "Tiếp tục"}
+                title={isLastSlide ? t('common.done') : t('common.next')}
                 onPress={() =>
                     isLastSlide
                         ? router.replace("/(auth)/sign-up")

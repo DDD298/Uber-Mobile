@@ -37,7 +37,7 @@ const PaymentMethodSelection: React.FC<PaymentMethodSelectionProps> = ({
               onPress={() => onPaymentMethodSelect(method.id)}
               className={`flex flex-row items-center justify-center p-4 mb-3 rounded-lg border-2 w-[48%] ${
                 isSelected
-                  ? "border-blue-500 bg-blue-50"
+                  ? "border-green-500 bg-green-50"
                   : "border-gray-200 bg-white"
               }`}
               activeOpacity={0.7}
@@ -48,7 +48,7 @@ const PaymentMethodSelection: React.FC<PaymentMethodSelectionProps> = ({
               </Text>
 
               <View
-                className={`absolute top-2 right-2 justify-center items-center w-5 h-5 bg-blue-500 !rounded-full ${
+                className={`absolute top-2 right-2 justify-center items-center w-5 h-5 bg-green-500 !rounded-full ${
                   isSelected ? "opacity-100" : "opacity-0"
                 }`}
               >

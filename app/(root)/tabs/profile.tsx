@@ -1,11 +1,14 @@
 import { useUser } from "@clerk/clerk-expo";
 import { Image, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useTranslation } from "react-i18next";
 
 import InputField from "@/components/Common/InputField";
+import { LanguageSwitcher } from "@/components/Common/LanguageSwitcher";
 
 export default function ProfileScreen() {
   const { user } = useUser();
+  const { t } = useTranslation();
 
   return (
     <SafeAreaView className="flex-1">
@@ -13,7 +16,7 @@ export default function ProfileScreen() {
         className="px-4"
         contentContainerStyle={{ paddingBottom: 120 }}
       >
-        <Text className="my-5 text-2xl font-JakartaBold">Hồ sơ của tôi</Text>
+        <Text className="my-5 text-2xl font-JakartaBold">{t('profile.profile')}</Text>
 
         <View className="flex justify-center items-center my-5">
           <Image
@@ -25,28 +28,20 @@ export default function ProfileScreen() {
           />
         </View>
 
-        <View className="flex flex-col justify-center items-start p-4 bg-white rounded-lg shadow-sm shadow-neutral-300">
+        <View className="flex flex-col justify-center items-start p-4 bg-white rounded-lg shadow-sm shadow-neutral-300 mb-4">
           <View className="flex flex-col justify-start items-start w-full">
             <InputField
-              label="Tên"
-              placeholder={user?.firstName || "Không tìm thấy"}
+              label={t('profile.name')}
+              placeholder={user?.firstName || t('errors.somethingWentWrong')}
               containerStyle="w-full"
               inputStyle="p-3.5"
               editable={false}
             />
 
             <InputField
-              label="Họ"
-              placeholder={user?.lastName || "Không tìm thấy"}
-              containerStyle="w-full"
-              inputStyle="p-3.5"
-              editable={false}
-            />
-
-            <InputField
-              label="Email"
+              label={t('profile.email')}
               placeholder={
-                user?.primaryEmailAddress?.emailAddress || "Không tìm thấy"
+                user?.primaryEmailAddress?.emailAddress || t('errors.somethingWentWrong')
               }
               containerStyle="w-full"
               inputStyle="p-3.5"
@@ -54,13 +49,19 @@ export default function ProfileScreen() {
             />
 
             <InputField
-              label="Số điện thoại"
-              placeholder={user?.primaryPhoneNumber?.phoneNumber || "Không tìm thấy"}
+              label={t('profile.phone')}
+              placeholder={user?.primaryPhoneNumber?.phoneNumber || t('errors.somethingWentWrong')}
               containerStyle="w-full"
               inputStyle="p-3.5"
               editable={false}
             />
           </View>
+        </View>
+
+        {/* Language Settings Section */}
+        <View className="flex flex-col p-4 bg-white rounded-lg shadow-sm shadow-neutral-300">
+          <Text className="mb-4 text-lg font-JakartaBold">{t('profile.settings')}</Text>
+          <LanguageSwitcher />
         </View>
       </ScrollView>
     </SafeAreaView>

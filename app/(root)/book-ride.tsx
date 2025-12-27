@@ -6,8 +6,10 @@ import { useDriverStore, useLocationStore } from "@/store";
 import { useUser } from "@clerk/clerk-expo";
 import { StripeProvider } from "@stripe/stripe-react-native";
 import { Image, Text, View } from "react-native";
+import { useTranslation } from 'react-i18next';
 
 const BookRide = () => {
+  const { t } = useTranslation();
   const { user } = useUser();
   const { 
     userAddress, 
@@ -29,10 +31,10 @@ const BookRide = () => {
       merchantIdentifier="merchant.com.uber"
       urlScheme="myapp"
     >
-      <RideLayout title="Đặt chuyến xe">
+      <RideLayout title={t('booking.bookRide')}>
         <>
           <Text className="mb-4 text-xl font-JakartaSemiBold">
-            Thông tin chuyến xe
+            {t('ride.rideDetails')}
           </Text>
 
           <View className="flex flex-col justify-center items-center w-full">
@@ -61,21 +63,21 @@ const BookRide = () => {
 
           <View className="flex flex-col justify-center items-start p-4 mt-4 w-full rounded-3xl bg-general-600">
             <View className="flex flex-row justify-between items-center py-4 pt-0 w-full border-b border-white">
-              <Text className="text-lg font-JakartaRegular">Giá chuyến xe</Text>
+              <Text className="text-lg font-JakartaRegular">{t('ride.fare')}</Text>
               <Text className="text-lg font-JakartaRegular text-[#0CC25F]">
                 {Number(driverDetails?.price).toLocaleString('vi-VN')} VNĐ
               </Text>
             </View>
 
             <View className="flex flex-row justify-between items-center py-4 w-full border-b border-white">
-              <Text className="text-lg font-JakartaRegular">Thời gian đón</Text>
+              <Text className="text-lg font-JakartaRegular">{t('booking.estimatedTime')}</Text>
               <Text className="text-lg font-JakartaRegular">
                 {formatTime(driverDetails?.time!)}
               </Text>
             </View>
 
             <View className="flex flex-row justify-between items-center py-4 pb-0 w-full">
-              <Text className="text-lg font-JakartaRegular">Số chỗ ngồi</Text>
+              <Text className="text-lg font-JakartaRegular">{t('booking.seats')}</Text>
               <Text className="text-lg font-JakartaRegular">
                 {driverDetails?.car_seats}
               </Text>

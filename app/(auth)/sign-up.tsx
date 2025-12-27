@@ -8,8 +8,10 @@ import { Link, router } from 'expo-router';
 import { useState } from 'react';
 import { Alert, Image, ScrollView, Text, View } from 'react-native';
 import ReactNativeModal from 'react-native-modal';
+import { useTranslation } from 'react-i18next';
 
 const SignUp = () => {
+  const { t } = useTranslation();
   const { isLoaded, signUp, setActive } = useSignUp();
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
@@ -38,7 +40,7 @@ const SignUp = () => {
         state: "pending",
       });
     } catch (err: any) {
-      Alert.alert("Lỗi", err.errors[0].longMessage);
+      Alert.alert(t('common.error'), err.errors[0].longMessage);
     }
   };
 
@@ -67,7 +69,7 @@ const SignUp = () => {
       } else {
         setVerification({
           ...verification,
-          error: "Đăng nhập thất bại. Xin vui lòng thử lại.",
+          error: t('errors.tryAgain'),
           state: "failed",
         });
       }
@@ -85,40 +87,40 @@ const SignUp = () => {
       <View className='flex-1 bg-white'>
         <View className="relative w-full h-[280px]">
           <Image source={images.signUpCar} className="z-0 w-full h-[250px]" resizeMode='contain' />
-          <Text className='absolute -bottom-2 w-full text-2xl text-center text black font-JakartaSemiBold'>Đăng kí tài khoản</Text>
+          <Text className='absolute -bottom-2 w-full text-2xl text-center text black font-JakartaSemiBold'>{t('auth.createAccount')}</Text>
         </View>
         <View className='p-4'>
           <InputField
-            label="Tên đăng nhập"
-            placeholder="Nhập tên đăng nhập"
+            label={t('profile.name')}
+            placeholder={t('profile.name')}
             icon={icons.person}
             value={form.name}
             onChangeText={(value) => setForm({ ...form, name: value })} />
 
           <InputField
-            label="Email"
-            placeholder="Nhập email"
+            label={t('auth.email')}
+            placeholder={t('auth.email')}
             icon={icons.email}
             value={form.email}
             onChangeText={(value) => setForm({ ...form, email: value })} />
 
           <InputField
-            label="Mật khẩu"
-            placeholder="Nhập mật khẩu"
+            label={t('auth.password')}
+            placeholder={t('auth.password')}
             icon={icons.lock}
             secureTextEntry={true}
             value={form.password}
             onChangeText={(value) => setForm({ ...form, password: value })} />
 
-          <CustomButton title='Đăng Kí' onPress={onSignUpPress} className='mt-4' />
+          <CustomButton title={t('auth.signUp')} onPress={onSignUpPress} className='mt-4' />
 
           <OAuth />
           <Link
             href="/sign-in"
             className="mt-4 text-lg text-center text-general-200"
           >
-            Đã có tài khoản?{" "}
-            <Text className="text-primary-500">Đăng nhập ngay</Text>
+            {t('auth.alreadyHaveAccount')}{" "}
+            <Text className="text-primary-600">{t('auth.signIn')}</Text>
           </Link>
         </View>
 
@@ -129,10 +131,10 @@ const SignUp = () => {
           }}
         >
           <View className="bg-white px-7 py-9 rounded-2xl min-h-[300px]">
-            <Text className="mb-2 text-2xl text-black font-JakartaBold">Xác minh email</Text>
-            <Text className="mb-5 font-Jakarta">Mã xác minh đã được gửi đến {form.email}</Text>
+            <Text className="mb-2 text-2xl text-black font-JakartaBold">{t('auth.signUp')}</Text>
+            <Text className="mb-5 font-Jakarta">{t('common.loading')} {form.email}</Text>
             <InputField
-              label="Mã xác minh"
+              label={t('common.confirm')}
               placeholder="*****"
               icon={icons.lock}
               value={verification.code} keyboardType='numeric'
@@ -143,7 +145,7 @@ const SignUp = () => {
             )}
 
             <CustomButton
-              title="Xác minh"
+              title={t('common.confirm')}
               onPress={onPressVerify}
               className="mt-4 bg-success-500"
             />
@@ -153,10 +155,10 @@ const SignUp = () => {
         <ReactNativeModal isVisible={showSuccessModal} >
           <View className="bg-white px-7 py-9 rounded-2xl min-h-[300px]">
             <Image source={images.check} className="w-[110px] h-[110px] mx-auto my-5" />
-            <Text className="text-2xl text-center text-black font-JakartaBold">Đăng ký thành công!</Text>
-            <Text className="mt-3 text-base text-center text-gray-400 font-Jakarta">Bạn đã đăng ký thành công tài khoản. Hãy bắt đầu khám phá ngay!</Text>
+            <Text className="text-2xl text-center text-black font-JakartaBold">{t('common.success')}!</Text>
+            <Text className="mt-3 text-base text-center text-gray-400 font-Jakarta">{t('auth.createAccount')}</Text>
             <CustomButton
-              title="Bắt đầu thôi"
+              title={t('common.done')}
               onPress={() => {
                 setShowSuccessModal(false);
                 router.push('/(root)/tabs/home')

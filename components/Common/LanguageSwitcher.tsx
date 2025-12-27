@@ -2,101 +2,130 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
+interface LanguageOption {
+  code: 'vi' | 'en' | 'zh' | 'ko' | 'th';
+  name: string;
+  nativeName: string;
+  flag: string;
+}
+
+const languages: LanguageOption[] = [
+  { code: 'vi', name: 'Vietnamese', nativeName: 'Tiếng Việt', flag: '🇻🇳' },
+  { code: 'en', name: 'English', nativeName: 'English', flag: '🇬🇧' },
+  { code: 'zh', name: 'Chinese', nativeName: '中文', flag: '🇨🇳' },
+  { code: 'ko', name: 'Korean', nativeName: '한국어', flag: '🇰🇷' },
+  { code: 'th', name: 'Thai', nativeName: 'ภาษาไทย', flag: '🇹🇭' },
+];
+
 export const LanguageSwitcher: React.FC = () => {
   const { i18n } = useTranslation();
   const currentLanguage = i18n.language;
 
-  const changeLanguage = (lang: 'en' | 'vi') => {
+  const changeLanguage = (lang: string) => {
     i18n.changeLanguage(lang);
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Language / Ngôn ngữ</Text>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={[
-            styles.button,
-            currentLanguage === 'vi' && styles.buttonActive,
-          ]}
-          onPress={() => changeLanguage('vi')}
-          activeOpacity={0.7}
-        >
-          <Text style={styles.flag}>🇻🇳</Text>
-          <Text
+      {languages.map((language, index) => {
+        const isActive = currentLanguage === language.code;
+        const isLast = index === languages.length - 1;
+        
+        return (
+          <TouchableOpacity
+            key={language.code}
             style={[
-              styles.buttonText,
-              currentLanguage === 'vi' && styles.buttonTextActive,
+              styles.languageButton,
+              isActive && styles.languageButtonActive,
+              !isLast && styles.languageButtonBorder,
             ]}
+            onPress={() => changeLanguage(language.code)}
+            activeOpacity={0.7}
           >
-            Tiếng Việt
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[
-            styles.button,
-            currentLanguage === 'en' && styles.buttonActive,
-          ]}
-          onPress={() => changeLanguage('en')}
-          activeOpacity={0.7}
-        >
-          <Text style={styles.flag}>🇬🇧</Text>
-          <Text
-            style={[
-              styles.buttonText,
-              currentLanguage === 'en' && styles.buttonTextActive,
-            ]}
-          >
-            English
-          </Text>
-        </TouchableOpacity>
-      </View>
+            <View style={styles.languageContent}>
+              <View style={styles.leftContent}>
+                <Text style={styles.flag}>{language.flag}</Text>
+                <View style={styles.textContainer}>
+                  <Text style={[styles.nativeName, isActive && styles.nativeNameActive]}>
+                    {language.nativeName}
+                  </Text>
+                  <Text style={styles.englishName}>{language.name}</Text>
+                </View>
+              </View>
+              {isActive && (
+                <View style={styles.checkmark}>
+                  <Text style={styles.checkmarkText}>✓</Text>
+                </View>
+              )}
+            </View>
+          </TouchableOpacity>
+        );
+      })}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 16,
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    overflow: 'hidden',
   },
-  label: {
+  languageButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    backgroundColor: '#fff',
+  },
+  languageButtonActive: {
+    backgroundColor: '#F0F4FF',
+  },
+  languageButtonBorder: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#F3F4F6',
+  },
+  languageContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  leftContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  flag: {
+    fontSize: 28,
+    marginRight: 12,
+  },
+  textContainer: {
+    flex: 1,
+  },
+  nativeName: {
     fontSize: 16,
     fontWeight: '600',
     color: '#374151',
-    marginBottom: 12,
+    marginBottom: 2,
   },
-  buttonContainer: {
-    flexDirection: 'row',
-    gap: 12,
+  nativeNameActive: {
+    color: '#667eea',
   },
-  button: {
-    flex: 1,
-    flexDirection: 'row',
+  englishName: {
+    fontSize: 13,
+    color: '#9CA3AF',
+  },
+  checkmark: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: '#667eea',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderRadius: 12,
-    borderWidth: 2,
-    borderColor: '#E5E7EB',
-    backgroundColor: '#fff',
   },
-  buttonActive: {
-    borderColor: '#667eea',
-    backgroundColor: '#EEF2FF',
-  },
-  flag: {
-    fontSize: 24,
-    marginRight: 8,
-  },
-  buttonText: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#6B7280',
-  },
-  buttonTextActive: {
-    color: '#667eea',
-    fontWeight: '600',
+  checkmarkText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '700',
   },
 });

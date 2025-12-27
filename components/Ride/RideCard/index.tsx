@@ -58,7 +58,7 @@ const RideCard = ({ ride, onCancel }: RideCardProps) => {
          case 'confirmed':
             return {
                text: 'Tài xế đã nhận chuyến',
-               color: 'text-blue-500',
+               color: 'text-blue-600',
                bgColor: 'bg-blue-50',
                icon: 'checkmark-circle' as const,
                iconColor: '#3B82F6'
@@ -82,7 +82,7 @@ const RideCard = ({ ride, onCancel }: RideCardProps) => {
          case 'completed':
             return {
                text: 'Hoàn thành',
-               color: 'text-green-500',
+               color: 'text-green-600',
                bgColor: 'bg-green-50',
                icon: 'checkmark-done-circle' as const,
                iconColor: '#10B981'
@@ -117,9 +117,9 @@ const RideCard = ({ ride, onCancel }: RideCardProps) => {
    const getPaymentStatusInfo = (status: string) => {
       switch (status) {
          case 'paid':
-            return { text: 'Đã thanh toán', color: 'text-green-500' };
+            return { text: 'Đã thanh toán', color: 'text-green-600' };
          case 'refunded':
-            return { text: 'Đã hoàn tiền', color: 'text-blue-500' };
+            return { text: 'Đã hoàn tiền', color: 'text-green-600' };
          case 'pending':
             return { text: 'Chờ thanh toán', color: 'text-yellow-500' };
          default:

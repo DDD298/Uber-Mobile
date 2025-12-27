@@ -11,7 +11,7 @@ export default function Stats() {
             <View className='mb-2'>
               <AntDesign name="star" size={20} color="#0286FF" />
             </View>
-            <Text className='text-2xl font-JakartaExtraBold text-primary-500'>4.8</Text>
+            <Text className='text-2xl font-JakartaExtraBold text-primary-600'>4.8</Text>
             <Text className='text-sm text-secondary-600'>Đánh giá TB</Text>
           </View>
           <View className='w-px bg-secondary-200' />

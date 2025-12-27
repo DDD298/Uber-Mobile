@@ -7,6 +7,7 @@ import { Alert } from 'react-native';
 import FlashMessage from 'react-native-flash-message';
 import { IMessage, User } from 'react-native-gifted-chat';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 
 const AI_USER: User = {
     _id: 'ai-assistant',
@@ -16,11 +17,12 @@ const AI_USER: User = {
 
 const USER: User = {
     _id: 'user',
-    name: 'Bạn',
+    name: 'user',
     avatar: icons.userchat,
 };
 
 export default function ChatScreen() {
+    const { t } = useTranslation();
     const [messages, setMessages] = useState<IMessage[]>([]);
 
     useEffect(() => {

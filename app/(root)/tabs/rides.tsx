@@ -6,8 +6,10 @@ import { useAuth } from "@clerk/clerk-expo";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, Image, RefreshControl, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useTranslation } from "react-i18next";
 
 export default function RidesScreen() {
+  const { t } = useTranslation();
   const { userId } = useAuth();
   const [rides, setRides] = useState<Ride[]>([]);
   const [loading, setLoading] = useState(true);
@@ -27,7 +29,7 @@ export default function RidesScreen() {
       const response = await fetchAPI(url);
       setRides(response.data || []);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Lỗi khi tải danh sách chuyến đi");
+      setError(err instanceof Error ? err.message : t('errors.networkError'));
     } finally {
       setLoading(false);
     }
@@ -46,7 +48,7 @@ export default function RidesScreen() {
         body: JSON.stringify({
           ride_id: rideId,
           user_id: userId,
-          reason: "Người dùng đã hủy"
+          reason: t('ride.cancelled')
         })
       });
 
@@ -86,7 +88,7 @@ export default function RidesScreen() {
                 <Image
                   source={images.noResult}
                   className="w-40 h-40"
-                  alt="Lỗi tải dữ liệu"
+                  alt={t('errors.somethingWentWrong')}
                   resizeMode="contain"
                 />
                 <Text className="mt-4 text-sm text-red-500">{error}</Text>
@@ -96,20 +98,20 @@ export default function RidesScreen() {
                 <Image
                   source={images.noResult}
                   className="w-40 h-40"
-                  alt="Không tìm thấy chuyến gần đây"
+                  alt={t('ride.myRides')}
                   resizeMode="contain"
                 />
-                <Text className="mt-4 text-sm">Không tìm thấy chuyến gần đây</Text>
+                <Text className="mt-4 text-sm">{t('ride.myRides')}</Text>
               </>
             )}
           </View>
         )}
         ListHeaderComponent={
           <>
-            <Text className="my-5 text-2xl font-JakartaBold">Tất cả chuyến đi</Text>
+            <Text className="my-5 text-2xl font-JakartaBold">{t('ride.myRides')}</Text>
             {rides.length > 0 && (
               <Text className="mb-2 text-sm text-gray-500">
-                {rides.length} chuyến đi
+                {rides.length} {t('ride.myRides')}
               </Text>
             )}
           </>

@@ -14,7 +14,10 @@ import { useEffect, useRef, useState } from 'react';
 import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
+
 export default function HomeScreen() {
+  const { t } = useTranslation();
   const { setUserLocation, setDestinationLocation } = useLocationStore();
   const { user } = useUser();
   const { signOut } = useAuth();
@@ -101,7 +104,7 @@ export default function HomeScreen() {
           {/* Header */}
           <View className='flex flex-row justify-between items-center my-5'>
             <Text className='text-2xl capitalize font-JakartaExtraBold text-secondary-900'>
-              Xin chào{", "}
+              {t('home.greeting')}{", "}
               {user?.firstName || user?.emailAddresses[0].emailAddress.split("@")[0]}{""}👋
             </Text>
             <TouchableOpacity onPress={handleSignOut} className='justify-center items-center w-10 h-10 bg-white rounded-full shadow-sm'>
@@ -118,7 +121,7 @@ export default function HomeScreen() {
 
           {/* Current Location Map */}
           <View className='mt-4'>
-            <Text className='mb-3 text-xl font-JakartaBold text-secondary-900'>Vị trí hiện tại của bạn</Text>
+            <Text className='mb-3 text-xl font-JakartaBold text-secondary-900'>{t('home.whereTo')}</Text>
             <View className="flex flex-row items-center bg-transparent h-[300px] rounded-xl rounded-b-none overflow-hidden shadow-sm">
               <Map />
             </View>

@@ -52,7 +52,7 @@ const QRPaymentModal: React.FC<QRPaymentModalProps> = ({
         >
           {qrStep === 1 && (
             <>
-              <View className="flex justify-center items-center mb-4 w-16 h-16 bg-blue-100 rounded-full">
+              <View className="flex justify-center items-center mb-4 w-16 h-16 bg-green-100 rounded-full">
                 <Text className="text-3xl">📱</Text>
               </View>
               <Text className="mb-2 text-xl text-center font-JakartaBold">
@@ -112,7 +112,7 @@ const QRPaymentModal: React.FC<QRPaymentModalProps> = ({
                     
                     {/* Scanning animation */}
                     <Animated.View
-                      className="absolute w-full h-1 bg-blue-500"
+                      className="absolute w-full h-1 bg-green-500"
                       style={{
                         opacity: qrScanAnim,
                         transform: [{
@@ -127,8 +127,8 @@ const QRPaymentModal: React.FC<QRPaymentModalProps> = ({
                 )}
               </View>
 
-              <View className="p-4 mb-4 w-full bg-blue-50 rounded-lg border border-blue-200">
-                <Text className="text-center text-blue-700 font-JakartaSemiBold">
+              <View className="p-4 mb-4 w-full bg-green-50 rounded-lg border border-green-200">
+                <Text className="text-center text-green-700 font-JakartaSemiBold">
                   💡 Mẹo: Mở ứng dụng ngân hàng và chọn &quot;Quét QR&quot;
                 </Text>
               </View>
