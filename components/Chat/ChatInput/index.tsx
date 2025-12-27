@@ -36,7 +36,8 @@ export const renderInputToolbar = (props: any) => {
   );
 };
 
-export const renderComposer = (props: any) => {
+// Convert to a proper React component to use hooks
+const CustomComposer = (props: any) => {
   const { t } = useTranslation();
 
   return (
@@ -70,6 +71,8 @@ export const renderComposer = (props: any) => {
     />
   );
 };
+
+export const renderComposer = (props: any) => <CustomComposer {...props} />;
 
 export const renderSend = (props: any) => {
   return (

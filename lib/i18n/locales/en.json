@@ -92,6 +92,7 @@
     "cancelRide": "Cancel Ride",
     "confirmCancel": "Are you sure you want to cancel this ride?",
     "rateRide": "Rate Ride",
+    "rateDriver": "Rate Driver",
     "viewReceipt": "View Receipt",
     "statusUnknown": "Unknown",
     "statusConfirmed": "Confirmed",

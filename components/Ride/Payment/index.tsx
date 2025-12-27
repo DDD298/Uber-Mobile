@@ -3,6 +3,7 @@ import { useStripe } from "@stripe/stripe-react-native";
 import { router } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
 import { Animated } from "react-native";
+import { useTranslation } from "react-i18next";
 
 import CustomButton from "@/components/Common/CustomButton";
 import CashPaymentModal from "@/components/Payment/CashPaymentModal";
@@ -25,12 +26,14 @@ const Payment = ({
   destinationLatitude,
   destinationLongitude,
 }: PaymentProps) => {
+  const { t } = useTranslation();
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const { userId } = useAuth();
   const [success, setSuccess] = useState<boolean>(false);
   const [currentPaymentIntent, setCurrentPaymentIntent] = useState<any>(null);
   const [currentCustomer, setCurrentCustomer] = useState<string>("");
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>("card");
+  const [selectedPaymentMethod, setSelectedPaymentMethod] =
+    useState<string>("card");
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [showCashModal, setShowCashModal] = useState<boolean>(false);
   const [showQRModal, setShowQRModal] = useState<boolean>(false);
@@ -88,9 +91,9 @@ const Payment = ({
 
   const openPaymentSheet = async () => {
     if (isProcessing) {
-      return; 
+      return;
     }
-  
+
     if (selectedPaymentMethod === "cash") {
       setShowCashModal(true);
       setCashStep(1);
@@ -98,25 +101,25 @@ const Payment = ({
       setChangeAmount("0");
       return;
     }
-    
+
     if (selectedPaymentMethod === "qr") {
       setShowQRModal(true);
       setQrStep(1);
       setQrCodeVisible(false);
       return;
     }
-    
+
     setIsProcessing(true);
     try {
       const initSuccess = await initializePaymentSheet();
       if (!initSuccess) {
         setIsProcessing(false);
-        return; 
+        return;
       }
-      
+
       const { error } = await presentPaymentSheet();
       if (error) {
-        if (error.code === 'Canceled') {
+        if (error.code === "Canceled") {
           setIsProcessing(false);
           return;
         }
@@ -143,7 +146,7 @@ const Payment = ({
         fare_price: amount,
         driver_id: driverId,
         user_id: userId,
-        payment_intent_id: currentPaymentIntent?.id || "cash_payment"
+        payment_intent_id: currentPaymentIntent?.id || "cash_payment",
       };
 
       const response = await fetchAPI("/(api)/ride/book", {
@@ -167,11 +170,11 @@ const Payment = ({
   const initializePaymentSheet = async (): Promise<boolean> => {
     try {
       if (!amount || amount === "0" || parseFloat(amount) <= 0) {
-        throw new Error("Số tiền là bắt buộc và phải lớn hơn 0");
+        throw new Error(t("payment.amountRequired"));
       }
-      
+
       if (!email) {
-        throw new Error("Email là bắt buộc");
+        throw new Error(t("payment.emailRequired"));
       }
 
       const requestBody = {
@@ -179,7 +182,7 @@ const Payment = ({
         email: email,
         amount: amount,
       };
-      
+
       const { paymentIntent, customer, ephemeralKey } = await fetchAPI(
         "/(api)/(stripe)/create",
         {
@@ -188,19 +191,19 @@ const Payment = ({
             "Content-Type": "application/json",
           },
           body: JSON.stringify(requestBody),
-        },
+        }
       );
-      
+
       if (!paymentIntent?.client_secret) {
-        throw new Error("Không thể tạo payment intent");
+        throw new Error(t("payment.cannotCreatePaymentIntent"));
       }
 
       if (!customer) {
-        throw new Error("Không thể tạo khách hàng");
+        throw new Error(t("payment.cannotCreateCustomer"));
       }
 
       if (!ephemeralKey?.secret) {
-        throw new Error("Không thể tạo ephemeral key");
+        throw new Error(t("payment.cannotCreateEphemeralKey"));
       }
 
       const { error } = await initPaymentSheet({
@@ -213,7 +216,7 @@ const Payment = ({
       });
 
       if (error) {
-        throw new Error(`Thiết lập thanh toán thất bại: ${error.message}`);
+        throw new Error(`${t("payment.paymentSetupFailed")}: ${error.message}`);
       }
 
       setCurrentPaymentIntent(paymentIntent);
@@ -229,7 +232,7 @@ const Payment = ({
       setCashStep(2);
     } else if (cashStep === 2) {
       setCashStep(3);
-      
+
       setTimeout(async () => {
         setShowCashModal(false);
         setSuccess(true);
@@ -244,7 +247,7 @@ const Payment = ({
       setQrCodeVisible(true);
     } else if (qrStep === 2) {
       setQrStep(3);
-      
+
       setTimeout(async () => {
         setShowQRModal(false);
         setSuccess(true);
@@ -282,13 +285,13 @@ const Payment = ({
       />
       <CustomButton
         title={
-          isProcessing 
-            ? "Đang xử lý..." 
-            : selectedPaymentMethod === "cash" 
-              ? "Thanh toán tiền mặt"
+          isProcessing
+            ? t("payment.processing")
+            : selectedPaymentMethod === "cash"
+              ? t("payment.payCash")
               : selectedPaymentMethod === "qr"
-                ? "Thanh toán QR"
-                : "Xác nhận chuyến"
+                ? t("payment.payQR")
+                : t("payment.confirmRide")
         }
         className="mb-10"
         onPress={openPaymentSheet}

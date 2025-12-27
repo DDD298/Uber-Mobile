@@ -56,7 +56,7 @@ export default function HomeScreen() {
         }
 
         let location = await Location.getCurrentPositionAsync();
-        let addressString = "Vị trí hiện tại";
+        let addressString = t("common.currentLocation");
 
         const maxRetries = 3;
         let retryCount = 0;
@@ -73,7 +73,7 @@ export default function HomeScreen() {
                 `${address[0].name || ""}, ${address[0].region || ""}`.replace(
                   /^, |, $/,
                   ""
-                ) || "Vị trí hiện tại";
+                ) || t("common.currentLocation");
             }
             break;
           } catch (geocodeError) {

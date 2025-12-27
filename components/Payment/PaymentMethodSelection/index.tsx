@@ -1,5 +1,6 @@
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
+import { useTranslation } from "react-i18next";
 
 interface PaymentMethod {
   id: string;
@@ -16,19 +17,21 @@ const PaymentMethodSelection: React.FC<PaymentMethodSelectionProps> = ({
   selectedPaymentMethod,
   onPaymentMethodSelect,
 }) => {
+  const { t } = useTranslation();
+
   const paymentMethods = React.useMemo(
     () => [
-      { id: "card", name: "Thẻ tín dụng", icon: "💳" },
-      { id: "cash", name: "Tiền mặt", icon: "💵" },
-      { id: "qr", name: "Quét mã QR", icon: "📱" },
+      { id: "card", name: t("payment.creditCard"), icon: "💳" },
+      { id: "cash", name: t("payment.cash"), icon: "💵" },
+      { id: "qr", name: t("payment.qrCode"), icon: "📱" },
     ],
-    []
+    [t]
   );
 
   return (
     <View className="my-4">
       <Text className="mb-4 text-lg font-JakartaSemiBold">
-        Chọn phương thức thanh toán
+        {t("payment.selectPaymentMethod")}
       </Text>
 
       <View className="flex flex-row flex-wrap justify-between">

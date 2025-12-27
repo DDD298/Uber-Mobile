@@ -63,6 +63,12 @@ declare interface Ride {
   cancel_reason?: string;
   payment_intent_id?: string;
   rating_id?: number;
+  rating?: {
+    id: number;
+    stars: number;
+    comment?: string;
+    created_at: string;
+  };
   driver: {
     driver_id?: number;
     first_name: string;

@@ -94,11 +94,22 @@ export async function GET(request: Request) {
                     'car_seats', drivers.car_seats,
                     'rating', drivers.rating,
                     'vehicle_type', drivers.vehicle_type
-                ) AS driver 
+                ) AS driver,
+                CASE 
+                    WHEN ratings.id IS NOT NULL THEN json_build_object(
+                        'id', ratings.id,
+                        'stars', ratings.stars,
+                        'comment', ratings.comment,
+                        'created_at', ratings.created_at
+                    )
+                    ELSE NULL
+                END AS rating
             FROM 
                 rides
             INNER JOIN
                 drivers ON rides.driver_id = drivers.id
+            LEFT JOIN
+                ratings ON rides.ride_id = ratings.ride_id
             WHERE rides.user_id = ${user_id} AND rides.ride_status = 'completed'
             ORDER BY rides.created_at DESC
             LIMIT ${parseInt(limit)} OFFSET ${parseInt(offset)}
@@ -200,12 +211,24 @@ export async function GET(request: Request) {
                 'profile_image_url', drivers.profile_image_url,
                 'car_image_url', drivers.car_image_url,
                 'car_seats', drivers.car_seats,
-                'rating', drivers.rating
-            ) AS driver 
+                'rating', drivers.rating,
+                'vehicle_type', drivers.vehicle_type
+            ) AS driver,
+            CASE 
+                WHEN ratings.id IS NOT NULL THEN json_build_object(
+                    'id', ratings.id,
+                    'stars', ratings.stars,
+                    'comment', ratings.comment,
+                    'created_at', ratings.created_at
+                )
+                ELSE NULL
+            END AS rating
         FROM 
             rides
         INNER JOIN
             drivers ON rides.driver_id = drivers.id
+        LEFT JOIN
+            ratings ON rides.ride_id = ratings.ride_id
         WHERE rides.user_id = ${user_id}
         ORDER BY rides.created_at DESC
         LIMIT ${parseInt(limit)} OFFSET ${parseInt(offset)}

@@ -5,14 +5,18 @@ import { Ride } from "@/types/type";
 import { Ionicons } from "@expo/vector-icons";
 import { Alert, Image, Text, TouchableOpacity, View } from "react-native";
 import { useTranslation } from "react-i18next";
+import { RatingModal } from "@/components/Ride/RatingModal";
+import { useState } from "react";
 
 interface RideCardProps {
   ride: Ride;
   onCancel?: () => void;
+  onRatingSubmitted?: () => void;
 }
 
-const RideCard = ({ ride, onCancel }: RideCardProps) => {
+const RideCard = ({ ride, onCancel, onRatingSubmitted }: RideCardProps) => {
   const { t } = useTranslation();
+  const [showRatingModal, setShowRatingModal] = useState(false);
   const {
     destination_longitude,
     destination_latitude,
@@ -248,7 +252,7 @@ const RideCard = ({ ride, onCancel }: RideCardProps) => {
 
         {/* Additional Info for Cancelled Rides */}
         {(ride_status === "cancelled" || ride_status === "no_show") && (
-          <View className="mt-4 p-3 bg-red-50 rounded-xl">
+          <View className="mt-4 p-4 bg-red-50 rounded-xl">
             {cancelled_at && (
               <Text className="text-xs text-gray-600 font-JakartaMedium mb-1">
                 {t("ride.cancelledAt") || "Hủy lúc"}:{" "}
@@ -265,7 +269,7 @@ const RideCard = ({ ride, onCancel }: RideCardProps) => {
 
         {/* Action Buttons */}
         {ride_status === "in_progress" && (
-          <View className="mt-4 p-3 bg-purple-50 rounded-xl border border-purple-200">
+          <View className="mt-4 p-4 bg-purple-50 rounded-xl border border-purple-200">
             <View className="flex-row items-center justify-center">
               <Ionicons name="time-outline" size={16} color="#8B5CF6" />
               <Text className="text-sm text-purple-700 font-JakartaMedium ml-2">
@@ -288,14 +292,93 @@ const RideCard = ({ ride, onCancel }: RideCardProps) => {
           </TouchableOpacity>
         )}
 
+        {/* Rating Section */}
         {ride_status === "completed" && (
-          <View className="mt-4 p-3 bg-green-50 rounded-xl border border-green-300">
-            <Text className="text-base text-green-600 font-JakartaMedium text-center">
-              {t("ride.rideCompleted") || "Chuyến đã hoàn thành"}
-            </Text>
-          </View>
+          <>
+            {ride.rating ? (
+              // Show submitted rating
+              <View className="mt-4 p-4 bg-green-50 rounded-xl border border-green-200">
+                <View className="flex-row items-center justify-between mb-2">
+                  <Text className="text-base font-JakartaBold text-gray-800">
+                    {t("rating.yourRating")}
+                  </Text>
+                  <View className="flex-row items-center">
+                    {[...Array(5)].map((_, index) => (
+                      <Ionicons
+                        key={index}
+                        name={
+                          index < ride.rating!.stars ? "star" : "star-outline"
+                        }
+                        size={18}
+                        color={
+                          index < ride.rating!.stars ? "#F59E0B" : "#D1D5DB"
+                        }
+                      />
+                    ))}
+                    <Text className="ml-2 text-sm font-JakartaBold text-gray-700">
+                      ({ride.rating.stars}/5)
+                    </Text>
+                  </View>
+                </View>
+                {ride.rating.comment && (
+                  <Text className="text-sm font-JakartaMedium text-gray-600 italic mt-2">
+                    "{ride.rating.comment}"
+                  </Text>
+                )}
+                <Text className="text-xs font-Jakarta text-gray-400 mt-2">
+                  {formatDateVN(ride.rating.created_at)} •{" "}
+                  {formatTimeVN(new Date(ride.rating.created_at).getTime())}
+                </Text>
+              </View>
+            ) : (
+              // Show rating button
+              <TouchableOpacity
+                onPress={() => {
+                  console.log("Rating button pressed, setting modal to true");
+                  console.log("DEBUG - ride.driver_id:", ride.driver_id);
+                  console.log("DEBUG - driver.driver_id:", driver.driver_id);
+                  console.log(
+                    "DEBUG - Full driver object:",
+                    JSON.stringify(driver, null, 2)
+                  );
+                  setShowRatingModal(true);
+                }}
+                className="flex-row justify-center items-center py-3 mt-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl border border-yellow-300"
+              >
+                <Ionicons name="star" size={20} color="#F59E0B" />
+                <Text className="text-base text-amber-600 font-JakartaBold ml-2">
+                  {t("ride.rateDriver") || "Đánh giá tài xế"}
+                </Text>
+              </TouchableOpacity>
+            )}
+          </>
         )}
       </View>
+
+      {/* Rating Modal - Always render for completed rides */}
+      {ride_status === "completed" && (
+        <RatingModal
+          visible={showRatingModal}
+          onClose={() => {
+            console.log("Modal closing...");
+            setShowRatingModal(false);
+          }}
+          ride={{
+            ride_id: Number(ride.ride_id) || 0,
+            driver_id: Number(driver.driver_id || ride.driver_id) || 0,
+            driver: {
+              first_name: driver.first_name,
+              last_name: driver.last_name,
+              profile_image_url: driver.profile_image_url,
+            },
+          }}
+          onRatingSubmitted={() => {
+            console.log("Rating submitted!");
+            setShowRatingModal(false);
+            onRatingSubmitted?.();
+          }}
+        />
+      )}
     </View>
   );
 };

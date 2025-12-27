@@ -34,7 +34,7 @@ export default function ProfileScreen() {
         </Text>
 
         {/* Profile Image Section with Background */}
-        <View className="relative overflow-hidden rounded-[24px] mb-6 shadow-lg shadow-neutral-400">
+        <View className="relative overflow-hidden rounded-[24px] mb-4 shadow-lg shadow-neutral-400">
           <ImageBackground
             source={{ uri: backgroundImageUrl }}
             style={{ width: "100%", height: 200 }}
@@ -76,7 +76,7 @@ export default function ProfileScreen() {
         <Text className="mb-4 text-xl font-JakartaBold">
           {t("profile.profileInfo")}
         </Text>
-        <View className="flex flex-col bg-white rounded-[24px] shadow-sm shadow-neutral-300 mb-6 p-2">
+        <View className="flex flex-col bg-white rounded-[24px] shadow-sm shadow-neutral-300 mb-4 p-2">
           {/* Name Item */}
           <View className="flex flex-row items-center px-4 py-3 border-b border-gray-100">
             <View className="w-10 h-10 items-center justify-center bg-neutral-50 rounded-full mr-4">
