@@ -140,7 +140,7 @@ Jakarta-SemiBold
 - **Secondary**: `bg-gray-500` với `text-gray-100`
 - **Danger**: `bg-red-500` với `text-red-100`
 - **Success**: `bg-green-500` với `text-green-100`
-- **Outline**: `bg-transparent border-neutral-300 border-[0.5px]`
+- **Outline**: `bg-transparent border-gray-300 border-[0.5px]`
 
 #### Styling
 
@@ -169,7 +169,7 @@ Jakarta-SemiBold
 #### Styling
 
 ```
-- Container: bg-neutral-100 rounded-full border border-neutral-100
+- Container: bg-neutral-100 rounded-full border border-gray-100
 - Focus: focus:border-green-500
 - Label: text-lg font-JakartaSemiBold text-green-600
 - Input: p-4 font-JakartaSemiBold text-[15px]
@@ -1054,7 +1054,7 @@ Text
 View
 ├── bg-neutral-100
 ├── rounded-full
-├── border border-neutral-100
+├── border border-gray-100
 ├── focus:border-green-500
 └── flex-row items-center
 ```

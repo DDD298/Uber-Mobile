@@ -60,6 +60,7 @@
   },
   "ride": {
     "myRides": "Chuyến đi của tôi",
+    "noRidesFound": "Không tìm thấy chuyến đi nào",
     "rideHistory": "Lịch sử chuyến đi",
     "upcomingRides": "Chuyến đi sắp tới",
     "completed": "Hoàn thành",
@@ -74,8 +75,17 @@
     "to": "Đến",
     "rideDetails": "Chi tiết chuyến đi",
     "cancelRide": "Hủy chuyến",
+    "confirmCancel": "Bạn có chắc chắn muốn hủy chuyến này?",
     "rateRide": "Đánh giá",
-    "viewReceipt": "Xem hóa đơn"
+    "viewReceipt": "Xem hóa đơn",
+    "statusUnknown": "Chưa xác định",
+    "statusConfirmed": "Đã xác nhận",
+    "statusDriverArrived": "Tài xế đã đến",
+    "statusNoShow": "Khách không xuất hiện",
+    "cancelledAt": "Hủy lúc",
+    "cancelReason": "Lý do",
+    "arriving": "Đang đến trong 5 phút",
+    "rideCompleted": "Chuyến đã hoàn thành"
   },
   "rating": {
     "rateYourRide": "Đánh giá chuyến đi",
@@ -90,7 +100,7 @@
   "profile": {
     "profile": "Thông tin cá nhân",
     "logout": "Đăng xuất",
-    "profileInfo": "Thông tin cá nhân",
+    "profileInfo": "Chi tiết",
     "editProfile": "Chỉnh sửa hồ sơ",
     "personalInfo": "Thông tin cá nhân",
     "name": "Họ tên",
@@ -116,6 +126,8 @@
     "payNow": "Thanh toán ngay",
     "paymentSuccessful": "Thanh toán thành công",
     "paymentFailed": "Thanh toán thất bại",
+    "pending": "Chờ thanh toán",
+    "refunded": "Đã hoàn tiền",
     "total": "Tổng cộng",
     "subtotal": "Tạm tính",
     "tax": "Thuế",

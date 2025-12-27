@@ -60,6 +60,7 @@
   },
   "ride": {
     "myRides": "การเดินทางของฉัน",
+    "noRidesFound": "ไม่พบประวัติการเดินทาง",
     "rideHistory": "ประวัติการเดินทาง",
     "upcomingRides": "การเดินทางที่กำลังจะมาถึง",
     "completed": "เสร็จสิ้น",
@@ -74,8 +75,17 @@
     "to": "ถึง",
     "rideDetails": "รายละเอียดการเดินทาง",
     "cancelRide": "ยกเลิกการจอง",
+    "confirmCancel": "คุณแน่ใจว่าต้องการยกเลิกการเดินทางนี้หรือไม่?",
     "rateRide": "ให้คะแนน",
-    "viewReceipt": "ดูใบเสร็จ"
+    "viewReceipt": "ดูใบเสร็จ",
+    "statusUnknown": "ไม่ทราบ",
+    "statusConfirmed": "ยืนยันแล้ว",
+    "statusDriverArrived": "คนขับมาถึงแล้ว",
+    "statusNoShow": "ไม่มา",
+    "cancelledAt": "ยกเลิกเมื่อ",
+    "cancelReason": "เหตุผล",
+    "arriving": "จะมาถึงใน 5 นาที",
+    "rideCompleted": "การเดินทางเสร็จสิ้น"
   },
   "rating": {
     "rateYourRide": "ให้คะแนนการเดินทาง",
@@ -90,7 +100,7 @@
   "profile": {
     "profile": "โปรไฟล์",
     "logout": "ออกจากระบบ",
-    "profileInfo": "ข้อมูลส่วนตัว",
+    "profileInfo": "รายละเอียด",
     "editProfile": "แก้ไขโปรไฟล์",
     "personalInfo": "ข้อมูลส่วนตัว",
     "name": "ชื่อ",
@@ -116,6 +126,8 @@
     "payNow": "ชำระเงินเลย",
     "paymentSuccessful": "ชำระเงินสำเร็จ",
     "paymentFailed": "การชำระเงินล้มเหลว",
+    "pending": "รอการชำระเงิน",
+    "refunded": "คืนเงินแล้ว",
     "total": "ยอดรวม",
     "subtotal": "ยอดรวมย่อย",
     "tax": "ภาษี",

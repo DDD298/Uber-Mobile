@@ -40,12 +40,12 @@ const QRPaymentModal: React.FC<QRPaymentModalProps> = ({
       <Animated.View
         className="flex-1 justify-center items-center"
         style={{
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
           opacity: fadeAnim,
         }}
       >
         <Animated.View
-          className="flex flex-col justify-center items-center p-6 mx-5 w-11/12 bg-white rounded-2xl"
+          className="flex flex-col justify-center items-center p-6 mx-4 w-11/12 bg-white rounded-2xl"
           style={{
             transform: [{ scale: scaleAnim }],
           }}
@@ -63,7 +63,7 @@ const QRPaymentModal: React.FC<QRPaymentModalProps> = ({
               </Text>
               <View className="p-4 mb-4 w-full bg-gray-50 rounded-lg">
                 <Text className="text-lg text-center font-JakartaSemiBold">
-                  Số tiền: {Number(amount).toLocaleString('vi-VN')} VNĐ
+                  Số tiền: {Number(amount).toLocaleString("vi-VN")} VNĐ
                 </Text>
               </View>
               <View className="flex flex-row gap-x-4 w-full">
@@ -92,7 +92,7 @@ const QRPaymentModal: React.FC<QRPaymentModalProps> = ({
               <Text className="mb-4 text-center text-gray-600 font-JakartaRegular">
                 Sử dụng ứng dụng ngân hàng để quét mã QR
               </Text>
-              
+
               <View className="relative justify-center items-center mb-4 w-64 h-64 bg-white rounded-lg border-2 border-gray-300">
                 {qrCodeVisible && (
                   <>
@@ -109,18 +109,20 @@ const QRPaymentModal: React.FC<QRPaymentModalProps> = ({
                         quietZone={10}
                       />
                     </View>
-                    
+
                     {/* Scanning animation */}
                     <Animated.View
                       className="absolute w-full h-1 bg-green-500"
                       style={{
                         opacity: qrScanAnim,
-                        transform: [{
-                          translateY: qrScanAnim.interpolate({
-                            inputRange: [0, 1],
-                            outputRange: [0, 240],
-                          }),
-                        }],
+                        transform: [
+                          {
+                            translateY: qrScanAnim.interpolate({
+                              inputRange: [0, 1],
+                              outputRange: [0, 240],
+                            }),
+                          },
+                        ],
                       }}
                     />
                   </>
@@ -135,16 +137,28 @@ const QRPaymentModal: React.FC<QRPaymentModalProps> = ({
 
               <View className="p-4 mb-4 w-full bg-gray-50 rounded-lg border border-gray-200">
                 <View className="flex flex-row justify-between items-center mb-2">
-                  <Text className="text-sm text-gray-700 font-JakartaSemiBold">Mã giao dịch:</Text>
-                  <Text className="text-sm text-gray-600 font-JakartaRegular">QR{Date.now().toString().slice(-6)}</Text>
+                  <Text className="text-sm text-gray-700 font-JakartaSemiBold">
+                    Mã giao dịch:
+                  </Text>
+                  <Text className="text-sm text-gray-600 font-JakartaRegular">
+                    QR{Date.now().toString().slice(-6)}
+                  </Text>
                 </View>
                 <View className="flex flex-row justify-between items-center mb-2">
-                  <Text className="text-sm text-gray-700 font-JakartaSemiBold">Số tiền:</Text>
-                  <Text className="text-sm text-green-600 font-JakartaSemiBold">{Number(amount).toLocaleString('vi-VN')} VNĐ</Text>
+                  <Text className="text-sm text-gray-700 font-JakartaSemiBold">
+                    Số tiền:
+                  </Text>
+                  <Text className="text-sm text-green-600 font-JakartaSemiBold">
+                    {Number(amount).toLocaleString("vi-VN")} VNĐ
+                  </Text>
                 </View>
                 <View className="flex flex-row justify-between items-center">
-                  <Text className="text-sm text-gray-700 font-JakartaSemiBold">Thời gian:</Text>
-                  <Text className="text-sm text-gray-600 font-JakartaRegular">{new Date().toLocaleTimeString('vi-VN')}</Text>
+                  <Text className="text-sm text-gray-700 font-JakartaSemiBold">
+                    Thời gian:
+                  </Text>
+                  <Text className="text-sm text-gray-600 font-JakartaRegular">
+                    {new Date().toLocaleTimeString("vi-VN")}
+                  </Text>
                 </View>
               </View>
 
@@ -180,7 +194,7 @@ const QRPaymentModal: React.FC<QRPaymentModalProps> = ({
                   style={{
                     width: qrScanAnim.interpolate({
                       inputRange: [0, 1],
-                      outputRange: ['0%', '100%'],
+                      outputRange: ["0%", "100%"],
                     }),
                   }}
                 />

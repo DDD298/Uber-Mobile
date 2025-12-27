@@ -16,14 +16,17 @@ const PaymentMethodSelection: React.FC<PaymentMethodSelectionProps> = ({
   selectedPaymentMethod,
   onPaymentMethodSelect,
 }) => {
-  const paymentMethods = React.useMemo(() => [
-    { id: "card", name: "Thẻ tín dụng", icon: "💳" },
-    { id: "cash", name: "Tiền mặt", icon: "💵" },
-    { id: "qr", name: "Quét mã QR", icon: "📱" },
-  ], []);
+  const paymentMethods = React.useMemo(
+    () => [
+      { id: "card", name: "Thẻ tín dụng", icon: "💳" },
+      { id: "cash", name: "Tiền mặt", icon: "💵" },
+      { id: "qr", name: "Quét mã QR", icon: "📱" },
+    ],
+    []
+  );
 
   return (
-    <View className="my-5">
+    <View className="my-4">
       <Text className="mb-3 text-lg font-JakartaSemiBold">
         Chọn phương thức thanh toán
       </Text>

@@ -4,7 +4,14 @@ import { fetchAPI } from "@/lib/fetch";
 import { Ride } from "@/types/type";
 import { useAuth } from "@clerk/clerk-expo";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, Image, RefreshControl, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  Image,
+  RefreshControl,
+  Text,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
 
@@ -17,7 +24,7 @@ export default function RidesScreen() {
   const [error, setError] = useState<string | null>(null);
 
   const fetchRides = async () => {
-    const testUserId = userId || 'user_33V7GizlzLeZyR9fHj10LxbFR9z';
+    const testUserId = userId || "user_33V7GizlzLeZyR9fHj10LxbFR9z";
     if (!testUserId) {
       return;
     }
@@ -29,7 +36,7 @@ export default function RidesScreen() {
       const response = await fetchAPI(url);
       setRides(response.data || []);
     } catch (err) {
-      setError(err instanceof Error ? err.message : t('errors.networkError'));
+      setError(err instanceof Error ? err.message : t("errors.networkError"));
     } finally {
       setLoading(false);
     }
@@ -48,13 +55,12 @@ export default function RidesScreen() {
         body: JSON.stringify({
           ride_id: rideId,
           user_id: userId,
-          reason: t('ride.cancelled')
-        })
+          reason: t("ride.cancelled"),
+        }),
       });
 
       await fetchRides();
-    } catch (err) {
-    }
+    } catch (err) {}
   };
 
   useEffect(() => {
@@ -67,10 +73,16 @@ export default function RidesScreen() {
         renderItem={({ item }) => (
           <RideCard
             ride={item}
-            onCancel={(item.ride_status === 'confirmed' || item.ride_status === 'driver_arrived') && item.ride_id ? () => handleCancelRide(Number(item.ride_id)) : undefined}
+            onCancel={
+              (item.ride_status === "confirmed" ||
+                item.ride_status === "driver_arrived") &&
+              item.ride_id
+                ? () => handleCancelRide(Number(item.ride_id))
+                : undefined
+            }
           />
         )}
-        keyExtractor={(item) => item.ride_id?.toString() || '0'}
+        keyExtractor={(item) => item.ride_id?.toString() || "0"}
         className="px-4"
         keyboardShouldPersistTaps="handled"
         refreshControl={
@@ -88,7 +100,7 @@ export default function RidesScreen() {
                 <Image
                   source={images.noResult}
                   className="w-40 h-40"
-                  alt={t('errors.somethingWentWrong')}
+                  alt={t("errors.somethingWentWrong")}
                   resizeMode="contain"
                 />
                 <Text className="mt-4 text-sm text-red-500">{error}</Text>
@@ -98,20 +110,22 @@ export default function RidesScreen() {
                 <Image
                   source={images.noResult}
                   className="w-40 h-40"
-                  alt={t('ride.myRides')}
+                  alt={t("ride.noRidesFound")}
                   resizeMode="contain"
                 />
-                <Text className="mt-4 text-sm">{t('ride.myRides')}</Text>
+                <Text className="mt-4 text-sm">{t("ride.noRidesFound")}</Text>
               </>
             )}
           </View>
         )}
         ListHeaderComponent={
           <>
-            <Text className="my-5 text-2xl font-JakartaBold">{t('ride.myRides')}</Text>
+            <Text className="my-4 text-2xl font-JakartaBold">
+              {t("ride.myRides")}
+            </Text>
             {rides.length > 0 && (
-              <Text className="mb-2 text-sm text-gray-500">
-                {rides.length} {t('ride.myRides')}
+              <Text className="mb-2 text-base font-bold text-green-600">
+                {rides.length} {t("ride.myRides")}
               </Text>
             )}
           </>
@@ -119,4 +133,4 @@ export default function RidesScreen() {
       />
     </SafeAreaView>
   );
-};
+}

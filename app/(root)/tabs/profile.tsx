@@ -16,12 +16,12 @@ export default function ProfileScreen() {
         className="px-4"
         contentContainerStyle={{ paddingBottom: 120 }}
       >
-        <Text className="my-5 text-2xl font-JakartaBold">
+        <Text className="my-4 text-2xl font-JakartaBold">
           {t("profile.profile")}
         </Text>
 
         {/* Profile Image Section */}
-        <View className="flex justify-center items-center my-5">
+        <View className="flex justify-center items-center my-4">
           <Image
             source={{
               uri: user?.externalAccounts[0]?.imageUrl ?? user?.imageUrl,
@@ -36,7 +36,7 @@ export default function ProfileScreen() {
         </Text>
         <View className="flex flex-col bg-white rounded-[24px] shadow-sm shadow-neutral-300 mb-6 p-2">
           {/* Name Item */}
-          <View className="flex flex-row items-center px-4 py-3 border-b border-neutral-100">
+          <View className="flex flex-row items-center px-4 py-3 border-b border-gray-100">
             <View className="w-10 h-10 items-center justify-center bg-neutral-50 rounded-full mr-4">
               <Ionicons name="person-outline" size={20} color="#10B981" />
             </View>
@@ -55,7 +55,7 @@ export default function ProfileScreen() {
           </View>
 
           {/* Email Item */}
-          <View className="flex flex-row items-center px-4 py-3 border-b border-neutral-100">
+          <View className="flex flex-row items-center px-4 py-3 border-b border-gray-100">
             <View className="w-10 h-10 items-center justify-center bg-neutral-50 rounded-full mr-4">
               <Ionicons name="mail-outline" size={20} color="#10B981" />
             </View>

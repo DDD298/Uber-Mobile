@@ -60,6 +60,7 @@
   },
   "ride": {
     "myRides": "My Rides",
+    "noRidesFound": "No rides found",
     "rideHistory": "Ride History",
     "upcomingRides": "Upcoming Rides",
     "completed": "Completed",
@@ -74,8 +75,17 @@
     "to": "To",
     "rideDetails": "Ride Details",
     "cancelRide": "Cancel Ride",
+    "confirmCancel": "Are you sure you want to cancel this ride?",
     "rateRide": "Rate Ride",
-    "viewReceipt": "View Receipt"
+    "viewReceipt": "View Receipt",
+    "statusUnknown": "Unknown",
+    "statusConfirmed": "Confirmed",
+    "statusDriverArrived": "Driver Arrived",
+    "statusNoShow": "No Show",
+    "cancelledAt": "Cancelled At",
+    "cancelReason": "Reason",
+    "arriving": "Arriving in 5 min",
+    "rideCompleted": "Ride Completed"
   },
   "rating": {
     "rateYourRide": "Rate Your Ride",
@@ -90,7 +100,7 @@
   "profile": {
     "profile": "Profile",
     "logout": "Logout",
-    "profileInfo": "Profile Information",
+    "profileInfo": "Details",
     "editProfile": "Edit Profile",
     "personalInfo": "Personal Information",
     "name": "Name",
@@ -116,6 +126,8 @@
     "payNow": "Pay Now",
     "paymentSuccessful": "Payment Successful",
     "paymentFailed": "Payment Failed",
+    "pending": "Pending Payment",
+    "refunded": "Refunded",
     "total": "Total",
     "subtotal": "Subtotal",
     "tax": "Tax",

@@ -60,6 +60,7 @@
   },
   "ride": {
     "myRides": "내 이용 내역",
+    "noRidesFound": "이용 내역이 없습니다",
     "rideHistory": "이용 기록",
     "upcomingRides": "예정된 이용",
     "completed": "완료됨",
@@ -74,8 +75,17 @@
     "to": "도착",
     "rideDetails": "이용 상세",
     "cancelRide": "예약 취소",
+    "confirmCancel": "정말 이 예약을 취소하시겠습니까?",
     "rateRide": "평가하기",
-    "viewReceipt": "영수증 보기"
+    "viewReceipt": "영수증 보기",
+    "statusUnknown": "알 수 없음",
+    "statusConfirmed": "확인됨",
+    "statusDriverArrived": "기사 도착",
+    "statusNoShow": "미출석",
+    "cancelledAt": "취소 시간",
+    "cancelReason": "이유",
+    "arriving": "5분 후 도착",
+    "rideCompleted": "이용 완료"
   },
   "rating": {
     "rateYourRide": "이용 평가",
@@ -90,7 +100,7 @@
   "profile": {
     "profile": "프로필",
     "logout": "로그아웃",
-    "profileInfo": "개인 정보",
+    "profileInfo": "상세 정보",
     "editProfile": "프로필 편집",
     "personalInfo": "개인 정보",
     "name": "이름",
@@ -116,6 +126,8 @@
     "payNow": "지금 결제",
     "paymentSuccessful": "결제 성공",
     "paymentFailed": "결제 실패",
+    "pending": "결제 대기 중",
+    "refunded": "환불 완료",
     "total": "합계",
     "subtotal": "소계",
     "tax": "세금",

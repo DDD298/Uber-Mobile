@@ -60,6 +60,7 @@
   },
   "ride": {
     "myRides": "我的行程",
+    "noRidesFound": "未发现行程",
     "rideHistory": "行程历史",
     "upcomingRides": "即将到来的行程",
     "completed": "已完成",
@@ -74,8 +75,17 @@
     "to": "到",
     "rideDetails": "行程详情",
     "cancelRide": "取消行程",
+    "confirmCancel": "您确定要取消此行程吗？",
     "rateRide": "评价",
-    "viewReceipt": "查看收据"
+    "viewReceipt": "查看收据",
+    "statusUnknown": "未知",
+    "statusConfirmed": "已确认",
+    "statusDriverArrived": "司机已到达",
+    "statusNoShow": "未出现",
+    "cancelledAt": "取消时间",
+    "cancelReason": "原因",
+    "arriving": "5分钟后到达",
+    "rideCompleted": "行程已完成"
   },
   "rating": {
     "rateYourRide": "评价行程",
@@ -90,7 +100,7 @@
   "profile": {
     "profile": "个人资料",
     "logout": "退出登录",
-    "profileInfo": "个人信息",
+    "profileInfo": "详情",
     "editProfile": "编辑资料",
     "personalInfo": "个人信息",
     "name": "姓名",
@@ -116,6 +126,8 @@
     "payNow": "立即支付",
     "paymentSuccessful": "支付成功",
     "paymentFailed": "支付失败",
+    "pending": "等待支付",
+    "refunded": "已退款",
     "total": "总计",
     "subtotal": "小计",
     "tax": "税费",

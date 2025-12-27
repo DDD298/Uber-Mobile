@@ -28,12 +28,12 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
       <Animated.View
         className="flex-1 justify-center items-center"
         style={{
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
           opacity: fadeAnim,
         }}
       >
         <Animated.View
-          className="flex flex-col justify-center items-center p-7 mx-5 w-11/12 bg-white rounded-2xl"
+          className="flex flex-col justify-center items-center p-7 mx-4 w-11/12 bg-white rounded-2xl"
           style={{
             transform: [{ scale: scaleAnim }],
           }}
@@ -45,8 +45,8 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
           </Text>
 
           <Text className="mt-3 text-center text-md text-general-200 font-JakartaRegular">
-            Cảm ơn bạn đã đặt chuyến. Đặt chỗ của bạn đã được xác nhận thành công.
-            Vui lòng tiến hành chuyến của bạn.
+            Cảm ơn bạn đã đặt chuyến. Đặt chỗ của bạn đã được xác nhận thành
+            công. Vui lòng tiến hành chuyến của bạn.
           </Text>
 
           <CustomButton

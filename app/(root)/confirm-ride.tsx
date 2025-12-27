@@ -20,7 +20,7 @@ const ConfirmRide = () => {
           />
         )}
         ListFooterComponent={() => (
-          <View className="mx-5 mt-10">
+          <View className="mx-4 mt-10">
             <CustomButton
               title="Đặt xe"
               onPress={() => router.push("/(root)/book-ride")}
@@ -29,7 +29,7 @@ const ConfirmRide = () => {
         )}
       />
     </RideLayout>
-  )
-}
+  );
+};
 
 export default ConfirmRide;
