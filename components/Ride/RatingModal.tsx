@@ -87,11 +87,7 @@ export const RatingModal: React.FC<RatingModalProps> = ({
   );
 
   const handleSubmit = async () => {
-    console.log("=== RATING SUBMISSION DEBUG START ===");
-    console.log("1. User check:", { hasUser: !!user, userId: user?.id });
-
     if (!user) {
-      console.log("ERROR: No user found");
       showError(t("common.error"), t("rating.pleaseLogin"));
       return;
     }
@@ -105,12 +101,8 @@ export const RatingModal: React.FC<RatingModalProps> = ({
       comment: comment.trim() || null,
     };
 
-    console.log("2. API Endpoint:", apiEndpoint);
-    console.log("3. Request payload:", JSON.stringify(requestPayload, null, 2));
-
     setLoading(true);
     try {
-      console.log("4. Sending fetchAPI request...");
       const data = await fetchAPI(apiEndpoint, {
         method: "POST",
         headers: {
@@ -119,37 +111,22 @@ export const RatingModal: React.FC<RatingModalProps> = ({
         body: JSON.stringify(requestPayload),
       });
 
-      console.log("5. Response data:", JSON.stringify(data, null, 2));
-
       if (data.success) {
-        console.log("6. SUCCESS: Rating submitted successfully");
         showSuccess(t("common.success"), t("rating.thankYou"), () => {
           onClose();
           onRatingSubmitted?.();
         });
       } else {
-        console.log("7. ERROR: Response not successful", {
-          success: data.success,
-          error: data.error,
-        });
         showError(t("common.error"), data.error || t("rating.cannotSubmit"));
       }
     } catch (error) {
       const err = error as Error;
-      console.log("8. CATCH ERROR:", {
-        errorType: err?.constructor?.name,
-        errorMessage: err?.message,
-        errorStack: err?.stack,
-        fullError: JSON.stringify(err, Object.getOwnPropertyNames(err)),
-      });
-      console.error("Error submitting rating:", error);
       showError(
         t("common.error"),
         `${t("rating.submitError")}\n\nDebug: ${err?.message || "Unknown error"}`
       );
     } finally {
       setLoading(false);
-      console.log("=== RATING SUBMISSION DEBUG END ===");
     }
   };
 

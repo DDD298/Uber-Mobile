@@ -110,7 +110,12 @@
     "submitRating": "提交评价",
     "thankYou": "感谢您的反馈！",
     "ratingSubmitted": "评价已提交",
-    "stars": "星"
+    "stars": "星",
+    "pleaseLogin": "请登录以评价",
+    "cannotSubmit": "无法提交评价",
+    "submitError": "提交评价时发生错误",
+    "characterLimit": "字符",
+    "yourRating": "您的评价"
   },
   "profile": {
     "profile": "个人资料",

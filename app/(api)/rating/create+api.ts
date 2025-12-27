@@ -74,7 +74,6 @@ export async function POST(request: Request) {
       { status: 201 }
     );
   } catch (error) {
-    console.error("Error creating rating:", error);
     return Response.json(
       {
         error: "Lỗi máy chủ nội bộ",
@@ -114,7 +113,6 @@ export async function GET(request: Request) {
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error fetching rating:", error);
     return Response.json(
       {
         error: "Lỗi máy chủ nội bộ",

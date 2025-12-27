@@ -53,7 +53,7 @@ const RideCard = ({ ride, onCancel, onRatingSubmitted }: RideCardProps) => {
   const getRideStatusInfo = (status: string | undefined) => {
     if (!status) {
       return {
-        text: t("ride.statusUnknown") || "CHƯA XÁC ĐỊNH",
+        text: t("ride.statusUnknown").toUpperCase() || "CHƯA XÁC ĐỊNH",
         color: "#6B7280",
         bgColor: "#F3F4F6",
         icon: "help-circle" as const,
@@ -63,14 +63,14 @@ const RideCard = ({ ride, onCancel, onRatingSubmitted }: RideCardProps) => {
     switch (status) {
       case "confirmed":
         return {
-          text: t("ride.statusConfirmed") || "ĐÃ XÁC NHẬN",
+          text: t("ride.statusConfirmed").toUpperCase() || "ĐÃ XÁC NHẬN",
           color: "#3B82F6",
           bgColor: "#DBEAFE",
           icon: "checkmark-circle" as const,
         };
       case "driver_arrived":
         return {
-          text: t("ride.statusDriverArrived") || "TÀI XẾ ĐÃ ĐẾN",
+          text: t("ride.statusDriverArrived").toUpperCase() || "TÀI XẾ ĐÃ ĐẾN",
           color: "#F97316",
           bgColor: "#FFEDD5",
           icon: "car" as const,
@@ -98,7 +98,7 @@ const RideCard = ({ ride, onCancel, onRatingSubmitted }: RideCardProps) => {
         };
       case "no_show":
         return {
-          text: t("ride.statusNoShow") || "KHÔNG XUẤT HIỆN",
+          text: t("ride.statusNoShow").toUpperCase() || "KHÔNG XUẤT HIỆN",
           color: "#6B7280",
           bgColor: "#F3F4F6",
           icon: "person-remove" as const,
@@ -334,13 +334,6 @@ const RideCard = ({ ride, onCancel, onRatingSubmitted }: RideCardProps) => {
               // Show rating button
               <TouchableOpacity
                 onPress={() => {
-                  console.log("Rating button pressed, setting modal to true");
-                  console.log("DEBUG - ride.driver_id:", ride.driver_id);
-                  console.log("DEBUG - driver.driver_id:", driver.driver_id);
-                  console.log(
-                    "DEBUG - Full driver object:",
-                    JSON.stringify(driver, null, 2)
-                  );
                   setShowRatingModal(true);
                 }}
                 className="flex-row justify-center items-center py-3 mt-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl border border-yellow-300"
@@ -360,7 +353,6 @@ const RideCard = ({ ride, onCancel, onRatingSubmitted }: RideCardProps) => {
         <RatingModal
           visible={showRatingModal}
           onClose={() => {
-            console.log("Modal closing...");
             setShowRatingModal(false);
           }}
           ride={{
@@ -373,7 +365,6 @@ const RideCard = ({ ride, onCancel, onRatingSubmitted }: RideCardProps) => {
             },
           }}
           onRatingSubmitted={() => {
-            console.log("Rating submitted!");
             setShowRatingModal(false);
             onRatingSubmitted?.();
           }}

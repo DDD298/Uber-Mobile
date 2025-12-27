@@ -25,13 +25,11 @@ export const sendRideConfirmationEmail = async (
       html: getRideConfirmationHTML(data),
     });
 
-    console.log('✅ Email sent successfully:', info.messageId);
     return { 
       success: true, 
       messageId: info.messageId 
     };
   } catch (error) {
-    console.error('❌ Error sending ride confirmation email:', error);
     return { 
       success: false, 
       error: error instanceof Error ? error.message : 'Unknown error' 

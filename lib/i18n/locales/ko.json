@@ -110,7 +110,12 @@
     "submitRating": "평가 제출",
     "thankYou": "피드백 감사합니다!",
     "ratingSubmitted": "평가가 제출되었습니다",
-    "stars": "별"
+    "stars": "별",
+    "pleaseLogin": "평가하려면 로그인하세요",
+    "cannotSubmit": "평가를 제출할 수 없습니다",
+    "submitError": "평가 제출 중 오류가 발생했습니다",
+    "characterLimit": "자",
+    "yourRating": "내 평가"
   },
   "profile": {
     "profile": "프로필",

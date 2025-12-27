@@ -68,6 +68,15 @@ export default function RidesScreen() {
 
   useEffect(() => {
     fetchRides();
+
+    // Auto-refresh every 30 seconds to get latest status updates
+    const refreshInterval = setInterval(() => {
+      fetchRides();
+    }, 30000);
+
+    return () => {
+      clearInterval(refreshInterval);
+    };
   }, [userId]);
 
   return (

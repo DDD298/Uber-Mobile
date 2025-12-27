@@ -53,7 +53,7 @@ export async function POST(request: Request) {
     // Sử dụng thời gian Việt Nam (GMT+7) cho created_at
     const vietnamTime = getVietnamTimeAsUTC();
 
-    // Tạo chuyến với trạng thái "booked"
+    // Tạo chuyến với trạng thái "confirmed"
     const response = await sql`
       INSERT INTO rides ( 
           origin_address, 
@@ -64,7 +64,8 @@ export async function POST(request: Request) {
           destination_longitude, 
           ride_time, 
           fare_price, 
-          payment_status, 
+          payment_status,
+          ride_status,
           driver_id, 
           user_id,
           payment_intent_id,
@@ -79,6 +80,7 @@ export async function POST(request: Request) {
           ${ride_time},
           ${fare_price},
           'paid',
+          'confirmed',
           ${driver_id},
           ${user_id},
           ${payment_intent_id},
@@ -120,7 +122,6 @@ export async function POST(request: Request) {
         });
       }
     } catch (emailError) {
-      // Email error không nên block ride booking
       console.error('Email preparation failed (non-critical):', emailError);
     }
     

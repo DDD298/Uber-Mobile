@@ -232,7 +232,6 @@ export async function GET(request: Request) {
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error fetching warnings:", error);
     return Response.json(
       {
         error: "Lỗi máy chủ nội bộ",
@@ -298,7 +297,6 @@ export async function POST(request: Request) {
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error resolving warning:", error);
     return Response.json(
       {
         error: "Lỗi máy chủ nội bộ",
@@ -376,7 +374,6 @@ export async function PUT(request: Request) {
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error updating driver status:", error);
     return Response.json(
       {
         error: "Lỗi máy chủ nội bộ",

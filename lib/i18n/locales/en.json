@@ -111,7 +111,12 @@
     "submitRating": "Submit Rating",
     "thankYou": "Thank you for your feedback!",
     "ratingSubmitted": "Rating submitted successfully",
-    "stars": "stars"
+    "stars": "stars",
+    "pleaseLogin": "Please login to rate",
+    "cannotSubmit": "Cannot submit rating",
+    "submitError": "An error occurred while submitting rating",
+    "characterLimit": "characters",
+    "yourRating": "Your Rating"
   },
   "profile": {
     "profile": "Profile",

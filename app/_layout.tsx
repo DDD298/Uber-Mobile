@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import { LogBox } from "react-native";
 import "react-native-reanimated";
 import "@/lib/i18n"; // Initialize i18n
+import { rideStatusUpdater } from "@/services/rideStatusUpdater";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -14,7 +15,7 @@ const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!;
 
 if (!publishableKey) {
   throw new Error(
-    "Thiếu Publishable Key. Vui lòng thiết lập EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY trong file .env",
+    "Thiếu Publishable Key. Vui lòng thiết lập EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY trong file .env"
   );
 }
 
@@ -27,7 +28,7 @@ export default function RootLayout() {
     "Jakarta-ExtraLight": require("../assets/fonts/PlusJakartaSans-ExtraLight.ttf"),
     "Jakarta-Light": require("../assets/fonts/PlusJakartaSans-Light.ttf"),
     "Jakarta-Medium": require("../assets/fonts/PlusJakartaSans-Medium.ttf"),
-    "Jakarta": require("../assets/fonts/PlusJakartaSans-Regular.ttf"),
+    Jakarta: require("../assets/fonts/PlusJakartaSans-Regular.ttf"),
     "Jakarta-SemiBold": require("../assets/fonts/PlusJakartaSans-SemiBold.ttf"),
   });
 
@@ -36,6 +37,15 @@ export default function RootLayout() {
       SplashScreen.hideAsync();
     }
   }, [loaded]);
+
+  // Start ride status auto-updater
+  useEffect(() => {
+    rideStatusUpdater.start();
+
+    return () => {
+      rideStatusUpdater.stop();
+    };
+  }, []);
 
   if (!loaded) {
     return null;

@@ -41,7 +41,6 @@ const languageDetector = {
       const supportedLanguage = languageMap[deviceLanguage] || 'en';
       callback(supportedLanguage);
     } catch (error) {
-      console.error('Error detecting language:', error);
       callback('en');
     }
   },

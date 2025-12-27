@@ -110,7 +110,12 @@
     "submitRating": "ส่งคะแนน",
     "thankYou": "ขอบคุณสำหรับความคิดเห็น!",
     "ratingSubmitted": "ส่งคะแนนเรียบร้อย",
-    "stars": "ดาว"
+    "stars": "ดาว",
+    "pleaseLogin": "กรุณาเข้าสู่ระบบเพื่อให้คะแนน",
+    "cannotSubmit": "ไม่สามารถส่งคะแนนได้",
+    "submitError": "เกิดข้อผิดพลาดขณะส่งคะแนน",
+    "characterLimit": "ตัวอักษร",
+    "yourRating": "คะแนนของคุณ"
   },
   "profile": {
     "profile": "โปรไฟล์",

@@ -21,10 +21,8 @@ export const transporter = nodemailer.createTransport({
 export const verifyEmailConnection = async (): Promise<boolean> => {
   try {
     await transporter.verify();
-    console.log('✅ Email service is ready to send messages');
     return true;
   } catch (error) {
-    console.error('❌ Email service connection failed:', error);
     return false;
   }
 };
