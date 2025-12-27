@@ -1,5 +1,6 @@
-import { getVietnamTimeAsUTC } from "@/lib/utils";
+import { getVietnamTimeAsUTC, formatDateVN } from "@/lib/utils";
 import { neon } from "@neondatabase/serverless";
+import { sendRideConfirmationEmail } from "@/lib/email";
 
 if (!process.env.DATABASE_URL) {
   throw new Error("Biến môi trường DATABASE_URL chưa được thiết lập");
@@ -85,6 +86,44 @@ export async function POST(request: Request) {
       )
       RETURNING *;
     `;
+    
+    try {
+      // Lấy thông tin user
+      const userData = await sql`
+        SELECT name, email FROM users WHERE clerk_id = ${user_id}
+      `;
+      
+      // Lấy thông tin driver
+      const driverData = await sql`
+        SELECT first_name, last_name, vehicle_type 
+        FROM drivers WHERE id = ${driver_id}
+      `;
+      
+      if (userData.length > 0 && driverData.length > 0) {
+        const user = userData[0];
+        const driver = driverData[0];
+        
+        // Gửi email bất đồng bộ
+        sendRideConfirmationEmail({
+          userEmail: user.email,
+          userName: user.name,
+          rideId: response[0].ride_id,
+          originAddress: origin_address,
+          destinationAddress: destination_address,
+          farePrice: parseFloat(fare_price),
+          rideTime: formatDateVN(vietnamTime),
+          driverName: `${driver.first_name} ${driver.last_name}`,
+          vehicleType: driver.vehicle_type,
+          paymentIntentId: payment_intent_id,
+        }).catch(emailError => {
+          console.error('Email sending failed (non-critical):', emailError);
+        });
+      }
+    } catch (emailError) {
+      // Email error không nên block ride booking
+      console.error('Email preparation failed (non-critical):', emailError);
+    }
+    
     const successResponse = { 
       success: true,
       data: response[0],

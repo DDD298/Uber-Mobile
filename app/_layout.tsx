@@ -6,6 +6,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import { LogBox } from "react-native";
 import "react-native-reanimated";
+import "@/lib/i18n"; // Initialize i18n
 
 SplashScreen.preventAutoHideAsync();
 

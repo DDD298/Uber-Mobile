@@ -62,6 +62,7 @@ declare interface Ride {
   cancelled_at?: string;
   cancel_reason?: string;
   payment_intent_id?: string;
+  rating_id?: number;
   driver: {
     driver_id?: number;
     first_name: string;
@@ -72,6 +73,16 @@ declare interface Ride {
     rating?: number;
     vehicle_type: string;
   };
+}
+
+declare interface Rating {
+  id: number;
+  ride_id: number;
+  user_id: string;
+  driver_id: number;
+  stars: number;
+  comment?: string;
+  created_at: string;
 }
 
 declare interface ButtonProps extends TouchableOpacityProps {

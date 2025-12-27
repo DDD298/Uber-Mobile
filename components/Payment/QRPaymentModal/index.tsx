@@ -129,7 +129,7 @@ const QRPaymentModal: React.FC<QRPaymentModalProps> = ({
 
               <View className="p-4 mb-4 w-full bg-blue-50 rounded-lg border border-blue-200">
                 <Text className="text-center text-blue-700 font-JakartaSemiBold">
-                  💡 Mẹo: Mở ứng dụng ngân hàng và chọn "Quét QR"
+                  💡 Mẹo: Mở ứng dụng ngân hàng và chọn &quot;Quét QR&quot;
                 </Text>
               </View>
 
