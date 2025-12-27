@@ -44,7 +44,7 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
             Đặt chuyến thành công
           </Text>
 
-          <Text className="mt-3 text-center text-md text-general-200 font-JakartaRegular">
+          <Text className="mt-4 text-center text-md text-general-200 font-JakartaRegular">
             Cảm ơn bạn đã đặt chuyến. Đặt chỗ của bạn đã được xác nhận thành
             công. Vui lòng tiến hành chuyến của bạn.
           </Text>

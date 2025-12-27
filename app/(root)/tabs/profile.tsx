@@ -16,7 +16,7 @@ export default function ProfileScreen() {
         className="px-4"
         contentContainerStyle={{ paddingBottom: 120 }}
       >
-        <Text className="my-4 text-2xl font-JakartaBold">
+        <Text className="my-4 text-xl font-JakartaBold">
           {t("profile.profile")}
         </Text>
 

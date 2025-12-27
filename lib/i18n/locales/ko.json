@@ -60,6 +60,7 @@
   },
   "ride": {
     "myRides": "내 이용 내역",
+    "trips": "건",
     "noRidesFound": "이용 내역이 없습니다",
     "rideHistory": "이용 기록",
     "upcomingRides": "예정된 이용",

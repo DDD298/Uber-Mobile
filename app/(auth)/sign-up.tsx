@@ -147,7 +147,7 @@ const SignUp = () => {
             <Text className="mb-2 text-2xl text-black font-JakartaBold">
               {t("auth.signUp")}
             </Text>
-            <Text className="mb-5 font-Jakarta">
+            <Text className="mb-4 font-Jakarta">
               {t("common.loading")} {form.email}
             </Text>
             <InputField
@@ -184,7 +184,7 @@ const SignUp = () => {
             <Text className="text-2xl text-center text-black font-JakartaBold">
               {t("common.success")}!
             </Text>
-            <Text className="mt-3 text-base text-center text-gray-400 font-Jakarta">
+            <Text className="mt-4 text-base text-center text-gray-400 font-Jakarta">
               {t("auth.createAccount")}
             </Text>
             <CustomButton

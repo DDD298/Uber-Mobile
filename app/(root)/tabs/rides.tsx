@@ -12,6 +12,7 @@ import {
   Text,
   View,
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
 
@@ -120,13 +121,16 @@ export default function RidesScreen() {
         )}
         ListHeaderComponent={
           <>
-            <Text className="my-4 text-2xl font-JakartaBold">
+            <Text className="mt-4 mb-2 text-xl font-JakartaBold">
               {t("ride.myRides")}
             </Text>
             {rides.length > 0 && (
-              <Text className="mb-2 text-base font-bold text-green-600">
-                {rides.length} {t("ride.myRides")}
-              </Text>
+              <View className="flex-row items-center mb-2">
+                <Ionicons name="car-outline" size={20} color="#16a34a" />
+                <Text className="ml-2 text-base font-bold text-green-600">
+                  {rides.length} {t("ride.trips")}
+                </Text>
+              </View>
             )}
           </>
         }

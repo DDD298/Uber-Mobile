@@ -60,6 +60,7 @@
   },
   "ride": {
     "myRides": "我的行程",
+    "trips": "趟",
     "noRidesFound": "未发现行程",
     "rideHistory": "行程历史",
     "upcomingRides": "即将到来的行程",

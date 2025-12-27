@@ -73,7 +73,7 @@ const Onboarding = () => {
                 {item.title}
               </Text>
             </View>
-            <Text className="text-lg font-JakartaSemiBold text-center text-[#858585] mx-10 mt-3">
+            <Text className="text-lg font-JakartaSemiBold text-center text-[#858585] mx-10 mt-4">
               {item.description}
             </Text>
           </View>

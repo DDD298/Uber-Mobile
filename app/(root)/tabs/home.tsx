@@ -139,7 +139,7 @@ export default function HomeScreen() {
 
           {/* Current Location Map */}
           <View className="mt-4">
-            <Text className="mb-3 text-xl font-JakartaBold text-secondary-900">
+            <Text className="mb-4 text-xl font-JakartaBold text-secondary-900">
               {t("home.whereTo")}
             </Text>
             <View className="flex flex-row items-center bg-transparent h-[300px] rounded-xl rounded-b-none overflow-hidden shadow-sm">

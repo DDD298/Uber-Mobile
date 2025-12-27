@@ -60,6 +60,7 @@
   },
   "ride": {
     "myRides": "My Rides",
+    "trips": "trips",
     "noRidesFound": "No rides found",
     "rideHistory": "Ride History",
     "upcomingRides": "Upcoming Rides",

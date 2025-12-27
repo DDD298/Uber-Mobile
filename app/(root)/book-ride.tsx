@@ -6,23 +6,23 @@ import { useDriverStore, useLocationStore } from "@/store";
 import { useUser } from "@clerk/clerk-expo";
 import { StripeProvider } from "@stripe/stripe-react-native";
 import { Image, Text, View } from "react-native";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 const BookRide = () => {
   const { t } = useTranslation();
   const { user } = useUser();
-  const { 
-    userAddress, 
-    destinationAddress, 
-    userLatitude, 
-    userLongitude, 
-    destinationLatitude, 
-    destinationLongitude 
+  const {
+    userAddress,
+    destinationAddress,
+    userLatitude,
+    userLongitude,
+    destinationLatitude,
+    destinationLongitude,
   } = useLocationStore();
   const { drivers, selectedDriver } = useDriverStore();
 
   const driverDetails = drivers?.filter(
-    (driver) => +driver.id === selectedDriver,
+    (driver) => +driver.id === selectedDriver
   )[0];
 
   return (
@@ -31,10 +31,10 @@ const BookRide = () => {
       merchantIdentifier="merchant.com.uber"
       urlScheme="myapp"
     >
-      <RideLayout title={t('booking.bookRide')}>
+      <RideLayout title={t("booking.bookRide")}>
         <>
           <Text className="mb-4 text-xl font-JakartaSemiBold">
-            {t('ride.rideDetails')}
+            {t("ride.rideDetails")}
           </Text>
 
           <View className="flex flex-col justify-center items-center w-full">
@@ -61,23 +61,29 @@ const BookRide = () => {
             </View>
           </View>
 
-          <View className="flex flex-col justify-center items-start p-4 mt-4 w-full rounded-3xl bg-general-600">
-            <View className="flex flex-row justify-between items-center py-4 pt-0 w-full border-b border-white">
-              <Text className="text-lg font-JakartaRegular">{t('ride.fare')}</Text>
-              <Text className="text-lg font-JakartaRegular text-[#0CC25F]">
-                {Number(driverDetails?.price).toLocaleString('vi-VN')} VNĐ
+          <View className="flex flex-col justify-center items-start p-4 mt-4 w-full rounded-[24px] bg-green-50">
+            <View className="flex flex-row justify-between items-center py-4 pt-0 w-full border-b-[1px] border-green-200">
+              <Text className="text-lg font-JakartaRegular">
+                {t("ride.fare")}
+              </Text>
+              <Text className="text-lg font-JakartaRegular text-green-600">
+                {Number(driverDetails?.price).toLocaleString("vi-VN")} VNĐ
               </Text>
             </View>
 
             <View className="flex flex-row justify-between items-center py-4 w-full border-b border-white">
-              <Text className="text-lg font-JakartaRegular">{t('booking.estimatedTime')}</Text>
+              <Text className="text-lg font-JakartaRegular">
+                {t("booking.estimatedTime")}
+              </Text>
               <Text className="text-lg font-JakartaRegular">
                 {formatTime(driverDetails?.time!)}
               </Text>
             </View>
 
             <View className="flex flex-row justify-between items-center py-4 pb-0 w-full">
-              <Text className="text-lg font-JakartaRegular">{t('booking.seats')}</Text>
+              <Text className="text-lg font-JakartaRegular">
+                {t("booking.seats")}
+              </Text>
               <Text className="text-lg font-JakartaRegular">
                 {driverDetails?.car_seats}
               </Text>
@@ -85,7 +91,7 @@ const BookRide = () => {
           </View>
 
           <View className="flex flex-col justify-center items-start mt-4 w-full">
-            <View className="flex flex-row justify-start items-center py-4 mt-3 w-full border-t border-b border-general-700">
+            <View className="flex flex-row justify-start items-center py-4 mt-4 w-full border-t border-b border-general-700">
               <Image source={icons.to} className="w-6 h-6" />
               <Text className="ml-2 text-lg font-JakartaRegular">
                 {userAddress}

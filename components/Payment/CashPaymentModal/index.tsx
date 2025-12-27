@@ -122,7 +122,7 @@ const CashPaymentModal: React.FC<CashPaymentModalProps> = ({
                 </View>
 
                 {/* Quick amount buttons */}
-                <View className="mt-3">
+                <View className="mt-4">
                   <Text className="mb-2 text-sm text-gray-700 font-JakartaSemiBold">
                     Số tiền nhanh:
                   </Text>
@@ -146,7 +146,7 @@ const CashPaymentModal: React.FC<CashPaymentModalProps> = ({
                 </View>
 
                 {parseFloat(changeAmount) > 0 && (
-                  <View className="p-4 mt-3 bg-green-50 rounded-lg border border-green-200">
+                  <View className="p-4 mt-4 bg-green-50 rounded-lg border border-green-200">
                     <Text className="text-center text-green-700 font-JakartaSemiBold">
                       Tiền thừa: {Number(changeAmount).toLocaleString("vi-VN")}{" "}
                       VNĐ
@@ -155,7 +155,7 @@ const CashPaymentModal: React.FC<CashPaymentModalProps> = ({
                 )}
 
                 {parseFloat(paymentAmount) < parseFloat(amount) && (
-                  <View className="p-4 mt-3 bg-red-50 rounded-lg border border-red-200">
+                  <View className="p-4 mt-4 bg-red-50 rounded-lg border border-red-200">
                     <Text className="text-center text-red-700 font-JakartaSemiBold">
                       Thiếu:{" "}
                       {Number(

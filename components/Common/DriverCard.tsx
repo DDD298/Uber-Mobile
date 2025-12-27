@@ -18,7 +18,7 @@ const DriverCard = ({ item, selected, setSelected }: DriverCardProps) => {
         className="w-14 h-14 rounded-full"
       />
 
-      <View className="flex flex-col flex-1 justify-center items-start mx-3">
+      <View className="flex flex-col flex-1 justify-center items-start mx-4">
         <View className="flex flex-row justify-start items-center mb-1">
           <Text className="text-lg font-JakartaRegular">{item.title}</Text>
 
@@ -31,7 +31,7 @@ const DriverCard = ({ item, selected, setSelected }: DriverCardProps) => {
         <View className="flex flex-row justify-start items-center">
           <View className="flex flex-row items-center">
             <Text className="ml-1 text-sm font-JakartaRegular">
-              {Number(item.price).toLocaleString('vi-VN')} VNĐ
+              {Number(item.price).toLocaleString("vi-VN")} VNĐ
             </Text>
           </View>
 

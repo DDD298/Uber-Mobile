@@ -60,6 +60,7 @@
   },
   "ride": {
     "myRides": "Chuyến đi của tôi",
+    "trips": "chuyến",
     "noRidesFound": "Không tìm thấy chuyến đi nào",
     "rideHistory": "Lịch sử chuyến đi",
     "upcomingRides": "Chuyến đi sắp tới",

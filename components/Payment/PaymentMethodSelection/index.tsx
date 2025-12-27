@@ -27,7 +27,7 @@ const PaymentMethodSelection: React.FC<PaymentMethodSelectionProps> = ({
 
   return (
     <View className="my-4">
-      <Text className="mb-3 text-lg font-JakartaSemiBold">
+      <Text className="mb-4 text-lg font-JakartaSemiBold">
         Chọn phương thức thanh toán
       </Text>
 
@@ -38,7 +38,7 @@ const PaymentMethodSelection: React.FC<PaymentMethodSelectionProps> = ({
             <TouchableOpacity
               key={method.id}
               onPress={() => onPaymentMethodSelect(method.id)}
-              className={`flex flex-row items-center justify-center p-4 mb-3 rounded-lg border-2 w-[48%] ${
+              className={`flex flex-row items-center justify-center p-4 mb-4 rounded-lg border-2 w-[48%] ${
                 isSelected
                   ? "border-green-500 bg-green-50"
                   : "border-gray-200 bg-white"

@@ -151,7 +151,7 @@ const RideCard = ({ ride, onCancel }: RideCardProps) => {
             className="w-28 h-28 rounded-xl"
           />
 
-          <View className="flex-1 ml-3 justify-center">
+          <View className="flex-1 ml-4 justify-center">
             {/* Origin */}
             <View className="flex-row items-start mb-2">
               <Image source={icons.to} className="w-5 h-5 mr-2" />
@@ -200,7 +200,7 @@ const RideCard = ({ ride, onCancel }: RideCardProps) => {
                 uri:
                   driver.profile_image_url || "https://via.placeholder.com/40",
               }}
-              className="w-10 h-10 rounded-full mr-3"
+              className="w-10 h-10 rounded-full mr-4"
             />
             <View className="flex-1">
               <Text className="text-sm font-JakartaBold text-gray-900">
@@ -248,7 +248,7 @@ const RideCard = ({ ride, onCancel }: RideCardProps) => {
 
         {/* Additional Info for Cancelled Rides */}
         {(ride_status === "cancelled" || ride_status === "no_show") && (
-          <View className="mt-3 p-3 bg-red-50 rounded-xl">
+          <View className="mt-4 p-3 bg-red-50 rounded-xl">
             {cancelled_at && (
               <Text className="text-xs text-gray-600 font-JakartaMedium mb-1">
                 {t("ride.cancelledAt") || "Hủy lúc"}:{" "}
@@ -265,7 +265,7 @@ const RideCard = ({ ride, onCancel }: RideCardProps) => {
 
         {/* Action Buttons */}
         {ride_status === "in_progress" && (
-          <View className="mt-3 p-3 bg-purple-50 rounded-xl border border-purple-200">
+          <View className="mt-4 p-3 bg-purple-50 rounded-xl border border-purple-200">
             <View className="flex-row items-center justify-center">
               <Ionicons name="time-outline" size={16} color="#8B5CF6" />
               <Text className="text-sm text-purple-700 font-JakartaMedium ml-2">
@@ -279,7 +279,7 @@ const RideCard = ({ ride, onCancel }: RideCardProps) => {
         {checkCanCancelRide().canCancel && onCancel && (
           <TouchableOpacity
             onPress={handleCancel}
-            className="flex-row justify-center items-center py-3 mt-3 bg-red-50 rounded-xl border border-red-200"
+            className="flex-row justify-center items-center py-3 mt-4 bg-red-50 rounded-xl border border-red-200"
           >
             <Ionicons name="close-circle-outline" size={18} color="#EF4444" />
             <Text className="text-sm text-red-600 font-JakartaBold ml-2">
@@ -289,7 +289,7 @@ const RideCard = ({ ride, onCancel }: RideCardProps) => {
         )}
 
         {ride_status === "completed" && (
-          <View className="mt-3 p-3 bg-green-50 rounded-xl border border-green-300">
+          <View className="mt-4 p-3 bg-green-50 rounded-xl border border-green-300">
             <Text className="text-base text-green-600 font-JakartaMedium text-center">
               {t("ride.rideCompleted") || "Chuyến đã hoàn thành"}
             </Text>
