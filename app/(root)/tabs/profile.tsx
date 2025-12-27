@@ -1,8 +1,9 @@
 import { useUser } from "@clerk/clerk-expo";
-import { Image, ScrollView, Text, View } from "react-native";
+import { Image, ScrollView, Text, View, ImageBackground } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
 import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 
 import { LanguageSwitcher } from "@/components/Common/LanguageSwitcher";
 import CustomButton from "@/components/Common/CustomButton";
@@ -10,6 +11,18 @@ import CustomButton from "@/components/Common/CustomButton";
 export default function ProfileScreen() {
   const { user } = useUser();
   const { t } = useTranslation();
+
+  const userId = user?.id || "default";
+  const imageId =
+    parseInt(
+      userId
+        .split("")
+        .reduce((acc, char) => acc + char.charCodeAt(0), 0)
+        .toString()
+        .slice(0, 4)
+    ) % 1000;
+  const backgroundImageUrl = `https://picsum.photos/seed/${userId}/800/400`;
+
   return (
     <SafeAreaView className="flex-1">
       <ScrollView
@@ -20,15 +33,44 @@ export default function ProfileScreen() {
           {t("profile.profile")}
         </Text>
 
-        {/* Profile Image Section */}
-        <View className="flex justify-center items-center my-4">
-          <Image
-            source={{
-              uri: user?.externalAccounts[0]?.imageUrl ?? user?.imageUrl,
-            }}
-            style={{ width: 110, height: 110, borderRadius: 110 / 2 }}
-            className=" rounded-full h-[110px] w-[110px] border-[3px] border-white shadow-sm shadow-neutral-300"
-          />
+        {/* Profile Image Section with Background */}
+        <View className="relative overflow-hidden rounded-[24px] mb-6 shadow-lg shadow-neutral-400">
+          <ImageBackground
+            source={{ uri: backgroundImageUrl }}
+            style={{ width: "100%", height: 200 }}
+            imageStyle={{ borderRadius: 24 }}
+          >
+            <LinearGradient
+              colors={["rgba(0,0,0,0.3)", "rgba(0,0,0,0.6)"]}
+              style={{
+                position: "absolute",
+                left: 0,
+                right: 0,
+                top: 0,
+                bottom: 0,
+                borderRadius: 24,
+              }}
+            />
+            <View className="flex justify-center items-center h-full">
+              <Image
+                source={{
+                  uri: user?.externalAccounts[0]?.imageUrl ?? user?.imageUrl,
+                }}
+                style={{ width: 110, height: 110, borderRadius: 55 }}
+                className="border-4 border-white shadow-xl shadow-black/50"
+              />
+              <Text className="mt-3 text-xl font-JakartaBold text-white">
+                {user?.firstName && user?.lastName
+                  ? `${user.firstName} ${user.lastName}`
+                  : user?.firstName ||
+                    user?.lastName ||
+                    t("common.notProvided")}
+              </Text>
+              <Text className="mt-1 text-sm font-JakartaMedium text-white/80">
+                {user?.primaryEmailAddress?.emailAddress || ""}
+              </Text>
+            </View>
+          </ImageBackground>
         </View>
         {/* Profile Info Section */}
         <Text className="mb-4 text-xl font-JakartaBold">

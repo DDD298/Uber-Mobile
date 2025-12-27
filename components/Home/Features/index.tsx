@@ -1,10 +1,11 @@
 import { AntDesign, FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { FlatList, Text, View } from "react-native";
+import { useTranslation } from "react-i18next";
 
 interface FeatureItem {
   id: string;
-  title: string;
-  description: string;
+  titleKey: string;
+  descKey: string;
   icon: {
     name: string;
     size: number;
@@ -12,42 +13,6 @@ interface FeatureItem {
     library: "AntDesign" | "FontAwesome5" | "Ionicons";
   };
 }
-
-const featuresData: FeatureItem[] = [
-  {
-    id: "1",
-    title: "Đánh giá tài xế",
-    description: "Chia sẻ trải nghiệm của bạn",
-    icon: {
-      name: "star",
-      size: 24,
-      color: "white",
-      library: "AntDesign",
-    },
-  },
-  {
-    id: "2",
-    title: "Thanh toán linh hoạt",
-    description: "Tiền mặt, thẻ, ví điện tử",
-    icon: {
-      name: "credit-card",
-      size: 20,
-      color: "white",
-      library: "FontAwesome5",
-    },
-  },
-  {
-    id: "3",
-    title: "Hỗ trợ 24/7",
-    description: "Luôn sẵn sàng hỗ trợ bạn",
-    icon: {
-      name: "headset",
-      size: 24,
-      color: "white",
-      library: "Ionicons",
-    },
-  },
-];
 
 const renderIcon = (icon: FeatureItem["icon"]) => {
   const iconProps = {
@@ -68,7 +33,7 @@ const renderIcon = (icon: FeatureItem["icon"]) => {
   }
 };
 
-const FeatureItem = ({ item }: { item: FeatureItem }) => (
+const FeatureItem = ({ item, t }: { item: FeatureItem; t: any }) => (
   <View className="p-4 mb-4 rounded-xl bg-white/20">
     <View className="flex-row items-center">
       <View className="justify-center items-center mr-4 w-12 h-12 rounded-full bg-white/20">
@@ -76,9 +41,9 @@ const FeatureItem = ({ item }: { item: FeatureItem }) => (
       </View>
       <View className="flex-1 pl-3 border-l border-l-white/20">
         <Text className="text-lg text-white font-JakartaBold">
-          {item.title}
+          {t(item.titleKey)}
         </Text>
-        <Text className="text-sm text-white/80">{item.description}</Text>
+        <Text className="text-sm text-white/80">{t(item.descKey)}</Text>
       </View>
       <View
         className="w-12 h-12 bg-green-600 rounded-full"
@@ -91,14 +56,52 @@ const FeatureItem = ({ item }: { item: FeatureItem }) => (
 );
 
 export default function Features() {
+  const { t } = useTranslation();
+
+  const featuresData: FeatureItem[] = [
+    {
+      id: "1",
+      titleKey: "home.rateDriver",
+      descKey: "home.rateDriverDesc",
+      icon: {
+        name: "star",
+        size: 24,
+        color: "white",
+        library: "AntDesign",
+      },
+    },
+    {
+      id: "2",
+      titleKey: "home.flexiblePayment",
+      descKey: "home.flexiblePaymentDesc",
+      icon: {
+        name: "credit-card",
+        size: 20,
+        color: "white",
+        library: "FontAwesome5",
+      },
+    },
+    {
+      id: "3",
+      titleKey: "home.support247",
+      descKey: "home.support247Desc",
+      icon: {
+        name: "headset",
+        size: 24,
+        color: "white",
+        library: "Ionicons",
+      },
+    },
+  ];
+
   const renderFeatureItem = ({ item }: { item: FeatureItem }) => (
-    <FeatureItem item={item} />
+    <FeatureItem item={item} t={t} />
   );
 
   return (
     <View>
       <Text className="mb-4 text-xl text-white font-JakartaBold">
-        Tính năng
+        {t("home.features")}
       </Text>
       <FlatList
         data={featuresData}

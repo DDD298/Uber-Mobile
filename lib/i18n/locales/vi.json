@@ -40,7 +40,21 @@
     "greeting": "Xin chào",
     "goodMorning": "Chào buổi sáng",
     "goodAfternoon": "Chào buổi chiều",
-    "goodEvening": "Chào buổi tối"
+    "goodEvening": "Chào buổi tối",
+    "quickServices": "Dịch vụ nhanh",
+    "bookRide": "Đặt chuyến",
+    "history": "Lịch sử",
+    "features": "Tính năng",
+    "rateDriver": "Đánh giá tài xế",
+    "rateDriverDesc": "Chia sẻ trải nghiệm của bạn",
+    "flexiblePayment": "Thanh toán linh hoạt",
+    "flexiblePaymentDesc": "Tiền mặt, thẻ, ví điện tử",
+    "support247": "Hỗ trợ 24/7",
+    "support247Desc": "Luôn sẵn sàng hỗ trợ bạn",
+    "otherServices": "Dịch vụ khác",
+    "motorcycle": "Xe máy",
+    "premiumCar": "Xe cao cấp",
+    "delivery": "Giao hàng"
   },
   "booking": {
     "bookRide": "Đặt xe",
@@ -135,13 +149,18 @@
     "discount": "Giảm giá"
   },
   "chat": {
-    "chat": "Trò chuyện",
-    "messages": "Tin nhắn",
-    "typeMessage": "Nhập tin nhắn...",
-    "send": "Gửi",
-    "online": "Trực tuyến",
-    "offline": "Ngoại tuyến",
-    "typing": "đang nhập..."
+    "title": "Chat với Trợ lý MyApp",
+    "clearHistory": "Xóa lịch sử chat",
+    "confirmClear": "Bạn có chắc muốn xóa toàn bộ lịch sử chat?",
+    "welcomeMessage": "Xin chào! Tôi là AI Assistant của MyApp. Tôi có thể giúp bạn với thông tin chuyến đi, mẹo an toàn, hoặc kết nối với hỗ trợ khách hàng. Bạn cần hỗ trợ gì?",
+    "placeholder": "Nhập tin nhắn...",
+    "notification": "Thông báo",
+    "featureComingSoon": "Tính năng này sẽ được thêm vào sau",
+    "aiResponding": "AI đang phản hồi...",
+    "messageSent": "Tin nhắn đã gửi!",
+    "errorOccurred": "Có lỗi xảy ra. Vui lòng thử lại.",
+    "assistantTyping": "Trợ lý MyApp đang phản hồi...",
+    "you": "Bạn"
   },
   "errors": {
     "somethingWentWrong": "Đã xảy ra lỗi",

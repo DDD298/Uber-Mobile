@@ -40,7 +40,21 @@
     "greeting": "สวัสดี",
     "goodMorning": "สวัสดีตอนเช้า",
     "goodAfternoon": "สวัสดีตอนบ่าย",
-    "goodEvening": "สวัสดีตอนเย็น"
+    "goodEvening": "สวัสดีตอนเย็น",
+    "quickServices": "บริการด่วน",
+    "bookRide": "จองรถ",
+    "history": "ประวัติ",
+    "features": "คุณสมบัติ",
+    "rateDriver": "ให้คะแนนคนขับ",
+    "rateDriverDesc": "แบ่งปันประสบการณ์ของคุณ",
+    "flexiblePayment": "การชำระเงินที่ยืดหยุ่น",
+    "flexiblePaymentDesc": "เงินสด, บัตร, กระเป๋าเงินอิเล็กทรอนิกส์",
+    "support247": "สนับสนุน 24/7",
+    "support247Desc": "พร้อมช่วยเหลือทุกเมื่อ",
+    "otherServices": "บริการอื่นๆ",
+    "motorcycle": "รถจักรยานยนต์",
+    "premiumCar": "รถพรีเมียม",
+    "delivery": "จัดส่ง"
   },
   "booking": {
     "bookRide": "จองรถ",
@@ -135,13 +149,18 @@
     "discount": "ส่วนลด"
   },
   "chat": {
-    "chat": "แชท",
-    "messages": "ข้อความ",
-    "typeMessage": "พิมพ์ข้อความ...",
-    "send": "ส่ง",
-    "online": "ออนไลน์",
-    "offline": "ออฟไลน์",
-    "typing": "กำลังพิมพ์..."
+    "title": "แชทกับผู้ช่วย MyApp",
+    "clearHistory": "ลบประวัติการแชท",
+    "confirmClear": "คุณแน่ใจว่าต้องการลบประวัติการแชททั้งหมดหรือไม่?",
+    "welcomeMessage": "สวัสดี! ฉันคือผู้ช่วย AI ของ MyApp ฉันสามารถช่วยเหลือคุณเกี่ยวกับข้อมูลการเดินทาง คำแนะนำด้านความปลอดภัย หรือติดต่อกับฝ่ายสนับสนุนลูกค้า ฉันจะช่วยอะไรคุณได้บ้าง?",
+    "placeholder": "พิมพ์ข้อความ...",
+    "notification": "การแจ้งเตือน",
+    "featureComingSoon": "คุณสมบัตินี้จะเพิ่มในภายหลัง",
+    "aiResponding": "AI กำลังตอบกลับ...",
+    "messageSent": "ส่งข้อความแล้ว!",
+    "errorOccurred": "เกิดข้อผิดพลาด กรุณาลองอีกครั้ง",
+    "assistantTyping": "ผู้ช่วย MyApp กำลังตอบกลับ...",
+    "you": "คุณ"
   },
   "errors": {
     "somethingWentWrong": "เกิดข้อผิดพลาด",

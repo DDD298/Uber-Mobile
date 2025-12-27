@@ -1,5 +1,6 @@
 import { Image, View } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import { useTranslation } from "react-i18next";
 
 import { icons } from "@/constants";
 import { GoogleInputProps } from "@/types/type";
@@ -13,13 +14,15 @@ const GoogleTextInput = ({
   textInputBackgroundColor,
   handlePress,
 }: GoogleInputProps) => {
+  const { t } = useTranslation();
+
   return (
     <View
       className={`flex relative z-50 flex-row justify-center items-center rounded-xl border-0 bg-neutral-100 ${containerStyle}`}
     >
       <GooglePlacesAutocomplete
         fetchDetails={true}
-        placeholder="Tìm kiếm địa điểm"
+        placeholder={t("home.whereTo")}
         enablePoweredByContainer={false}
         debounce={200}
         styles={{
@@ -80,7 +83,7 @@ const GoogleTextInput = ({
         )}
         textInputProps={{
           placeholderTextColor: "gray",
-          placeholder: initialLocation ?? "Bạn muốn đi đâu?",
+          placeholder: initialLocation ?? t("home.whereTo"),
           numberOfLines: 1,
         }}
       />

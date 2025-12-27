@@ -40,7 +40,21 @@
     "greeting": "안녕하세요",
     "goodMorning": "좋은 아침입니다",
     "goodAfternoon": "좋은 오후입니다",
-    "goodEvening": "좋은 저녁입니다"
+    "goodEvening": "좋은 저녁입니다",
+    "quickServices": "빠른 서비스",
+    "bookRide": "예약하기",
+    "history": "기록",
+    "features": "기능",
+    "rateDriver": "기사 평가",
+    "rateDriverDesc": "경험 공유하기",
+    "flexiblePayment": "유연한 결제",
+    "flexiblePaymentDesc": "현금, 카드, 전자지갑",
+    "support247": "24/7 지원",
+    "support247Desc": "언제나 도와드립니다",
+    "otherServices": "기타 서비스",
+    "motorcycle": "오토바이",
+    "premiumCar": "프리미엄 차량",
+    "delivery": "배달"
   },
   "booking": {
     "bookRide": "차량 예약",
@@ -135,13 +149,18 @@
     "discount": "할인"
   },
   "chat": {
-    "chat": "채팅",
-    "messages": "메시지",
-    "typeMessage": "메시지 입력...",
-    "send": "전송",
-    "online": "온라인",
-    "offline": "오프라인",
-    "typing": "입력 중..."
+    "title": "MyApp 어시스턴트와 채팅",
+    "clearHistory": "채팅 기록 삭제",
+    "confirmClear": "모든 채팅 기록을 삭제하시겠습니까?",
+    "welcomeMessage": "안녕하세요! 저는 MyApp의 AI 어시스턴트입니다. 이용 정보, 안전 팁 또는 고객 지원을 도와드릴 수 있습니다. 무엇을 도와드릴까요?",
+    "placeholder": "메시지 입력...",
+    "notification": "알림",
+    "featureComingSoon": "이 기능은 추후 추가될 예정입니다",
+    "aiResponding": "AI가 응답하고 있습니다...",
+    "messageSent": "메시지가 전송되었습니다!",
+    "errorOccurred": "오류가 발생했습니다. 다시 시도해주세요.",
+    "assistantTyping": "MyApp 어시스턴트가 응답하고 있습니다...",
+    "you": "당신"
   },
   "errors": {
     "somethingWentWrong": "문제가 발생했습니다",

@@ -40,7 +40,21 @@
     "greeting": "Hello",
     "goodMorning": "Good Morning",
     "goodAfternoon": "Good Afternoon",
-    "goodEvening": "Good Evening"
+    "goodEvening": "Good Evening",
+    "quickServices": "Quick Services",
+    "bookRide": "Book Ride",
+    "history": "History",
+    "features": "Features",
+    "rateDriver": "Rate Driver",
+    "rateDriverDesc": "Share your experience",
+    "flexiblePayment": "Flexible Payment",
+    "flexiblePaymentDesc": "Cash, card, e-wallet",
+    "support247": "24/7 Support",
+    "support247Desc": "Always ready to help",
+    "otherServices": "Other Services",
+    "motorcycle": "Motorcycle",
+    "premiumCar": "Premium Car",
+    "delivery": "Delivery"
   },
   "booking": {
     "bookRide": "Book a Ride",
@@ -135,13 +149,18 @@
     "discount": "Discount"
   },
   "chat": {
-    "chat": "Chat",
-    "messages": "Messages",
-    "typeMessage": "Type a message...",
-    "send": "Send",
-    "online": "Online",
-    "offline": "Offline",
-    "typing": "typing..."
+    "title": "Chat with MyApp Assistant",
+    "clearHistory": "Clear chat history",
+    "confirmClear": "Are you sure you want to clear all chat history?",
+    "welcomeMessage": "Hello! I'm MyApp's AI Assistant. I can help you with ride information, safety tips, or connect you with customer support. How can I help you?",
+    "placeholder": "Type a message...",
+    "notification": "Notification",
+    "featureComingSoon": "This feature will be added later",
+    "aiResponding": "AI is responding...",
+    "messageSent": "Message sent!",
+    "errorOccurred": "An error occurred. Please try again.",
+    "assistantTyping": "MyApp Assistant is responding...",
+    "you": "You"
   },
   "errors": {
     "somethingWentWrong": "Something went wrong",

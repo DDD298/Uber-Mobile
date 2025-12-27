@@ -40,7 +40,21 @@
     "greeting": "你好",
     "goodMorning": "早上好",
     "goodAfternoon": "下午好",
-    "goodEvening": "晚上好"
+    "goodEvening": "晚上好",
+    "quickServices": "快速服务",
+    "bookRide": "预订行程",
+    "history": "历史记录",
+    "features": "功能特色",
+    "rateDriver": "评价司机",
+    "rateDriverDesc": "分享您的体验",
+    "flexiblePayment": "灵活支付",
+    "flexiblePaymentDesc": "现金、卡、电子钱包",
+    "support247": "24/7客服",
+    "support247Desc": "随时为您服务",
+    "otherServices": "其他服务",
+    "motorcycle": "摩托车",
+    "premiumCar": "豪华车",
+    "delivery": "送货"
   },
   "booking": {
     "bookRide": "预订行程",
@@ -135,13 +149,18 @@
     "discount": "折扣"
   },
   "chat": {
-    "chat": "聊天",
-    "messages": "消息",
-    "typeMessage": "输入消息...",
-    "send": "发送",
-    "online": "在线",
-    "offline": "离线",
-    "typing": "正在输入..."
+    "title": "与MyApp助手聊天",
+    "clearHistory": "清除聊天记录",
+    "confirmClear": "您确定要清除所有聊天记录吗？",
+    "welcomeMessage": "您好！我是MyApp的AI助手。我可以帮助您了解行程信息、安全提示或联系客服支持。我能帮您什么？",
+    "placeholder": "输入消息...",
+    "notification": "通知",
+    "featureComingSoon": "此功能将在后续添加",
+    "aiResponding": "AI正在回复...",
+    "messageSent": "消息已发送！",
+    "errorOccurred": "发生错误。请重试。",
+    "assistantTyping": "MyApp助手正在回复...",
+    "you": "您"
   },
   "errors": {
     "somethingWentWrong": "出错了",
