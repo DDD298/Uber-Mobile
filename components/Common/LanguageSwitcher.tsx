@@ -29,7 +29,6 @@ export const LanguageSwitcher: React.FC = () => {
     <View style={styles.container}>
       {languages.map((language, index) => {
         const isActive = currentLanguage === language.code;
-        const isLast = index === languages.length - 1;
         
         return (
           <TouchableOpacity
@@ -37,7 +36,6 @@ export const LanguageSwitcher: React.FC = () => {
             style={[
               styles.languageButton,
               isActive && styles.languageButtonActive,
-              !isLast && styles.languageButtonBorder,
             ]}
             onPress={() => changeLanguage(language.code)}
             activeOpacity={0.7}
@@ -46,10 +44,18 @@ export const LanguageSwitcher: React.FC = () => {
               <View style={styles.leftContent}>
                 <Text style={styles.flag}>{language.flag}</Text>
                 <View style={styles.textContainer}>
-                  <Text style={[styles.nativeName, isActive && styles.nativeNameActive]}>
+                  <Text style={[
+                    styles.nativeName, 
+                    isActive && styles.nativeNameActive
+                  ]}>
                     {language.nativeName}
                   </Text>
-                  <Text style={styles.englishName}>{language.name}</Text>
+                  <Text style={[
+                    styles.englishName,
+                    isActive && styles.englishNameActive
+                  ]}>
+                    {language.name}
+                  </Text>
                 </View>
               </View>
               {isActive && (
@@ -67,23 +73,17 @@ export const LanguageSwitcher: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-    overflow: 'hidden',
+    borderRadius: 16,
+    gap: 8,
   },
   languageButton: {
-    paddingVertical: 8,
+    paddingVertical: 16,
     paddingHorizontal: 16,
-    backgroundColor: '#fff',
+    backgroundColor: 'transparent',
+    borderRadius: 20,
   },
   languageButtonActive: {
-    backgroundColor: '#F0F4FF',
-  },
-  languageButtonBorder: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#F3F4F6',
+    backgroundColor: '#D1FAE5',
   },
   languageContent: {
     flexDirection: 'row',
@@ -96,8 +96,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   flag: {
-    fontSize: 28,
-    marginRight: 12,
+    fontSize: 32,
+    marginRight: 16,
   },
   textContainer: {
     flex: 1,
@@ -105,27 +105,30 @@ const styles = StyleSheet.create({
   nativeName: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#374151',
+    color: '#1F2937',
     marginBottom: 2,
   },
   nativeNameActive: {
-    color: '#667eea',
+    color: '#059669',
   },
   englishName: {
-    fontSize: 13,
+    fontSize: 14,
     color: '#9CA3AF',
   },
+  englishNameActive: {
+    color: '#10B981',
+  },
   checkmark: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: '#667eea',
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: '#10B981',
     alignItems: 'center',
     justifyContent: 'center',
   },
   checkmarkText: {
     color: '#fff',
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: '700',
   },
 });

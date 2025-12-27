@@ -15,7 +15,8 @@
     "done": "완료",
     "search": "검색",
     "filter": "필터",
-    "sort": "정렬"
+    "sort": "정렬",
+    "notProvided": "사용자가 제공하지 않음"
   },
   "auth": {
     "welcome": "환영합니다",
@@ -88,6 +89,8 @@
   },
   "profile": {
     "profile": "프로필",
+    "logout": "로그아웃",
+    "profileInfo": "개인 정보",
     "editProfile": "프로필 편집",
     "personalInfo": "개인 정보",
     "name": "이름",

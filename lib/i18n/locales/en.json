@@ -15,7 +15,8 @@
     "done": "Done",
     "search": "Search",
     "filter": "Filter",
-    "sort": "Sort"
+    "sort": "Sort",
+    "notProvided": "Not provided by user"
   },
   "auth": {
     "welcome": "Welcome",
@@ -88,6 +89,8 @@
   },
   "profile": {
     "profile": "Profile",
+    "logout": "Logout",
+    "profileInfo": "Profile Information",
     "editProfile": "Edit Profile",
     "personalInfo": "Personal Information",
     "name": "Name",

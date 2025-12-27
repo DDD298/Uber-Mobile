@@ -15,7 +15,8 @@
     "done": "完成",
     "search": "搜索",
     "filter": "筛选",
-    "sort": "排序"
+    "sort": "排序",
+    "notProvided": "用户未提供"
   },
   "auth": {
     "welcome": "欢迎",
@@ -88,6 +89,8 @@
   },
   "profile": {
     "profile": "个人资料",
+    "logout": "退出登录",
+    "profileInfo": "个人信息",
     "editProfile": "编辑资料",
     "personalInfo": "个人信息",
     "name": "姓名",

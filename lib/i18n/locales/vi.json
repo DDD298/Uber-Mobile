@@ -15,7 +15,8 @@
     "done": "Hoàn thành",
     "search": "Tìm kiếm",
     "filter": "Lọc",
-    "sort": "Sắp xếp"
+    "sort": "Sắp xếp",
+    "notProvided": "Người dùng chưa cung cấp"
   },
   "auth": {
     "welcome": "Chào mừng",
@@ -87,7 +88,9 @@
     "stars": "sao"
   },
   "profile": {
-    "profile": "Hồ sơ",
+    "profile": "Thông tin cá nhân",
+    "logout": "Đăng xuất",
+    "profileInfo": "Thông tin cá nhân",
     "editProfile": "Chỉnh sửa hồ sơ",
     "personalInfo": "Thông tin cá nhân",
     "name": "Họ tên",
