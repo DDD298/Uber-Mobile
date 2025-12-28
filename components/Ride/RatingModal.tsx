@@ -81,7 +81,11 @@ export const RatingModal: React.FC<RatingModalProps> = ({
   );
 
   const handleSubmit = async () => {
+    console.log("🎯 [RatingModal] ========== SUBMIT STARTED ==========");
+    console.log("⏰ [RatingModal] Timestamp:", new Date().toISOString());
+
     if (!user) {
+      console.log("❌ [RatingModal] No user found");
       showError(t("common.error"), t("rating.pleaseLogin"));
       return;
     }
@@ -95,7 +99,18 @@ export const RatingModal: React.FC<RatingModalProps> = ({
       comment: comment.trim() || null,
     };
 
+    console.log(
+      "📦 [RatingModal] Request Payload:",
+      JSON.stringify(requestPayload, null, 2)
+    );
+    console.log("🔗 [RatingModal] API Endpoint:", apiEndpoint);
+
     setLoading(true);
+    console.log("⏳ [RatingModal] Loading state set to TRUE");
+
+    const startTime = Date.now();
+    console.log("🚀 [RatingModal] API Call STARTED at:", startTime);
+
     try {
       const data = await fetchAPI(apiEndpoint, {
         method: "POST",
@@ -105,22 +120,67 @@ export const RatingModal: React.FC<RatingModalProps> = ({
         body: JSON.stringify(requestPayload),
       });
 
+      const endTime = Date.now();
+      const duration = endTime - startTime;
+      console.log("✅ [RatingModal] API Call COMPLETED at:", endTime);
+      console.log("⏱️  [RatingModal] API Duration:", duration, "ms");
+      console.log(
+        "📥 [RatingModal] API Response:",
+        JSON.stringify(data, null, 2)
+      );
+
       if (data.success) {
+        console.log("🎉 [RatingModal] Success! Showing success alert...");
+        const alertStartTime = Date.now();
+
         showSuccess(t("common.success"), t("rating.thankYou"), () => {
+          const alertEndTime = Date.now();
+          const alertDuration = alertEndTime - alertStartTime;
+          console.log("✨ [RatingModal] Alert callback executed");
+          console.log(
+            "⏱️  [RatingModal] Alert display duration:",
+            alertDuration,
+            "ms"
+          );
+          console.log("🔄 [RatingModal] Calling onClose and onRatingSubmitted");
           onClose();
           onRatingSubmitted?.();
         });
+
+        console.log(
+          "⏱️  [RatingModal] showSuccess called, waiting for alert to display..."
+        );
       } else {
+        console.log("⚠️  [RatingModal] API returned success=false");
+        console.log("❌ [RatingModal] Error message:", data.error);
         showError(t("common.error"), data.error || t("rating.cannotSubmit"));
       }
     } catch (error) {
+      const endTime = Date.now();
+      const duration = endTime - startTime;
+      console.log("💥 [RatingModal] API Call FAILED at:", endTime);
+      console.log("⏱️  [RatingModal] Failed after:", duration, "ms");
+
       const err = error as Error;
+      console.log("❌ [RatingModal] Error details:", {
+        name: err?.name,
+        message: err?.message,
+        stack: err?.stack,
+      });
+
       showError(
         t("common.error"),
         `${t("rating.submitError")}\n\nDebug: ${err?.message || "Unknown error"}`
       );
     } finally {
+      const finalTime = Date.now();
+      const totalDuration = finalTime - startTime;
+      console.log("🏁 [RatingModal] Finally block executed");
+      console.log("⏱️  [RatingModal] Total duration:", totalDuration, "ms");
+
       setLoading(false);
+      console.log("✅ [RatingModal] Loading state set to FALSE");
+      console.log("🎯 [RatingModal] ========== SUBMIT ENDED ==========\n");
     }
   };
 

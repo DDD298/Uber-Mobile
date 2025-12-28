@@ -17,19 +17,38 @@ export const useCustomAlert = () => {
   const [visible, setVisible] = useState(false);
 
   const showAlert = useCallback((config: AlertConfig) => {
+    console.log("🔔 [useCustomAlert] showAlert called");
+    console.log("📋 [useCustomAlert] Config:", JSON.stringify(config, null, 2));
+    const startTime = Date.now();
+    
     setAlertConfig(config);
+    console.log("✅ [useCustomAlert] Alert config set");
+    
     setVisible(true);
+    console.log("👁️  [useCustomAlert] Visible set to TRUE");
+    
+    const endTime = Date.now();
+    console.log("⏱️  [useCustomAlert] showAlert execution time:", endTime - startTime, "ms");
   }, []);
 
   const hideAlert = useCallback(() => {
+    console.log("🚫 [useCustomAlert] hideAlert called");
+    const startTime = Date.now();
+    
     setVisible(false);
+    console.log("👁️  [useCustomAlert] Visible set to FALSE");
+    
     setTimeout(() => {
       setAlertConfig(null);
+      const endTime = Date.now();
+      console.log("🗑️  [useCustomAlert] Alert config cleared after timeout");
+      console.log("⏱️  [useCustomAlert] hideAlert total time:", endTime - startTime, "ms");
     }, 300);
   }, []);
 
   // Convenience methods
   const showSuccess = useCallback((title: string, message: string, onPress?: () => void) => {
+    console.log("✅ [useCustomAlert] showSuccess called:", title);
     showAlert({
       type: 'success',
       title,
@@ -39,6 +58,7 @@ export const useCustomAlert = () => {
   }, [showAlert]);
 
   const showError = useCallback((title: string, message: string, onPress?: () => void) => {
+    console.log("❌ [useCustomAlert] showError called:", title);
     showAlert({
       type: 'error',
       title,

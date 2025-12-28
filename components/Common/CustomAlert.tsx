@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, TouchableOpacity, Image } from "react-native";
 import ReactNativeModal from "react-native-modal";
 import { Ionicons } from "@expo/vector-icons";
@@ -26,6 +26,23 @@ const CustomAlert: React.FC<CustomAlertProps> = ({
   buttons = [{ text: "OK", style: "default" }],
   onClose,
 }) => {
+  // Debug: Track component renders and visibility changes
+  useEffect(() => {
+    console.log("🎨 [CustomAlert] Component rendered");
+    console.log("👁️  [CustomAlert] Visible:", visible);
+    console.log("📝 [CustomAlert] Type:", type);
+    console.log("📌 [CustomAlert] Title:", title);
+  }, [visible, type, title]);
+
+  useEffect(() => {
+    if (visible) {
+      console.log("✨ [CustomAlert] Modal is now VISIBLE");
+      console.log("⏰ [CustomAlert] Timestamp:", new Date().toISOString());
+    } else {
+      console.log("🚫 [CustomAlert] Modal is now HIDDEN");
+    }
+  }, [visible]);
+
   const getTypeConfig = () => {
     switch (type) {
       case "success":
@@ -63,10 +80,18 @@ const CustomAlert: React.FC<CustomAlertProps> = ({
   const config = getTypeConfig();
 
   const handleButtonPress = (button: (typeof buttons)[0]) => {
+    console.log("🔘 [CustomAlert] Button pressed:", button.text);
+    console.log(
+      "⏰ [CustomAlert] Button press timestamp:",
+      new Date().toISOString()
+    );
+
     if (button.onPress) {
+      console.log("🎯 [CustomAlert] Executing button onPress callback");
       button.onPress();
     }
     if (onClose) {
+      console.log("🚪 [CustomAlert] Calling onClose");
       onClose();
     }
   };
