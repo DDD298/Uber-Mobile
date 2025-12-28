@@ -30,6 +30,8 @@
     "alreadyHaveAccount": "Already have an account?",
     "createAccount": "Create Account",
     "continueWithGoogle": "Continue with Google",
+    "signInWithGoogle": "Sign in with Google",
+    "or": "Or",
     "orContinueWith": "Or continue with"
   },
   "home": {

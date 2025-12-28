@@ -1,9 +1,10 @@
 import ChatHeader from "@/components/Chat/ChatHeader";
 import ChatInterface from "@/components/Chat/ChatInterface";
+import CustomAlert from "@/components/Common/CustomAlert";
+import { useCustomAlert } from "@/hooks/useCustomAlert";
 import { icons } from "@/constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from "react";
-import { Alert } from "react-native";
 import FlashMessage from "react-native-flash-message";
 import { IMessage, User } from "react-native-gifted-chat";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -24,6 +25,12 @@ const USER: User = {
 export default function ChatScreen() {
   const { t } = useTranslation();
   const [messages, setMessages] = useState<IMessage[]>([]);
+  const {
+    alertConfig,
+    visible: alertVisible,
+    hideAlert,
+    showInfo,
+  } = useCustomAlert();
 
   useEffect(() => {
     loadChatHistory();
@@ -68,7 +75,7 @@ export default function ChatScreen() {
   };
 
   const handleBackPress = () => {
-    Alert.alert(t("chat.notification"), t("chat.featureComingSoon"));
+    showInfo(t("chat.notification"), t("chat.featureComingSoon"));
   };
 
   const handleClearHistory = async () => {
@@ -89,6 +96,18 @@ export default function ChatScreen() {
       <ChatInterface messages={messages} setMessages={setMessages} />
 
       <FlashMessage position="top" />
+
+      {/* Custom Alert */}
+      {alertConfig && (
+        <CustomAlert
+          visible={alertVisible}
+          type={alertConfig.type}
+          title={alertConfig.title}
+          message={alertConfig.message}
+          buttons={alertConfig.buttons}
+          onClose={hideAlert}
+        />
+      )}
     </SafeAreaView>
   );
 }

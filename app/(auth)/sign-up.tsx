@@ -1,12 +1,14 @@
 import CustomButton from "@/components/Common/CustomButton";
 import InputField from "@/components/Common/InputField";
 import OAuth from "@/components/Common/OAuth";
+import CustomAlert from "@/components/Common/CustomAlert";
+import { useCustomAlert } from "@/hooks/useCustomAlert";
 import { icons, images } from "@/constants";
 import { fetchAPI } from "@/lib/fetch";
 import { useSignUp } from "@clerk/clerk-expo";
 import { Link, router } from "expo-router";
 import { useState } from "react";
-import { Alert, Image, ScrollView, Text, View } from "react-native";
+import { Image, ScrollView, Text, View } from "react-native";
 import ReactNativeModal from "react-native-modal";
 import { useTranslation } from "react-i18next";
 
@@ -14,6 +16,12 @@ const SignUp = () => {
   const { t } = useTranslation();
   const { isLoaded, signUp, setActive } = useSignUp();
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const {
+    alertConfig,
+    visible: alertVisible,
+    hideAlert,
+    showError,
+  } = useCustomAlert();
 
   const [form, setForm] = useState({
     name: "",
@@ -40,7 +48,7 @@ const SignUp = () => {
         state: "pending",
       });
     } catch (err: any) {
-      Alert.alert(t("common.error"), err.errors[0].longMessage);
+      showError(t("common.error"), err.errors[0].longMessage);
     }
   };
 
@@ -197,6 +205,18 @@ const SignUp = () => {
             />
           </View>
         </ReactNativeModal>
+
+        {/* Custom Alert */}
+        {alertConfig && (
+          <CustomAlert
+            visible={alertVisible}
+            type={alertConfig.type}
+            title={alertConfig.title}
+            message={alertConfig.message}
+            buttons={alertConfig.buttons}
+            onClose={hideAlert}
+          />
+        )}
       </View>
     </ScrollView>
   );

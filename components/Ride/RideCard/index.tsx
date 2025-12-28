@@ -4,9 +4,11 @@ import { formatDateVN, formatTimeVN } from "@/lib/utils";
 import { formatCurrencyByLanguage } from "@/lib/currency";
 import { Ride } from "@/types/type";
 import { Ionicons } from "@expo/vector-icons";
-import { Alert, Image, Text, TouchableOpacity, View } from "react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { RatingModal } from "@/components/Ride/RatingModal";
+import CustomAlert from "@/components/Common/CustomAlert";
+import { useCustomAlert } from "@/hooks/useCustomAlert";
 import { useState } from "react";
 
 interface RideCardProps {
@@ -18,6 +20,12 @@ interface RideCardProps {
 const RideCard = ({ ride, onCancel, onRatingSubmitted }: RideCardProps) => {
   const { t, i18n } = useTranslation();
   const [showRatingModal, setShowRatingModal] = useState(false);
+  const {
+    alertConfig,
+    visible: alertVisible,
+    hideAlert,
+    showConfirm,
+  } = useCustomAlert();
   const {
     destination_longitude,
     destination_latitude,
@@ -34,20 +42,10 @@ const RideCard = ({ ride, onCancel, onRatingSubmitted }: RideCardProps) => {
   } = ride;
 
   const handleCancel = () => {
-    Alert.alert(
+    showConfirm(
       t("ride.cancelRide"),
       t("ride.confirmCancel") || "Bạn có chắc chắn muốn hủy chuyến này?",
-      [
-        {
-          text: t("common.cancel"),
-          style: "cancel",
-        },
-        {
-          text: t("common.confirm"),
-          style: "destructive",
-          onPress: onCancel,
-        },
-      ]
+      onCancel
     );
   };
 
@@ -370,6 +368,18 @@ const RideCard = ({ ride, onCancel, onRatingSubmitted }: RideCardProps) => {
             setShowRatingModal(false);
             onRatingSubmitted?.();
           }}
+        />
+      )}
+
+      {/* Custom Alert */}
+      {alertConfig && (
+        <CustomAlert
+          visible={alertVisible}
+          type={alertConfig.type}
+          title={alertConfig.title}
+          message={alertConfig.message}
+          buttons={alertConfig.buttons}
+          onClose={hideAlert}
         />
       )}
     </View>

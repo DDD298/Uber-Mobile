@@ -30,6 +30,8 @@
     "alreadyHaveAccount": "已有账户？",
     "createAccount": "创建账户",
     "continueWithGoogle": "使用Google继续",
+    "signInWithGoogle": "使用Google登录",
+    "or": "或",
     "orContinueWith": "或继续使用"
   },
   "home": {
