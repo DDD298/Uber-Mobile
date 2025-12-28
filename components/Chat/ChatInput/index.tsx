@@ -88,7 +88,7 @@ export const renderSend = (props: any) => {
         marginRight: 10,
       }}
     >
-      <Ionicons name="send" size={18} color="white" />
+      <Ionicons name="send" size={20} color="white" />
     </Send>
   );
 };

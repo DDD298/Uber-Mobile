@@ -1,6 +1,7 @@
 import { icons } from "@/constants";
 import { canCancelRide } from "@/lib/ride-booking";
 import { formatDateVN, formatTimeVN } from "@/lib/utils";
+import { formatCurrencyByLanguage } from "@/lib/currency";
 import { Ride } from "@/types/type";
 import { Ionicons } from "@expo/vector-icons";
 import { Alert, Image, Text, TouchableOpacity, View } from "react-native";
@@ -15,7 +16,7 @@ interface RideCardProps {
 }
 
 const RideCard = ({ ride, onCancel, onRatingSubmitted }: RideCardProps) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [showRatingModal, setShowRatingModal] = useState(false);
   const {
     destination_longitude,
@@ -133,7 +134,7 @@ const RideCard = ({ ride, onCancel, onRatingSubmitted }: RideCardProps) => {
             style={{ marginRight: 4 }}
           />
           <Text
-            className="text-xs font-JakartaBold"
+            className="text-sm font-JakartaBold"
             style={{ color: statusInfo.color }}
           >
             {statusInfo.text}
@@ -167,7 +168,7 @@ const RideCard = ({ ride, onCancel, onRatingSubmitted }: RideCardProps) => {
                   {origin_address.split(",")[0]}
                 </Text>
                 <Text
-                  className="text-xs text-gray-500 font-JakartaMedium"
+                  className="text-sm text-gray-500 font-JakartaMedium"
                   numberOfLines={1}
                 >
                   {origin_address.split(",").slice(1).join(",")}
@@ -186,7 +187,7 @@ const RideCard = ({ ride, onCancel, onRatingSubmitted }: RideCardProps) => {
                   {destination_address.split(",")[0]}
                 </Text>
                 <Text
-                  className="text-xs text-gray-500 font-JakartaMedium"
+                  className="text-sm text-gray-500 font-JakartaMedium"
                   numberOfLines={1}
                 >
                   {destination_address.split(",").slice(1).join(",")}
@@ -211,13 +212,13 @@ const RideCard = ({ ride, onCancel, onRatingSubmitted }: RideCardProps) => {
                 {driver.first_name} {driver.last_name}
               </Text>
               <View className="flex-row items-center">
-                <Text className="text-xs text-gray-500 font-JakartaMedium mr-2">
+                <Text className="text-sm text-gray-500 font-JakartaMedium mr-2">
                   {driver.car_seats} {t("booking.seats")} •{" "}
                   {driver.vehicle_type || "Car"}
                 </Text>
                 <View className="flex-row items-center">
                   <Ionicons name="star" size={12} color="#FBBF24" />
-                  <Text className="text-xs text-gray-600 font-JakartaMedium ml-1">
+                  <Text className="text-sm text-gray-600 font-JakartaMedium ml-1">
                     {driver.rating || "5.0"}
                   </Text>
                 </View>
@@ -227,23 +228,23 @@ const RideCard = ({ ride, onCancel, onRatingSubmitted }: RideCardProps) => {
 
           <View className="items-end">
             <Text className="text-xl font-JakartaBold text-green-600">
-              ${Number(fare_price).toFixed(2)}
+              {formatCurrencyByLanguage(fare_price, i18n.language)}
             </Text>
             {payment_status === "paid" && (
               <View className="flex-row items-center mt-0.5">
-                <Text className="text-xs text-green-600 font-JakartaMedium mr-1">
+                <Text className="text-sm text-green-600 font-JakartaMedium mr-1">
                   {t("payment.paymentSuccessful")}
                 </Text>
                 <Ionicons name="checkmark-circle" size={12} color="#10B981" />
               </View>
             )}
             {payment_status === "pending" && (
-              <Text className="text-xs text-yellow-600 font-JakartaMedium mt-0.5">
+              <Text className="text-sm text-yellow-600 font-JakartaMedium mt-0.5">
                 {t("payment.pending") || "Chờ thanh toán"}
               </Text>
             )}
             {payment_status === "refunded" && (
-              <Text className="text-xs text-blue-600 font-JakartaMedium mt-0.5">
+              <Text className="text-sm text-blue-600 font-JakartaMedium mt-0.5">
                 {t("payment.refunded") || "Đã hoàn tiền"}
               </Text>
             )}
@@ -254,13 +255,13 @@ const RideCard = ({ ride, onCancel, onRatingSubmitted }: RideCardProps) => {
         {(ride_status === "cancelled" || ride_status === "no_show") && (
           <View className="mt-4 p-4 bg-red-50 rounded-xl">
             {cancelled_at && (
-              <Text className="text-xs text-gray-600 font-JakartaMedium mb-1">
+              <Text className="text-sm text-gray-600 font-JakartaMedium mb-1">
                 {t("ride.cancelledAt") || "Hủy lúc"}:{" "}
                 {formatDateVN(cancelled_at)}
               </Text>
             )}
             {cancel_reason && (
-              <Text className="text-xs text-red-600 font-JakartaMedium">
+              <Text className="text-sm text-red-600 font-JakartaMedium">
                 {t("ride.cancelReason") || "Lý do"}: {cancel_reason}
               </Text>
             )}
@@ -285,8 +286,8 @@ const RideCard = ({ ride, onCancel, onRatingSubmitted }: RideCardProps) => {
             onPress={handleCancel}
             className="flex-row justify-center items-center py-3 mt-4 bg-red-50 rounded-xl border border-red-200"
           >
-            <Ionicons name="close-circle-outline" size={18} color="#EF4444" />
-            <Text className="text-sm text-red-600 font-JakartaBold ml-2">
+            <Ionicons name="close-circle-outline" size={20} color="#EF4444" />
+            <Text className="text-base text-red-600 font-JakartaBold ml-2">
               {t("ride.cancelRide")}
             </Text>
           </TouchableOpacity>
@@ -309,7 +310,7 @@ const RideCard = ({ ride, onCancel, onRatingSubmitted }: RideCardProps) => {
                         name={
                           index < ride.rating!.stars ? "star" : "star-outline"
                         }
-                        size={18}
+                        size={20}
                         color={
                           index < ride.rating!.stars ? "#F59E0B" : "#D1D5DB"
                         }
@@ -325,7 +326,7 @@ const RideCard = ({ ride, onCancel, onRatingSubmitted }: RideCardProps) => {
                     "{ride.rating.comment}"
                   </Text>
                 )}
-                <Text className="text-xs font-Jakarta text-gray-400 mt-2">
+                <Text className="text-sm font-Jakarta text-gray-400 mt-2">
                   {formatDateVN(ride.rating.created_at)} •{" "}
                   {formatTimeVN(new Date(ride.rating.created_at).getTime())}
                 </Text>
@@ -358,6 +359,7 @@ const RideCard = ({ ride, onCancel, onRatingSubmitted }: RideCardProps) => {
           ride={{
             ride_id: Number(ride.ride_id) || 0,
             driver_id: Number(driver.driver_id || ride.driver_id) || 0,
+            fare_price: fare_price,
             driver: {
               first_name: driver.first_name,
               last_name: driver.last_name,

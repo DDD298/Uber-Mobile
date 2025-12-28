@@ -151,7 +151,11 @@
     "total": "ยอดรวม",
     "subtotal": "ยอดรวมย่อย",
     "tax": "ภาษี",
-    "discount": "ส่วนลด"
+    "discount": "ส่วนลด",
+    "selectPaymentMethod": "เลือกวิธีการชำระเงิน",
+    "creditCard": "บัตรเครดิต",
+    "cash": "เงินสด",
+    "qrCode": "คิวอาร์โค้ด"
   },
   "chat": {
     "title": "แชทกับผู้ช่วย MyApp",

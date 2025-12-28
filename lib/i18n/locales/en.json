@@ -152,7 +152,11 @@
     "total": "Total",
     "subtotal": "Subtotal",
     "tax": "Tax",
-    "discount": "Discount"
+    "discount": "Discount",
+    "selectPaymentMethod": "Select Payment Method",
+    "creditCard": "Credit Card",
+    "cash": "Cash",
+    "qrCode": "QR Code"
   },
   "chat": {
     "title": "Chat with MyApp Assistant",

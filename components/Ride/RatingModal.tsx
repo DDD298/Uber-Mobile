@@ -1,18 +1,12 @@
-import React, {
-  useState,
-  useRef,
-  useEffect,
-  useMemo,
-  useCallback,
-} from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import {
   View,
   Text,
   TextInput,
-  TouchableOpacity,
   Image,
-  ActivityIndicator,
-  Alert,
+  Keyboard,
+  Platform,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { StarRating } from "../Common/StarRating";
 import { useUser } from "@clerk/clerk-expo";
@@ -27,6 +21,7 @@ import { useTranslation } from "react-i18next";
 import { fetchAPI } from "@/lib/fetch";
 import CustomAlert from "../Common/CustomAlert";
 import { useCustomAlert } from "@/hooks/useCustomAlert";
+import { formatCurrencyByLanguage } from "@/lib/currency";
 
 interface RatingModalProps {
   visible: boolean;
@@ -34,6 +29,7 @@ interface RatingModalProps {
   ride: {
     ride_id: number;
     driver_id: number;
+    fare_price?: string | number; // Fare in VND from database
     driver: {
       first_name: string;
       last_name: string;
@@ -49,7 +45,7 @@ export const RatingModal: React.FC<RatingModalProps> = ({
   ride,
   onRatingSubmitted,
 }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { user } = useUser();
   const {
     alertConfig,
@@ -63,7 +59,6 @@ export const RatingModal: React.FC<RatingModalProps> = ({
   const [loading, setLoading] = useState(false);
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
-  // Control BottomSheetModal based on visible prop
   useEffect(() => {
     if (visible) {
       bottomSheetModalRef.current?.present();
@@ -72,7 +67,6 @@ export const RatingModal: React.FC<RatingModalProps> = ({
     }
   }, [visible]);
 
-  // Backdrop component with black overlay
   const renderBackdrop = useCallback(
     (props: BottomSheetBackdropProps) => (
       <BottomSheetBackdrop
@@ -132,10 +126,17 @@ export const RatingModal: React.FC<RatingModalProps> = ({
 
   const handleClose = () => {
     if (!loading) {
+      // Dismiss keyboard when closing
+      Keyboard.dismiss();
       setStars(5);
       setComment("");
       onClose();
     }
+  };
+
+  // Handle keyboard dismissal on iOS
+  const dismissKeyboard = () => {
+    Keyboard.dismiss();
   };
 
   return (
@@ -175,6 +176,14 @@ export const RatingModal: React.FC<RatingModalProps> = ({
           <Text className="text-base font-JakartaMedium text-gray-500">
             {t("rating.howWasYourTrip")}
           </Text>
+          {/* Display fare with proper currency conversion */}
+          {ride.fare_price && (
+            <View className="mt-2 px-4 py-2 bg-green-50 rounded-full">
+              <Text className="text-lg font-JakartaBold text-green-700">
+                {formatCurrencyByLanguage(ride.fare_price, i18n.language)}
+              </Text>
+            </View>
+          )}
         </View>
 
         {/* Star Rating */}
@@ -188,26 +197,31 @@ export const RatingModal: React.FC<RatingModalProps> = ({
         </View>
 
         {/* Comment Input */}
-        <View className="mb-4">
-          <Text className="text-base font-JakartaBold text-gray-700 mb-2">
-            {t("rating.leaveComment")}
-          </Text>
-          <TextInput
-            className="border border-gray-300 rounded-xl p-4 text-base font-Jakarta text-gray-800 min-h-[100px]"
-            placeholder={t("rating.shareExperience")}
-            placeholderTextColor="#9CA3AF"
-            multiline
-            numberOfLines={4}
-            value={comment}
-            onChangeText={setComment}
-            maxLength={500}
-            editable={!loading}
-            style={{ textAlignVertical: "top" }}
-          />
-          <Text className="text-xs font-JakartaMedium text-gray-400 text-right mt-1">
-            {comment.length}/500 {t("rating.characterLimit")}
-          </Text>
-        </View>
+        <TouchableWithoutFeedback onPress={dismissKeyboard}>
+          <View className="mb-4">
+            <Text className="text-base font-JakartaBold text-gray-700 mb-2">
+              {t("rating.leaveComment")}
+            </Text>
+            <TextInput
+              className="border border-gray-300 rounded-xl p-4 text-base font-Jakarta text-gray-800 min-h-[100px]"
+              placeholder={t("rating.shareExperience")}
+              placeholderTextColor="#9CA3AF"
+              multiline
+              numberOfLines={4}
+              value={comment}
+              onChangeText={setComment}
+              maxLength={500}
+              editable={!loading}
+              style={{ textAlignVertical: "top" }}
+              returnKeyType="done"
+              blurOnSubmit={true}
+              onSubmitEditing={dismissKeyboard}
+            />
+            <Text className="text-sm font-JakartaMedium text-gray-400 text-right mt-1">
+              {comment.length}/500 {t("rating.characterLimit")}
+            </Text>
+          </View>
+        </TouchableWithoutFeedback>
 
         <CustomButton
           title={t("rating.submitRating")}

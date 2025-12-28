@@ -59,7 +59,7 @@ const PaymentMethodSelection: React.FC<PaymentMethodSelectionProps> = ({
                 }`}
               >
                 {isSelected && (
-                  <Text className="text-xs font-bold text-white">✓</Text>
+                  <Text className="text-sm font-bold text-white">✓</Text>
                 )}
               </View>
             </TouchableOpacity>

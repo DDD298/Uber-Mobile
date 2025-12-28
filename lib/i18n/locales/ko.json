@@ -151,7 +151,11 @@
     "total": "합계",
     "subtotal": "소계",
     "tax": "세금",
-    "discount": "할인"
+    "discount": "할인",
+    "selectPaymentMethod": "결제 수단 선택",
+    "creditCard": "신용카드",
+    "cash": "현금",
+    "qrCode": "QR 코드"
   },
   "chat": {
     "title": "MyApp 어시스턴트와 채팅",

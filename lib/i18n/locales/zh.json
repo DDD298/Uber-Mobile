@@ -151,7 +151,11 @@
     "total": "总计",
     "subtotal": "小计",
     "tax": "税费",
-    "discount": "折扣"
+    "discount": "折扣",
+    "selectPaymentMethod": "选择支付方式",
+    "creditCard": "信用卡",
+    "cash": "现金",
+    "qrCode": "二维码"
   },
   "chat": {
     "title": "与MyApp助手聊天",
