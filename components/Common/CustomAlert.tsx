@@ -101,12 +101,27 @@ const CustomAlert: React.FC<CustomAlertProps> = ({
       isVisible={visible}
       onBackdropPress={onClose}
       onBackButtonPress={onClose}
-      animationIn="zoomIn"
-      animationOut="zoomOut"
+      animationIn="fadeIn"
+      animationOut="fadeOut"
+      animationInTiming={200}
+      animationOutTiming={150}
+      backdropTransitionInTiming={200}
+      backdropTransitionOutTiming={150}
       backdropOpacity={0.5}
       useNativeDriver
+      hideModalContentWhileAnimating
+      style={{ margin: 0, justifyContent: "center", alignItems: "center" }}
     >
-      <View className="bg-white rounded-3xl p-6 mx-4">
+      <View
+        className="bg-white rounded-3xl p-6 mx-4 w-[90%] max-w-md"
+        style={{
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.3,
+          shadowRadius: 8,
+          elevation: 8,
+        }}
+      >
         {/* Icon */}
         <View className="items-center mb-4">
           <View

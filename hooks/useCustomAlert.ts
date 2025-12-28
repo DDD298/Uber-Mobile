@@ -43,7 +43,7 @@ export const useCustomAlert = () => {
       const endTime = Date.now();
       console.log("🗑️  [useCustomAlert] Alert config cleared after timeout");
       console.log("⏱️  [useCustomAlert] hideAlert total time:", endTime - startTime, "ms");
-    }, 300);
+    }, 200); // Reduced from 300ms to match faster animation
   }, []);
 
   // Convenience methods
