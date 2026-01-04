@@ -1,9 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
-import { Text, TouchableOpacity, View } from "react-native";
-import CustomAlert from "@/components/Common/CustomAlert";
-import { useCustomAlert } from "@/hooks/useCustomAlert";
+import { Alert, Text, TouchableOpacity, View } from "react-native";
 import { useTranslation } from "react-i18next";
 
 interface ChatHeaderProps {
@@ -16,15 +14,19 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
   onClearHistory,
 }) => {
   const { t } = useTranslation();
-  const {
-    alertConfig,
-    visible: alertVisible,
-    hideAlert,
-    showConfirm,
-  } = useCustomAlert();
 
   const handleClearHistory = () => {
-    showConfirm(t("chat.clearHistory"), t("chat.confirmClear"), onClearHistory);
+    Alert.alert(t("chat.clearHistory"), t("chat.confirmClear"), [
+      {
+        text: t("common.cancel") || "Hủy",
+        style: "cancel",
+      },
+      {
+        text: t("common.confirm") || "Xác nhận",
+        onPress: onClearHistory,
+        style: "destructive",
+      },
+    ]);
   };
 
   return (
@@ -103,18 +105,6 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
       >
         <Ionicons name="trash-outline" size={20} color="white" />
       </TouchableOpacity>
-
-      {/* Custom Alert */}
-      {alertConfig && (
-        <CustomAlert
-          visible={alertVisible}
-          type={alertConfig.type}
-          title={alertConfig.title}
-          message={alertConfig.message}
-          buttons={alertConfig.buttons}
-          onClose={hideAlert}
-        />
-      )}
     </LinearGradient>
   );
 };

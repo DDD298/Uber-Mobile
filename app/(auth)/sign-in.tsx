@@ -1,24 +1,16 @@
 import CustomButton from "@/components/Common/CustomButton";
 import InputField from "@/components/Common/InputField";
 import OAuth from "@/components/Common/OAuth";
-import CustomAlert from "@/components/Common/CustomAlert";
-import { useCustomAlert } from "@/hooks/useCustomAlert";
 import { icons, images } from "@/constants";
 import { useSignIn } from "@clerk/clerk-expo";
 import { Link, router } from "expo-router";
 import { useCallback, useState } from "react";
-import { Image, ScrollView, Text, View } from "react-native";
+import { Alert, Image, ScrollView, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 
 const SignIn = () => {
   const { t } = useTranslation();
   const { signIn, setActive, isLoaded } = useSignIn();
-  const {
-    alertConfig,
-    visible: alertVisible,
-    hideAlert,
-    showError,
-  } = useCustomAlert();
 
   const [form, setForm] = useState({
     email: "",
@@ -38,10 +30,10 @@ const SignIn = () => {
         await setActive({ session: signInAttempt.createdSessionId });
         router.replace("/(root)/tabs/home");
       } else {
-        showError(t("common.error"), t("errors.tryAgain"));
+        Alert.alert(t("common.error"), t("errors.tryAgain"));
       }
     } catch (err: any) {
-      showError(t("common.error"), err.errors[0].longMessage);
+      Alert.alert(t("common.error"), err.errors[0].longMessage);
     }
   }, [isLoaded, form.email, form.password]);
 
@@ -91,18 +83,6 @@ const SignIn = () => {
             <Text className="text-primary-600">{t("auth.signUp")}</Text>
           </Link>
         </View>
-
-        {/* Custom Alert */}
-        {alertConfig && (
-          <CustomAlert
-            visible={alertVisible}
-            type={alertConfig.type}
-            title={alertConfig.title}
-            message={alertConfig.message}
-            buttons={alertConfig.buttons}
-            onClose={hideAlert}
-          />
-        )}
       </View>
     </ScrollView>
   );

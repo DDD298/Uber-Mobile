@@ -7,6 +7,7 @@ import {
   Keyboard,
   Platform,
   TouchableWithoutFeedback,
+  Alert,
 } from "react-native";
 import { StarRating } from "../Common/StarRating";
 import { useUser } from "@clerk/clerk-expo";
@@ -19,8 +20,6 @@ import {
 import CustomButton from "../Common/CustomButton";
 import { useTranslation } from "react-i18next";
 import { fetchAPI } from "@/lib/fetch";
-import CustomAlert from "../Common/CustomAlert";
-import { useCustomAlert } from "@/hooks/useCustomAlert";
 import { formatCurrencyByLanguage } from "@/lib/currency";
 
 interface RatingModalProps {
@@ -47,13 +46,6 @@ export const RatingModal: React.FC<RatingModalProps> = ({
 }) => {
   const { t, i18n } = useTranslation();
   const { user } = useUser();
-  const {
-    alertConfig,
-    visible: alertVisible,
-    hideAlert,
-    showSuccess,
-    showError,
-  } = useCustomAlert();
   const [stars, setStars] = useState(5);
   const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(false);
@@ -86,7 +78,7 @@ export const RatingModal: React.FC<RatingModalProps> = ({
 
     if (!user) {
       console.log("❌ [RatingModal] No user found");
-      showError(t("common.error"), t("rating.pleaseLogin"));
+      Alert.alert(t("common.error"), t("rating.pleaseLogin"));
       return;
     }
 
@@ -131,29 +123,23 @@ export const RatingModal: React.FC<RatingModalProps> = ({
 
       if (data.success) {
         console.log("🎉 [RatingModal] Success! Showing success alert...");
-        const alertStartTime = Date.now();
-
-        showSuccess(t("common.success"), t("rating.thankYou"), () => {
-          const alertEndTime = Date.now();
-          const alertDuration = alertEndTime - alertStartTime;
-          console.log("✨ [RatingModal] Alert callback executed");
-          console.log(
-            "⏱️  [RatingModal] Alert display duration:",
-            alertDuration,
-            "ms"
-          );
-          console.log("🔄 [RatingModal] Calling onClose and onRatingSubmitted");
-          onClose();
-          onRatingSubmitted?.();
-        });
-
-        console.log(
-          "⏱️  [RatingModal] showSuccess called, waiting for alert to display..."
-        );
+        Alert.alert(t("common.success"), t("rating.thankYou"), [
+          {
+            text: "OK",
+            onPress: () => {
+              console.log("✨ [RatingModal] Alert callback executed");
+              console.log(
+                "🔄 [RatingModal] Calling onClose and onRatingSubmitted"
+              );
+              onClose();
+              onRatingSubmitted?.();
+            },
+          },
+        ]);
       } else {
         console.log("⚠️  [RatingModal] API returned success=false");
         console.log("❌ [RatingModal] Error message:", data.error);
-        showError(t("common.error"), data.error || t("rating.cannotSubmit"));
+        Alert.alert(t("common.error"), data.error || t("rating.cannotSubmit"));
       }
     } catch (error) {
       const endTime = Date.now();
@@ -168,7 +154,7 @@ export const RatingModal: React.FC<RatingModalProps> = ({
         stack: err?.stack,
       });
 
-      showError(
+      Alert.alert(
         t("common.error"),
         `${t("rating.submitError")}\n\nDebug: ${err?.message || "Unknown error"}`
       );
@@ -289,18 +275,6 @@ export const RatingModal: React.FC<RatingModalProps> = ({
           disabled={loading}
         />
       </BottomSheetView>
-
-      {/* Custom Alert */}
-      {alertConfig && (
-        <CustomAlert
-          visible={alertVisible}
-          type={alertConfig.type}
-          title={alertConfig.title}
-          message={alertConfig.message}
-          buttons={alertConfig.buttons}
-          onClose={hideAlert}
-        />
-      )}
     </BottomSheetModal>
   );
 };

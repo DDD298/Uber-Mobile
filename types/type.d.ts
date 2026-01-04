@@ -181,3 +181,189 @@ declare interface DriverCardProps {
   selected: number;
   setSelected: () => void;
 }
+
+// Promo Code Types
+declare interface PromoCode {
+  id: number;
+  code: string;
+  description: string;
+  discount_type: 'percentage' | 'fixed_amount' | 'free_ride';
+  discount_value: number;
+  max_discount_amount?: number;
+  min_ride_amount: number;
+  max_uses?: number;
+  max_uses_per_user: number;
+  current_uses: number;
+  valid_from: string;
+  valid_until?: string;
+  user_type: 'all' | 'new_users' | 'existing_users';
+  is_active: boolean;
+  created_at: string;
+}
+
+declare interface PromoCodeUsage {
+  id: number;
+  promo_code_id: number;
+  user_id: string;
+  ride_id?: number;
+  original_amount: number;
+  discount_amount: number;
+  final_amount: number;
+  used_at: string;
+}
+
+declare interface PromoCodeData {
+  promo_code_id: number;
+  code: string;
+  discount_type: string;
+  discount_value: number;
+  original_amount: number;
+  discount_amount: number;
+  final_amount: number;
+}
+
+declare interface PromoStore {
+  appliedPromo: PromoCodeData | null;
+  availablePromos: PromoCode[];
+  isValidating: boolean;
+  setAppliedPromo: (promo: PromoCodeData | null) => void;
+  setAvailablePromos: (promos: PromoCode[]) => void;
+  setIsValidating: (isValidating: boolean) => void;
+  clearPromo: () => void;
+}
+
+// Driver Mode Types
+declare interface DriverProfile {
+  id: number;
+  clerk_id: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  phone: string;
+  profile_image_url?: string;
+  car_image_url?: string;
+  vehicle_type: "car" | "bike" | "suv";
+  car_seats: number;
+  license_number: string;
+  approval_status: "pending" | "approved" | "rejected" | "suspended";
+  status: "offline" | "online" | "on_ride" | "picking_up";
+  rating: number;
+  rating_count: number;
+  average_rating: number;
+  total_rides: number;
+  completed_rides: number;
+  cancelled_rides: number;
+  total_earnings: number;
+  current_latitude?: number;
+  current_longitude?: number;
+  last_location_update?: string;
+  warning_count: number;
+  created_at: string;
+  updated_at: string;
+}
+
+declare interface DriverDocument {
+  id: number;
+  driver_id: number;
+  document_type:
+    | "license"
+    | "registration"
+    | "insurance"
+    | "profile_photo"
+    | "vehicle_photo";
+  document_url: string;
+  status: "pending" | "approved" | "rejected";
+  uploaded_at: string;
+  reviewed_at?: string;
+  reviewed_by?: string;
+  rejection_reason?: string;
+}
+
+declare interface DriverEarnings {
+  total_earnings: number;
+  total_commission: number;
+  net_earnings: number;
+  total_rides: number;
+  earnings_by_date: {
+    date: string;
+    amount: number;
+    rides: number;
+  }[];
+}
+
+declare interface RideRequest {
+  ride_id: number;
+  user_id: string;
+  passenger_name: string;
+  passenger_phone: string;
+  pickup_address: string;
+  pickup_latitude: number;
+  pickup_longitude: number;
+  destination_address: string;
+  destination_latitude: number;
+  destination_longitude: number;
+  fare_price: number;
+  distance: number;
+  estimated_time: number;
+  created_at: string;
+}
+
+declare interface DriverModeStore {
+  // Driver info
+  driverProfile: DriverProfile | null;
+  isDriver: boolean;
+
+  // Driver status
+  driverStatus: "online" | "offline" | "on_ride" | "picking_up";
+  currentLocation: { latitude: number; longitude: number } | null;
+
+  // Active ride
+  activeRide: Ride | null;
+  rideRequests: RideRequest[];
+
+  // Earnings
+  todayEarnings: number;
+  weekEarnings: number;
+  monthEarnings: number;
+
+  // Actions
+  setDriverProfile: (profile: DriverProfile | null) => void;
+  updateDriverStatus: (status: string) => void;
+  updateLocation: (location: { latitude: number; longitude: number }) => void;
+  setActiveRide: (ride: Ride | null) => void;
+  addRideRequest: (request: RideRequest) => void;
+  removeRideRequest: (requestId: number) => void;
+  updateEarnings: (earnings: {
+    today: number;
+    week: number;
+    month: number;
+  }) => void;
+  clearDriverData: () => void;
+}
+
+// Ride Status Sync Types
+declare interface RideStatusEvent {
+  id: number;
+  ride_id: number;
+  old_status: string;
+  new_status: string;
+  changed_by: "driver" | "passenger" | "system";
+  changed_by_id: string;
+  event_type: "status_change" | "cancellation" | "completion";
+  metadata?: any;
+  created_at: string;
+}
+
+declare interface RideStatusSyncData {
+  ride_id: number;
+  current_status: string;
+  last_status_update: string;
+  status_updated_by?: string;
+  has_updates: boolean;
+  events: RideStatusEvent[];
+  driver_location?: {
+    latitude: number;
+    longitude: number;
+    updated_at: string;
+  };
+}
