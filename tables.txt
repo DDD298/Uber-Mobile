@@ -1,0 +1,50 @@
+1. drivers (10 columns)
+id - integer (Primary Key)
+first_name, last_name - character varying
+profile_image_url, car_image_url - text
+car_seats - integer
+rating - numeric
+vehicle_type - character varying (default: 'Car')
+rating_count - integer (default: 0)
+average_rating - numeric (default: 5.0)
+
+2. promo_codes (14 columns)
+id - integer (Primary Key)
+code - character varying (unique promo code)
+description - text
+discount_type, discount_value - character varying, numeric
+max_discount_amount, min_order_amount - numeric
+usage_limit, used_count - integer
+start_date, end_date - date
+is_active - boolean (default: true)
+created_at, updated_at - timestamp
+
+3. ratings (7 columns)
+id - integer (Primary Key)
+ride_id, driver_id - integer (Foreign Keys)
+user_id - character varying
+stars - integer
+comment - text
+created_at - timestamp
+
+4. rides (17 columns)
+ride_id - integer (Primary Key)
+origin_address, destination_address - character varying
+origin_latitude, origin_longitude - numeric
+destination_latitude, destination_longitude - numeric
+ride_time - integer
+fare_price - numeric
+payment_status - character varying
+driver_id - integer (Foreign Key)
+user_id - character varying
+payment_intent_id - character varying
+cancelled_at - timestamp
+cancel_reason - text
+ride_status - character varying (default: 'confirmed')
+created_at - timestamp
+
+5. users (4 columns)
+id - integer (Primary Key)
+name - character varying
+email - character varying
+clerk_id - character varying (Clerk authentication ID)

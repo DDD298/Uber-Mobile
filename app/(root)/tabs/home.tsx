@@ -4,6 +4,7 @@ import AdditionalServices from "@/components/Home/AdditionalServices";
 import Features from "@/components/Home/Features";
 import PolygonLuminary from "@/components/Home/PolygonLuminary";
 import QuickActions from "@/components/Home/QuickActions";
+import PromoSection from "@/components/Home/PromoSection";
 import { icons } from "@/constants";
 import { useLocationStore } from "@/store";
 import { useAuth, useUser } from "@clerk/clerk-expo";
