@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
-import Clipboard from "@react-native-clipboard/clipboard";
+import * as Clipboard from "expo-clipboard";
 
 import { fetchAPI } from "@/lib/fetch";
 import CustomButton from "@/components/Common/CustomButton";
@@ -39,9 +39,9 @@ export default function PromoDetailScreen() {
     }
   };
 
-  const copyToClipboard = () => {
+  const copyToClipboard = async () => {
     if (promo?.code) {
-      Clipboard.setString(promo.code);
+      await Clipboard.setStringAsync(promo.code);
       Alert.alert(t("common.success"), t("promo.codeCopied"));
     }
   };
@@ -114,18 +114,18 @@ export default function PromoDetailScreen() {
               <View className="w-16 h-16 bg-white/20 rounded-full items-center justify-center">
                 <Ionicons name="pricetag" size={32} color="white" />
               </View>
-              <Text className="text-5xl font-JakartaBold text-white">
+              <Text className="text-5xl font-JakartaBold text-neutral-200">
                 {formatDiscount()}
               </Text>
             </View>
 
             <View className="bg-white/20 px-4 py-2 rounded-full self-start mb-3">
-              <Text className="text-white font-JakartaBold text-lg tracking-wider">
+              <Text className="text-neutral-200 font-JakartaBold text-lg tracking-wider">
                 {promo.code}
               </Text>
             </View>
 
-            <Text className="text-white font-JakartaMedium text-base">
+            <Text className="text-neutral-200 font-JakartaMedium text-base">
               {promo.description}
             </Text>
           </LinearGradient>

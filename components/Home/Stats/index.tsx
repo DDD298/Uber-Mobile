@@ -4,7 +4,9 @@ import { Text, View } from "react-native";
 export default function Stats() {
   return (
     <View className="mb-4">
-      <Text className="mb-4 text-xl text-white font-JakartaBold">Thống kê</Text>
+      <Text className="mb-4 text-xl text-neutral-200 font-JakartaBold">
+        Thống kê
+      </Text>
       <View className="p-4 rounded-xl shadow-sm bg-white/20">
         <View className="flex-row justify-around">
           <View className="items-center">

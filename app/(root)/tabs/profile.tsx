@@ -101,14 +101,14 @@ export default function ProfileScreen() {
                 style={{ width: 110, height: 110, borderRadius: 55 }}
                 className="border-4 border-white shadow-xl shadow-black/50"
               />
-              <Text className="mt-3 text-xl font-JakartaBold text-white">
+              <Text className="mt-3 text-xl font-JakartaBold text-neutral-200">
                 {user?.firstName && user?.lastName
                   ? `${user.firstName} ${user.lastName}`
                   : user?.firstName ||
                     user?.lastName ||
                     t("common.notProvided")}
               </Text>
-              <Text className="mt-1 text-sm font-JakartaMedium text-white/80">
+              <Text className="mt-1 text-sm font-JakartaMedium text-neutral-200/80">
                 {user?.primaryEmailAddress?.emailAddress || ""}
               </Text>
             </View>

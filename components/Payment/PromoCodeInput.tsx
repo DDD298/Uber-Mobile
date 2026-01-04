@@ -126,7 +126,9 @@ const PromoCodeInput = ({
               {isValidating ? (
                 <ActivityIndicator color="white" size="small" />
               ) : (
-                <Text className="text-white font-JakartaSemiBold">Áp dụng</Text>
+                <Text className="text-neutral-200 font-JakartaSemiBold">
+                  Áp dụng
+                </Text>
               )}
             </TouchableOpacity>
           </View>

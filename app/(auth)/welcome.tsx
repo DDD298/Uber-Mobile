@@ -60,7 +60,7 @@ const Onboarding = () => {
         renderItem={({ item, index }) => (
           <View
             key={item.id}
-            className="flex justify-center items-center p-5"
+            className="flex justify-center items-center p-4"
             style={{ width: screenWidth }}
           >
             <Image

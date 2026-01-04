@@ -40,10 +40,10 @@ const FeatureItem = ({ item, t }: { item: FeatureItem; t: any }) => (
         {renderIcon(item.icon)}
       </View>
       <View className="flex-1 pl-3 border-l border-l-white/20">
-        <Text className="text-lg text-white font-JakartaBold">
+        <Text className="text-lg text-neutral-200 font-JakartaBold">
           {t(item.titleKey)}
         </Text>
-        <Text className="text-sm text-white/80">{t(item.descKey)}</Text>
+        <Text className="text-sm text-neutral-200/80">{t(item.descKey)}</Text>
       </View>
       <View
         className="w-12 h-12 bg-green-600 rounded-full"
@@ -100,7 +100,7 @@ export default function Features() {
 
   return (
     <View>
-      <Text className="mb-4 text-xl text-white font-JakartaBold">
+      <Text className="mb-4 text-xl text-neutral-200 font-JakartaBold">
         {t("home.features")}
       </Text>
       <FlatList

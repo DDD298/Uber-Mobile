@@ -115,7 +115,7 @@ const CashPaymentModal: React.FC<CashPaymentModalProps> = ({
                     }}
                     className="px-4 py-1 bg-green-500 rounded"
                   >
-                    <Text className="text-sm text-white font-JakartaSemiBold">
+                    <Text className="text-sm text-neutral-200 font-JakartaSemiBold">
                       +10k
                     </Text>
                   </TouchableOpacity>

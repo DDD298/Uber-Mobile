@@ -22,11 +22,9 @@ export default function PromoCard({ promo }: PromoCardProps) {
 
   const getGradientColors = (index: number): readonly [string, string] => {
     const gradients: readonly [string, string][] = [
-      ["#10B981", "#059669"], // Green
-      ["#3B82F6", "#2563EB"], // Blue
-      ["#F59E0B", "#D97706"], // Orange
-      ["#8B5CF6", "#7C3AED"], // Purple
-      ["#EF4444", "#DC2626"], // Red
+      ["#396f04", "#059669"], // Green1
+      ["#7dbd07", "#396f04"], // Green2
+      ["#0a2004", "#589507"], // Green3
     ];
     return gradients[index % gradients.length];
   };
@@ -51,7 +49,7 @@ export default function PromoCard({ promo }: PromoCardProps) {
     <TouchableOpacity
       activeOpacity={0.8}
       onPress={() => router.push(`/(root)/promo-detail?id=${promo.id}`)}
-      className="mr-4"
+      className="w-full px-1"
     >
       <LinearGradient
         colors={
@@ -59,15 +57,19 @@ export default function PromoCard({ promo }: PromoCardProps) {
         }
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
-        className="w-[280px] h-[140px] rounded-3xl p-5 shadow-lg shadow-black/20"
+        className="w-full min-h-[140px] h-fit rounded-xl p-4 shadow-lg shadow-black/20"
+        style={{ borderRadius: 16 }}
       >
         {/* Icon & Discount */}
         <View className="flex-row items-center justify-between mb-3">
-          <View className="flex-row items-center">
-            <View className="w-12 h-12 bg-white/20 rounded-full items-center justify-center">
+          <View className="flex-row items-center flex-1 pr-2">
+            <View className="w-12 h-12 bg-white/20 rounded-full items-center justify-center shrink-0">
               <Ionicons name="pricetag" size={24} color="white" />
             </View>
-            <Text className="ml-3 text-3xl font-JakartaBold text-white">
+            <Text
+              className="ml-3 text-3xl font-JakartaBold text-neutral-200 flex-1"
+              numberOfLines={1}
+            >
               {formatDiscount()}
             </Text>
           </View>
@@ -76,14 +78,14 @@ export default function PromoCard({ promo }: PromoCardProps) {
 
         {/* Code */}
         <View className="bg-white/20 px-3 py-1.5 rounded-full self-start mb-2">
-          <Text className="text-white font-JakartaBold text-sm tracking-wider">
+          <Text className="text-neutral-200 font-JakartaBold text-sm tracking-wider">
             {promo.code}
           </Text>
         </View>
 
         {/* Description */}
         <Text
-          className="text-white/90 font-JakartaMedium text-sm"
+          className="text-neutral-200/90 font-JakartaMedium text-base"
           numberOfLines={1}
         >
           {promo.description}
@@ -91,9 +93,9 @@ export default function PromoCard({ promo }: PromoCardProps) {
 
         {/* Footer */}
         {promo.end_date && (
-          <View className="absolute bottom-3 right-5 flex-row items-center">
+          <View className="flex-row items-center justify-end mt-2">
             <Ionicons name="time-outline" size={12} color="white" />
-            <Text className="ml-1 text-white/80 font-Jakarta text-xs">
+            <Text className="ml-1 text-neutral-200/80 font-Jakarta text-sm">
               {t("promo.until")} {formatEndDate()}
             </Text>
           </View>

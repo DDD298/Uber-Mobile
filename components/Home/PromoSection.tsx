@@ -1,11 +1,19 @@
-import { useEffect, useState, useRef } from "react";
-import { View, Text, FlatList, Dimensions } from "react-native";
+import { useEffect, useState, useRef, useCallback } from "react";
+import {
+  View,
+  Text,
+  Dimensions,
+  FlatList,
+  TouchableOpacity,
+} from "react-native";
 import { useTranslation } from "react-i18next";
+import { Ionicons } from "@expo/vector-icons";
 
 import PromoCard from "@/components/Promo/PromoCard";
 import { fetchAPI } from "@/lib/fetch";
 
 const { width } = Dimensions.get("window");
+const CARD_WIDTH = width - 40; // Width of the card container
 
 export default function PromoSection() {
   const { t } = useTranslation();
@@ -16,24 +24,6 @@ export default function PromoSection() {
   useEffect(() => {
     loadPromoCodes();
   }, []);
-
-  useEffect(() => {
-    // Auto scroll every 4 seconds
-    if (promoCodes.length > 1) {
-      const interval = setInterval(() => {
-        setCurrentIndex((prevIndex) => {
-          const nextIndex = (prevIndex + 1) % promoCodes.length;
-          flatListRef.current?.scrollToIndex({
-            index: nextIndex,
-            animated: true,
-          });
-          return nextIndex;
-        });
-      }, 4000);
-
-      return () => clearInterval(interval);
-    }
-  }, [promoCodes]);
 
   const loadPromoCodes = async () => {
     try {
@@ -49,51 +39,132 @@ export default function PromoSection() {
     }
   };
 
+  const scrollToIndex = (index: number) => {
+    console.log(
+      `[PromoSection] scrollToIndex: Attempting to scroll to index ${index}`
+    );
+    if (index >= 0 && index < promoCodes.length) {
+      // Update state immediately for UI feedback
+      setCurrentIndex(index);
+
+      try {
+        flatListRef.current?.scrollToIndex({
+          index,
+          animated: true,
+        });
+      } catch (error) {
+        console.error("[PromoSection] scrollToIndex Error:", error);
+      }
+    } else {
+      console.warn(
+        `[PromoSection] scrollToIndex: Invalid index ${index}. Total items: ${promoCodes.length}`
+      );
+    }
+  };
+
+  const handleNext = () => {
+    if (promoCodes.length === 0) return;
+    const nextIndex = (currentIndex + 1) % promoCodes.length;
+    console.log(
+      `[PromoSection] handleNext: Current ${currentIndex} -> Next ${nextIndex}`
+    );
+    scrollToIndex(nextIndex);
+  };
+
+  const handlePrev = () => {
+    if (promoCodes.length === 0) return;
+    let prevIndex = currentIndex - 1;
+    if (prevIndex < 0) prevIndex = promoCodes.length - 1;
+    console.log(
+      `[PromoSection] handlePrev: Current ${currentIndex} -> Prev ${prevIndex}`
+    );
+    scrollToIndex(prevIndex);
+  };
+
+  // Called when manual scroll manually updates
+  const onMomentumScrollEnd = (event: any) => {
+    const newIndex = Math.round(event.nativeEvent.contentOffset.x / CARD_WIDTH);
+    console.log(
+      `[PromoSection] onMomentumScrollEnd: Scrolled to index ${newIndex}`
+    );
+    setCurrentIndex(newIndex);
+  };
+
   if (promoCodes.length === 0) {
     return null;
   }
 
   return (
     <View className="mb-6">
-      <Text className="mb-3 text-lg font-JakartaBold text-white">
-        {t("promo.availablePromoCodes")}
-      </Text>
+      <View className="flex-row justify-between items-center mb-3 pr-2">
+        <Text className="text-lg font-JakartaBold text-neutral-200">
+          {t("promo.availablePromoCodes")}
+        </Text>
 
-      <FlatList
-        ref={flatListRef}
-        data={promoCodes}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        pagingEnabled={false}
-        snapToInterval={width - 80}
-        decelerationRate="fast"
-        contentContainerStyle={{ paddingRight: 16 }}
-        renderItem={({ item }) => <PromoCard promo={item} />}
-        keyExtractor={(item: any) => item.id.toString()}
-        onScrollToIndexFailed={(info) => {
-          const wait = new Promise((resolve) => setTimeout(resolve, 500));
-          wait.then(() => {
-            flatListRef.current?.scrollToIndex({
-              index: info.index,
-              animated: true,
+        {/* Navigation Buttons (Top Right) */}
+        {promoCodes.length > 1 && (
+          <View className="flex-row gap-2">
+            <TouchableOpacity
+              onPress={handlePrev}
+              className="w-8 h-8 rounded-full bg-white/20 items-center justify-center active:bg-white/30"
+            >
+              <Ionicons name="chevron-back" size={18} color="white" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={handleNext}
+              className="w-8 h-8 rounded-full bg-white/20 items-center justify-center active:bg-white/30"
+            >
+              <Ionicons name="chevron-forward" size={18} color="white" />
+            </TouchableOpacity>
+          </View>
+        )}
+      </View>
+
+      <View className="h-[160px]">
+        <FlatList
+          ref={flatListRef}
+          data={promoCodes}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={(item: any) => item.id.toString()}
+          renderItem={({ item }) => (
+            <View style={{ width: CARD_WIDTH }}>
+              <PromoCard promo={item} />
+            </View>
+          )}
+          snapToInterval={CARD_WIDTH}
+          decelerationRate="fast"
+          onMomentumScrollEnd={onMomentumScrollEnd}
+          getItemLayout={(data, index) => ({
+            length: CARD_WIDTH,
+            offset: CARD_WIDTH * index,
+            index,
+          })}
+          onScrollToIndexFailed={(info) => {
+            console.warn("[PromoSection] Scroll to index failed:", info);
+            // Fallback: wait a bit and retry
+            const wait = new Promise((resolve) => setTimeout(resolve, 500));
+            wait.then(() => {
+              flatListRef.current?.scrollToIndex({
+                index: info.index,
+                animated: true,
+              });
             });
-          });
-        }}
-      />
+          }}
+        />
 
-      {/* Pagination Dots */}
-      {promoCodes.length > 1 && (
-        <View className="flex-row justify-center mt-3">
+        {/* Pagination Dots */}
+        <View className="absolute bottom-0 w-full flex-row justify-center pb-2 pointer-events-none">
           {promoCodes.map((_, index) => (
             <View
               key={index}
               className={`w-2 h-2 rounded-full mx-1 ${
-                index === currentIndex ? "bg-white" : "bg-white/30"
+                index === currentIndex ? "bg-white w-4" : "bg-white/30"
               }`}
             />
           ))}
         </View>
-      )}
+      </View>
     </View>
   );
 }

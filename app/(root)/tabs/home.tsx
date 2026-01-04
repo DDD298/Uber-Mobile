@@ -201,7 +201,6 @@ export default function HomeScreen() {
               </View>
 
               <View className="pb-10">
-                <PromoSection />
                 <QuickActions />
                 <Features />
                 <AdditionalServices />

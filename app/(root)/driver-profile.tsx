@@ -157,15 +157,15 @@ export default function DriverProfileScreen() {
                 className="w-20 h-20 rounded-full border-4 border-white"
               />
               <View className="flex-1 ml-4">
-                <Text className="text-2xl font-JakartaBold text-white">
+                <Text className="text-2xl font-JakartaBold text-neutral-200">
                   {driverProfile.first_name} {driverProfile.last_name}
                 </Text>
                 <View className="flex-row items-center mt-1">
                   <Ionicons name="star" size={16} color="#FCD34D" />
-                  <Text className="ml-1 text-white font-JakartaBold">
+                  <Text className="ml-1 text-neutral-200 font-JakartaBold">
                     {driverProfile.average_rating.toFixed(1)}
                   </Text>
-                  <Text className="ml-1 text-white/80 font-JakartaMedium text-sm">
+                  <Text className="ml-1 text-neutral-200/80 font-JakartaMedium text-sm">
                     ({driverProfile.rating_count} {t("rating.ratings")})
                   </Text>
                 </View>
