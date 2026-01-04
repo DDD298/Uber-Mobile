@@ -25,7 +25,7 @@ const FindRide = () => {
           onPress={() => router.back()}
           className="w-10 h-10 items-center justify-center rounded-full bg-white border border-gray-200 mr-4"
         >
-          <Ionicons name="chevron-back" size={24} color="#000" />
+          <Ionicons name="chevron-back" size={20} color="#000" />
         </TouchableOpacity>
         <Text className="text-xl font-JakartaBold">
           {t("booking.findRide")}

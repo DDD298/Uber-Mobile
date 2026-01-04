@@ -132,7 +132,7 @@ export default function DriverProfileScreen() {
             onPress={() => router.back()}
             className="w-10 h-10 items-center justify-center bg-neutral-100 rounded-full mb-4"
           >
-            <Ionicons name="arrow-back" size={24} color="#000" />
+            <Ionicons name="arrow-back" size={20} color="#000" />
           </TouchableOpacity>
           <Text className="text-2xl font-JakartaBold">
             {t("driver.driverProfile")}
@@ -145,7 +145,7 @@ export default function DriverProfileScreen() {
             colors={["#10B981", "#059669"]}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
-            className="p-6"
+            className="p-4"
           >
             <View className="flex-row items-center">
               <Image
@@ -197,7 +197,7 @@ export default function DriverProfileScreen() {
           <View className="flex-row flex-wrap p-4">
             <View className="w-1/2 p-2">
               <View className="bg-blue-50 p-4 rounded-2xl">
-                <Ionicons name="car-outline" size={24} color="#3B82F6" />
+                <Ionicons name="car-outline" size={20} color="#3B82F6" />
                 <Text className="mt-2 text-2xl font-JakartaBold text-blue-900">
                   {driverProfile.completed_rides}
                 </Text>
@@ -209,7 +209,7 @@ export default function DriverProfileScreen() {
 
             <View className="w-1/2 p-2">
               <View className="bg-green-50 p-4 rounded-2xl">
-                <Ionicons name="cash-outline" size={24} color="#10B981" />
+                <Ionicons name="cash-outline" size={20} color="#10B981" />
                 <Text className="mt-2 text-2xl font-JakartaBold text-green-900">
                   {formatCurrencyByLanguage(
                     driverProfile.total_earnings,
@@ -224,7 +224,7 @@ export default function DriverProfileScreen() {
 
             <View className="w-1/2 p-2">
               <View className="bg-purple-50 p-4 rounded-2xl">
-                <Ionicons name="calendar-outline" size={24} color="#8B5CF6" />
+                <Ionicons name="calendar-outline" size={20} color="#8B5CF6" />
                 <Text className="mt-2 text-2xl font-JakartaBold text-purple-900">
                   {stats.recent_rides}
                 </Text>
@@ -238,7 +238,7 @@ export default function DriverProfileScreen() {
               <View className="bg-orange-50 p-4 rounded-2xl">
                 <Ionicons
                   name="trending-up-outline"
-                  size={24}
+                  size={20}
                   color="#F97316"
                 />
                 <Text className="mt-2 text-2xl font-JakartaBold text-orange-900">
@@ -256,7 +256,7 @@ export default function DriverProfileScreen() {
         </View>
 
         {/* Vehicle Info */}
-        <View className="mx-4 mt-4 bg-white rounded-3xl shadow-sm shadow-neutral-300 p-6">
+        <View className="mx-4 mt-4 bg-white rounded-3xl shadow-sm shadow-neutral-300 p-4">
           <Text className="text-lg font-JakartaBold mb-4">
             {t("driver.vehicleInfo")}
           </Text>
@@ -315,7 +315,7 @@ export default function DriverProfileScreen() {
         </View>
 
         {/* Contact Info */}
-        <View className="mx-4 mt-4 mb-6 bg-white rounded-3xl shadow-sm shadow-neutral-300 p-6">
+        <View className="mx-4 mt-4 mb-6 bg-white rounded-3xl shadow-sm shadow-neutral-300 p-4">
           <Text className="text-lg font-JakartaBold mb-4">
             {t("driver.contactInfo")}
           </Text>

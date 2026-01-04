@@ -48,7 +48,7 @@ const CashPaymentModal: React.FC<CashPaymentModalProps> = ({
         }}
       >
         <Animated.View
-          className="flex flex-col justify-center items-center p-6 mx-4 w-11/12 bg-white rounded-2xl"
+          className="flex flex-col justify-center items-center p-4 mx-4 w-11/12 bg-white rounded-2xl"
           style={{
             transform: [{ scale: scaleAnim }],
           }}

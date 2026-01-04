@@ -185,10 +185,10 @@ export default function ProfileScreen() {
             <Text className="mb-4 text-xl font-JakartaBold">
               {t("driver.driverMode")}
             </Text>
-            <View className="flex flex-col p-6 mb-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-[24px] shadow-sm shadow-neutral-300 border border-green-200">
+            <View className="flex flex-col p-4 mb-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-[24px] shadow-sm shadow-neutral-300 border border-green-200">
               <View className="flex-row items-center mb-4">
                 <View className="w-12 h-12 items-center justify-center bg-green-500 rounded-full mr-4">
-                  <Ionicons name="car-sport" size={24} color="white" />
+                  <Ionicons name="car-sport" size={20} color="white" />
                 </View>
                 <View className="flex-1">
                   <Text className="text-lg font-JakartaBold text-gray-900">

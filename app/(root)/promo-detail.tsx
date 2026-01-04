@@ -4,9 +4,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
 import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
-import { LinearGradient } from "expo-linear-gradient";
 import * as Clipboard from "expo-clipboard";
-
+import PromoCard from "@/components/Promo/PromoCard";
 import { fetchAPI } from "@/lib/fetch";
 import CustomButton from "@/components/Common/CustomButton";
 
@@ -46,17 +45,6 @@ export default function PromoDetailScreen() {
     }
   };
 
-  const formatDiscount = () => {
-    if (!promo) return "";
-    if (promo.discount_type === "percentage") {
-      return `${promo.discount_value}%`;
-    } else if (promo.discount_type === "fixed_amount") {
-      return `${promo.discount_value.toLocaleString()}₫`;
-    } else {
-      return t("promo.freeRide");
-    }
-  };
-
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString(i18n.language === "vi" ? "vi-VN" : "en-US", {
@@ -87,154 +75,101 @@ export default function PromoDetailScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50">
+    <SafeAreaView className="flex-1">
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         {/* Header */}
-        <View className="px-4 py-4 bg-white">
+        <View className="flex-row items-center p-4 border-b !border-b-gray-200">
           <TouchableOpacity
             onPress={() => router.back()}
-            className="w-10 h-10 items-center justify-center bg-neutral-100 rounded-full mb-4"
+            className="w-10 h-10 items-center justify-center rounded-full bg-white border border-gray-200 mr-4"
           >
-            <Ionicons name="arrow-back" size={24} color="#000" />
+            <Ionicons name="chevron-back" size={20} color="#000" />
           </TouchableOpacity>
-          <Text className="text-2xl font-JakartaBold">
+          <Text className="text-xl font-JakartaBold">
             {t("promo.promoDetail")}
           </Text>
         </View>
 
         {/* Promo Card */}
         <View className="mx-4 mt-4">
-          <LinearGradient
-            colors={["#10B981", "#059669"]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            className="rounded-3xl p-6 shadow-lg shadow-black/20"
-          >
-            <View className="flex-row items-center justify-between mb-4">
-              <View className="w-16 h-16 bg-white/20 rounded-full items-center justify-center">
-                <Ionicons name="pricetag" size={32} color="white" />
-              </View>
-              <Text className="text-5xl font-JakartaBold text-neutral-200">
-                {formatDiscount()}
-              </Text>
-            </View>
-
-            <View className="bg-white/20 px-4 py-2 rounded-full self-start mb-3">
-              <Text className="text-neutral-200 font-JakartaBold text-lg tracking-wider">
-                {promo.code}
-              </Text>
-            </View>
-
-            <Text className="text-neutral-200 font-JakartaMedium text-base">
-              {promo.description}
-            </Text>
-          </LinearGradient>
+          <PromoCard promo={promo} />
         </View>
 
-        {/* Details */}
-        <View className="mx-4 mt-4 bg-white rounded-3xl shadow-sm shadow-neutral-300 p-6">
-          <Text className="text-lg font-JakartaBold mb-4">
+        {/* Promo Details */}
+        <View className="mx-4 mt-4 bg-white rounded-3xl shadow-sm shadow-neutral-300 p-4">
+          <Text className="text-xl font-JakartaBold mb-4">
             {t("promo.details")}
           </Text>
 
-          {/* Discount Type */}
-          <View className="flex-row items-center py-3 border-b border-gray-100">
-            <View className="w-10 h-10 items-center justify-center bg-green-50 rounded-full">
-              <Ionicons name="gift-outline" size={20} color="#10B981" />
-            </View>
-            <View className="flex-1 ml-3">
-              <Text className="text-sm text-gray-500 font-JakartaMedium">
-                {t("promo.discountType")}
-              </Text>
-              <Text className="text-base font-JakartaBold text-gray-900">
-                {promo.discount_type === "percentage"
+          {[
+            {
+              icon: "gift-outline",
+              label: t("promo.discountType"),
+              value:
+                promo.discount_type === "percentage"
                   ? t("promo.percentage")
                   : promo.discount_type === "fixed_amount"
                     ? t("promo.fixedAmount")
-                    : t("promo.freeRide")}
-              </Text>
-            </View>
-          </View>
-
-          {/* Min Order Amount */}
-          {promo.min_order_amount && (
-            <View className="flex-row items-center py-3 border-b border-gray-100">
-              <View className="w-10 h-10 items-center justify-center bg-green-50 rounded-full">
-                <Ionicons name="cash-outline" size={20} color="#10B981" />
+                    : t("promo.freeRide"),
+            },
+            promo.min_order_amount && {
+              icon: "cash-outline",
+              label: t("promo.minOrderAmount"),
+              value: `${promo.min_order_amount.toLocaleString()}₫`,
+            },
+            promo.max_discount_amount && {
+              icon: "trending-down-outline",
+              label: t("promo.maxDiscount"),
+              value: `${promo.max_discount_amount.toLocaleString()}₫`,
+            },
+            {
+              icon: "calendar-outline",
+              label: t("promo.validPeriod"),
+              value: `${formatDate(promo.start_date)}${
+                promo.end_date ? ` - ${formatDate(promo.end_date)}` : ""
+              }`,
+            },
+            promo.usage_limit && {
+              icon: "people-outline",
+              label: t("promo.usage"),
+              value: `${promo.used_count} / ${promo.usage_limit}`,
+            },
+          ]
+            .filter(Boolean)
+            .map((item: any, index, array) => (
+              <View
+                key={index}
+                className={`flex-row items-center py-3 ${
+                  index < array.length - 1 ? "border-b border-gray-100" : ""
+                }`}
+              >
+                <View className="w-12 h-12 items-center justify-center bg-green-50 rounded-full">
+                  <Ionicons name={item.icon} size={20} color="#10B981" />
+                </View>
+                <View className="flex-1 ml-3">
+                  <Text className="text-sm text-gray-500 font-JakartaMedium">
+                    {item.label}
+                  </Text>
+                  <Text className="text-base font-JakartaBold text-gray-900">
+                    {item.value}
+                  </Text>
+                </View>
               </View>
-              <View className="flex-1 ml-3">
-                <Text className="text-sm text-gray-500 font-JakartaMedium">
-                  {t("promo.minOrderAmount")}
-                </Text>
-                <Text className="text-base font-JakartaBold text-gray-900">
-                  {promo.min_order_amount.toLocaleString()}₫
-                </Text>
-              </View>
-            </View>
-          )}
-
-          {/* Max Discount */}
-          {promo.max_discount_amount && (
-            <View className="flex-row items-center py-3 border-b border-gray-100">
-              <View className="w-10 h-10 items-center justify-center bg-green-50 rounded-full">
-                <Ionicons
-                  name="trending-down-outline"
-                  size={20}
-                  color="#10B981"
-                />
-              </View>
-              <View className="flex-1 ml-3">
-                <Text className="text-sm text-gray-500 font-JakartaMedium">
-                  {t("promo.maxDiscount")}
-                </Text>
-                <Text className="text-base font-JakartaBold text-gray-900">
-                  {promo.max_discount_amount.toLocaleString()}₫
-                </Text>
-              </View>
-            </View>
-          )}
-
-          {/* Valid Period */}
-          <View className="flex-row items-center py-3 border-b border-gray-100">
-            <View className="w-10 h-10 items-center justify-center bg-green-50 rounded-full">
-              <Ionicons name="calendar-outline" size={20} color="#10B981" />
-            </View>
-            <View className="flex-1 ml-3">
-              <Text className="text-sm text-gray-500 font-JakartaMedium">
-                {t("promo.validPeriod")}
-              </Text>
-              <Text className="text-base font-JakartaBold text-gray-900">
-                {formatDate(promo.start_date)}
-                {promo.end_date && ` - ${formatDate(promo.end_date)}`}
-              </Text>
-            </View>
-          </View>
-
-          {/* Usage */}
-          {promo.usage_limit && (
-            <View className="flex-row items-center py-3">
-              <View className="w-10 h-10 items-center justify-center bg-green-50 rounded-full">
-                <Ionicons name="people-outline" size={20} color="#10B981" />
-              </View>
-              <View className="flex-1 ml-3">
-                <Text className="text-sm text-gray-500 font-JakartaMedium">
-                  {t("promo.usage")}
-                </Text>
-                <Text className="text-base font-JakartaBold text-gray-900">
-                  {promo.used_count} / {promo.usage_limit}
-                </Text>
-              </View>
-            </View>
-          )}
+            ))}
         </View>
 
         {/* Copy Button */}
-        <View className="mx-4 mt-4 mb-6">
+        <View className="mx-4 mt-4">
           <CustomButton
             title={t("promo.copyCode")}
             onPress={copyToClipboard}
-            IconLeft={() => (
-              <Ionicons name="copy-outline" size={20} color="white" />
+            IconRight={() => (
+              <Ionicons
+                name="copy-outline"
+                size={20}
+                color="white"
+                style={{ marginLeft: 8 }}
+              />
             )}
           />
         </View>

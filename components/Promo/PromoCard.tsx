@@ -64,7 +64,7 @@ export default function PromoCard({ promo }: PromoCardProps) {
         <View className="flex-row items-center justify-between mb-3">
           <View className="flex-row items-center flex-1 pr-2">
             <View className="w-12 h-12 bg-white/20 rounded-full items-center justify-center shrink-0">
-              <Ionicons name="pricetag" size={24} color="white" />
+              <Ionicons name="pricetag" size={20} color="white" />
             </View>
             <Text
               className="ml-3 text-3xl font-JakartaBold text-neutral-200 flex-1"

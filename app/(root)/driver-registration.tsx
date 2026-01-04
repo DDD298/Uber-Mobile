@@ -153,7 +153,7 @@ export default function DriverRegistrationScreen() {
             onPress={() => router.back()}
             className="w-10 h-10 items-center justify-center bg-neutral-100 rounded-full"
           >
-            <Ionicons name="arrow-back" size={24} color="#000" />
+            <Ionicons name="arrow-back" size={20} color="#000" />
           </TouchableOpacity>
           <Text className="text-xl font-JakartaBold">
             {t("driver.becomeDriver")}
@@ -164,7 +164,7 @@ export default function DriverRegistrationScreen() {
         {/* Info Card */}
         <View className="bg-green-50 p-4 rounded-2xl mb-6 border border-green-200">
           <View className="flex-row items-center mb-2">
-            <Ionicons name="information-circle" size={24} color="#10B981" />
+            <Ionicons name="information-circle" size={20} color="#10B981" />
             <Text className="ml-2 text-lg font-JakartaBold text-green-800">
               {t("driver.requirements")}
             </Text>
