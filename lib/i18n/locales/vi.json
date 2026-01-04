@@ -232,6 +232,27 @@
     "submitApplication": "Gửi đơn đăng ký",
     "ratings": "đánh giá"
   },
+  "promo": {
+    "availablePromoCodes": "Mã giảm giá",
+    "promoDetail": "Chi tiết mã giảm giá",
+    "details": "Thông tin chi tiết",
+    "discountType": "Loại giảm giá",
+    "percentage": "Phần trăm",
+    "fixedAmount": "Số tiền cố định",
+    "freeRide": "Miễn phí chuyến đi",
+    "minOrderAmount": "Giá trị tối thiểu",
+    "maxDiscount": "Giảm tối đa",
+    "validPeriod": "Thời gian hiệu lực",
+    "usage": "Lượt sử dụng",
+    "copyCode": "Sao chép mã",
+    "codeCopied": "Đã sao chép mã giảm giá",
+    "notFound": "Không tìm thấy mã giảm giá",
+    "until": "Đến",
+    "applyPromo": "Áp dụng mã",
+    "enterPromoCode": "Nhập mã giảm giá",
+    "promoApplied": "Đã áp dụng mã giảm giá",
+    "discount": "Giảm giá"
+  },
   "errors": {
     "somethingWentWrong": "Đã xảy ra lỗi",
     "networkError": "Lỗi mạng. Vui lòng kiểm tra kết nối",

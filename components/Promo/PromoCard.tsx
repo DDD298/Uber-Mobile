@@ -20,8 +20,8 @@ interface PromoCardProps {
 export default function PromoCard({ promo }: PromoCardProps) {
   const { t, i18n } = useTranslation();
 
-  const getGradientColors = (index: number) => {
-    const gradients = [
+  const getGradientColors = (index: number): readonly [string, string] => {
+    const gradients: readonly [string, string][] = [
       ["#10B981", "#059669"], // Green
       ["#3B82F6", "#2563EB"], // Blue
       ["#F59E0B", "#D97706"], // Orange

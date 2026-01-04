@@ -221,6 +221,27 @@
     "submitApplication": "Submit Application",
     "ratings": "ratings"
   },
+  "promo": {
+    "availablePromoCodes": "Promo Codes",
+    "promoDetail": "Promo Code Details",
+    "details": "Details",
+    "discountType": "Discount Type",
+    "percentage": "Percentage",
+    "fixedAmount": "Fixed Amount",
+    "freeRide": "Free Ride",
+    "minOrderAmount": "Minimum Order",
+    "maxDiscount": "Max Discount",
+    "validPeriod": "Valid Period",
+    "usage": "Usage",
+    "copyCode": "Copy Code",
+    "codeCopied": "Promo code copied",
+    "notFound": "Promo code not found",
+    "until": "Until",
+    "applyPromo": "Apply Code",
+    "enterPromoCode": "Enter promo code",
+    "promoApplied": "Promo code applied",
+    "discount": "Discount"
+  },
   "errors": {
     "somethingWentWrong": "Something went wrong",
     "networkError": "Network error. Please check your connection",

@@ -1,10 +1,4 @@
 import { fetchAPI } from '@/lib/fetch';
-
-/**
- * Auto Status Updater Service
- * Tự động cập nhật ride status theo thời gian
- */
-
 interface RideStatusUpdate {
   ride_id: number;
   current_status: string;
@@ -15,11 +9,7 @@ interface RideStatusUpdate {
 class RideStatusUpdater {
   private intervalId: ReturnType<typeof setInterval> | null = null;
   private isRunning = false;
-  private updateInterval = 30000; // Check every 30 seconds
-
-  /**
-   * Bắt đầu auto-update service
-   */
+  private updateInterval = 30000;
   start() {
     if (this.isRunning) {
       console.log('⚠️  Status updater is already running');
@@ -38,9 +28,6 @@ class RideStatusUpdater {
     }, this.updateInterval);
   }
 
-  /**
-   * Dừng auto-update service
-   */
   stop() {
     if (this.intervalId) {
       clearInterval(this.intervalId);
@@ -50,9 +37,6 @@ class RideStatusUpdater {
     }
   }
 
-  /**
-   * Kiểm tra và cập nhật statuses
-   */
   private async checkAndUpdateStatuses() {
     try {
       // Gọi API để lấy danh sách rides cần update
@@ -95,9 +79,6 @@ class RideStatusUpdater {
     }
   }
 
-  /**
-   * Update một ride status
-   */
   private async updateRideStatus(ride_id: number, new_status: string) {
     try {
       await fetchAPI('/(api)/ride/update-status', {
@@ -117,13 +98,9 @@ class RideStatusUpdater {
     }
   }
 
-  /**
-   * Check if service is running
-   */
   isActive() {
     return this.isRunning;
   }
 }
 
-// Export singleton instance
 export const rideStatusUpdater = new RideStatusUpdater();

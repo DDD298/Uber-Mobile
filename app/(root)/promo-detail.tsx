@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
-import * as Clipboard from "expo-clipboard";
+import Clipboard from "@react-native-clipboard/clipboard";
 
 import { fetchAPI } from "@/lib/fetch";
 import CustomButton from "@/components/Common/CustomButton";
@@ -39,9 +39,9 @@ export default function PromoDetailScreen() {
     }
   };
 
-  const copyToClipboard = async () => {
+  const copyToClipboard = () => {
     if (promo?.code) {
-      await Clipboard.setStringAsync(promo.code);
+      Clipboard.setString(promo.code);
       Alert.alert(t("common.success"), t("promo.codeCopied"));
     }
   };
