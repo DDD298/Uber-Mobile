@@ -1,3 +1,4 @@
+/// <reference path="../../types/type.d.ts" />
 import React, { useState } from "react";
 import {
   View,
@@ -12,7 +13,7 @@ import { usePromoStore } from "@/store/promoStore";
 interface PromoCodeInputProps {
   rideAmount: number;
   userId: string;
-  onPromoApplied: (promoData: PromoCodeData) => void;
+  onPromoApplied: (promoData: any) => void;
   onPromoRemoved: () => void;
 }
 
@@ -87,7 +88,7 @@ const PromoCodeInput = ({
     return messages[reason] || "Mã giảm giá không hợp lệ";
   };
 
-  const formatDiscount = (promo: PromoCodeData) => {
+  const formatDiscount = (promo: any) => {
     if (promo.discount_type === "percentage") {
       return `${promo.discount_value}%`;
     } else if (promo.discount_type === "fixed_amount") {

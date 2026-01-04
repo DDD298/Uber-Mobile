@@ -1,6 +1,7 @@
-import { Image, View } from "react-native";
+import { Image, View, ActivityIndicator } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { useTranslation } from "react-i18next";
+import { useState } from "react";
 
 import { icons } from "@/constants";
 import { GoogleInputProps } from "@/types/type";
@@ -15,6 +16,7 @@ const GoogleTextInput = ({
   handlePress,
 }: GoogleInputProps) => {
   const { t } = useTranslation();
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
     <View
@@ -24,7 +26,8 @@ const GoogleTextInput = ({
         fetchDetails={true}
         placeholder={t("home.whereTo")}
         enablePoweredByContainer={false}
-        debounce={0} // Tăng tốc độ phản hồi (mặc định 200)
+        debounce={200} // Giảm xuống 200ms để phản hồi nhanh hơn
+        minLength={2}
         styles={{
           textInputContainer: {
             alignItems: "center",
@@ -43,7 +46,7 @@ const GoogleTextInput = ({
             fontSize: 16,
             fontWeight: "600",
             marginTop: 5,
-            paddingTop: 8, // Thêm padding để text không bị cắt
+            paddingTop: 8,
             width: "100%",
             borderTopWidth: 0,
             borderBottomWidth: 0,
@@ -62,35 +65,46 @@ const GoogleTextInput = ({
           },
         }}
         onPress={(data, details = null) => {
-          handlePress({
-            latitude: details?.geometry.location.lat!,
-            longitude: details?.geometry.location.lng!,
-            address: data.description,
-          });
+          setIsLoading(true);
+          try {
+            handlePress({
+              latitude: details?.geometry.location.lat!,
+              longitude: details?.geometry.location.lng!,
+              address: data.description,
+            });
+          } finally {
+            setIsLoading(false);
+          }
         }}
         query={{
           key: googlePlacesApiKey,
           language: "vi",
           components: "country:vn",
+          types: "geocode",
         }}
-        // Chỉ lấy các trường cần thiết để giảm tải payload
         requestUrl={{
-          useOnPlatform: "web", // hoặc 'all' nếu muốn force
+          useOnPlatform: "web",
           url: "https://maps.googleapis.com/maps/api",
         }}
+        nearbyPlacesAPI="GooglePlacesSearch"
         renderLeftButton={() => (
           <View className="justify-center items-center w-6 h-6">
-            <Image
-              source={icon ? icon : icons.search}
-              className="w-6 h-6"
-              resizeMode="contain"
-            />
+            {isLoading ? (
+              <ActivityIndicator size="small" color="#10B981" />
+            ) : (
+              <Image
+                source={icon ? icon : icons.search}
+                className="w-6 h-6"
+                resizeMode="contain"
+              />
+            )}
           </View>
         )}
         textInputProps={{
           placeholderTextColor: "gray",
           placeholder: initialLocation ?? t("home.whereTo"),
           numberOfLines: 1,
+          editable: !isLoading, // Disable khi đang loading
         }}
       />
     </View>

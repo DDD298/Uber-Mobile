@@ -3,6 +3,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
+import { usePromoStore } from "@/store";
 
 interface PromoCardProps {
   promo: {
@@ -15,10 +16,12 @@ interface PromoCardProps {
     min_order_amount?: number;
     end_date?: string;
   };
+  mode?: "view" | "select"; // 'view' for detail, 'select' for applying
 }
 
-export default function PromoCard({ promo }: PromoCardProps) {
+export default function PromoCard({ promo, mode = "view" }: PromoCardProps) {
   const { t, i18n } = useTranslation();
+  const { setSelectedPromo } = usePromoStore();
 
   const getGradientColors = (index: number): readonly [string, string] => {
     const gradients: readonly [string, string][] = [
@@ -45,10 +48,28 @@ export default function PromoCard({ promo }: PromoCardProps) {
     return date.toLocaleDateString(i18n.language === "vi" ? "vi-VN" : "en-US");
   };
 
+  const handlePress = () => {
+    if (mode === "select") {
+      // Save to store and go back
+      setSelectedPromo({
+        id: promo.id,
+        code: promo.code,
+        discount_type: promo.discount_type,
+        discount_value: promo.discount_value,
+        max_discount_amount: promo.max_discount_amount,
+        min_order_amount: promo.min_order_amount,
+      });
+      router.back();
+    } else {
+      // Navigate to detail
+      router.push(`/(root)/promo-detail?id=${promo.id}`);
+    }
+  };
+
   return (
     <TouchableOpacity
       activeOpacity={0.8}
-      onPress={() => router.push(`/(root)/promo-detail?id=${promo.id}`)}
+      onPress={handlePress}
       className="w-full px-1"
     >
       <LinearGradient
@@ -57,8 +78,8 @@ export default function PromoCard({ promo }: PromoCardProps) {
         }
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
-        className="w-full min-h-[140px] h-fit rounded-xl p-4 shadow-lg shadow-black/20"
-        style={{ borderRadius: 16 }}
+        className="w-full min-h-[140px] h-fit rounded-xl shadow-lg shadow-black/20"
+        style={{ borderRadius: 16, padding: 16 }}
       >
         {/* Icon & Discount */}
         <View className="flex-row items-center justify-between mb-3">

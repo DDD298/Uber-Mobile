@@ -7,7 +7,8 @@ if (!process.env.DATABASE_URL) {
 export async function POST(request: Request) {
   try {
     const sql = neon(`${process.env.DATABASE_URL}`);
-    const { code, user_id, ride_amount } = await request.json();
+    const body = await request.json();
+    const { code, user_id, ride_amount } = body;
 
     if (!code || !user_id || !ride_amount) {
       return Response.json(
@@ -85,27 +86,6 @@ export async function POST(request: Request) {
           success: false,
           error: "Mã giảm giá đã hết lượt sử dụng",
           reason: "max_uses_reached"
-        },
-        { status: 400 }
-      );
-    }
-
-    // 5. Kiểm tra số lần user đã dùng
-    const userUsageResult = await sql`
-      SELECT COUNT(*) as usage_count
-      FROM promo_code_usage
-      WHERE promo_code_id = ${promo.id}
-      AND user_id = ${user_id}
-    `;
-
-    const userUsageCount = parseInt(userUsageResult[0].usage_count);
-
-    if (userUsageCount >= promo.max_uses_per_user) {
-      return Response.json(
-        {
-          success: false,
-          error: "Bạn đã sử dụng hết lượt cho mã này",
-          reason: "user_limit_reached"
         },
         { status: 400 }
       );

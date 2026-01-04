@@ -129,6 +129,7 @@ const Payment = ({
         setIsProcessing(false);
       }
     } catch (error) {
+      console.error("Payment error:", error);
       setIsProcessing(false);
     }
   };
@@ -183,16 +184,15 @@ const Payment = ({
         amount: amount,
       };
 
-      const { paymentIntent, customer, ephemeralKey } = await fetchAPI(
-        "/(api)/(stripe)/create",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(requestBody),
-        }
-      );
+      const response = await fetchAPI("/(api)/(stripe)/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      const { paymentIntent, customer, ephemeralKey } = response;
 
       if (!paymentIntent?.client_secret) {
         throw new Error(t("payment.cannotCreatePaymentIntent"));
@@ -223,6 +223,7 @@ const Payment = ({
       setCurrentCustomer(customer);
       return true;
     } catch (error) {
+      console.error("Payment initialization error:", error);
       return false;
     }
   };

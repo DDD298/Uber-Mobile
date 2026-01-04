@@ -40,7 +40,11 @@ export async function POST(request: Request) {
       { apiVersion: '2025-08-27.basil' }
     );
 
-    const stripeAmount = parseInt(amount);
+    // Làm tròn lên và đảm bảo tối thiểu 23,000 VNĐ (Stripe VND minimum)
+    const parsedAmount = parseFloat(amount);
+    const roundedAmount = Math.ceil(parsedAmount);
+    const stripeAmount = Math.max(roundedAmount, 23000);
+
     const paymentIntent = await stripe.paymentIntents.create({
       amount: stripeAmount,
       currency: "VND",

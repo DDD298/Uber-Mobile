@@ -29,7 +29,7 @@ const PaymentMethodSelection: React.FC<PaymentMethodSelectionProps> = ({
   );
 
   return (
-    <View className="my-4">
+    <View className="mt-4">
       <Text className="mb-4 text-lg font-JakartaSemiBold">
         {t("payment.selectPaymentMethod")}
       </Text>

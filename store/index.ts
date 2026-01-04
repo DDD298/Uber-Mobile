@@ -49,3 +49,24 @@ export const useDriverStore = create<DriverStore>((set) => ({
   setDrivers: (drivers: MarkerData[]) => set(() => ({ drivers: drivers })),
   clearSelectedDriver: () => set(() => ({ selectedDriver: null })),
 }));
+
+interface PromoInfo {
+  id: number;
+  code: string;
+  discount_type: string;
+  discount_value: number;
+  max_discount_amount?: number;
+  min_order_amount?: number;
+}
+
+interface PromoStore {
+  selectedPromo: PromoInfo | null;
+  setSelectedPromo: (promo: PromoInfo | null) => void;
+  clearSelectedPromo: () => void;
+}
+
+export const usePromoStore = create<PromoStore>((set) => ({
+  selectedPromo: null,
+  setSelectedPromo: (promo: PromoInfo | null) => set(() => ({ selectedPromo: promo })),
+  clearSelectedPromo: () => set(() => ({ selectedPromo: null })),
+}));

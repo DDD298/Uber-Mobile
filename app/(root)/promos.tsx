@@ -63,7 +63,7 @@ export default function PromoList() {
           keyExtractor={(item: any) => item.id.toString()}
           renderItem={({ item }) => (
             <View className="mb-4 px-4 rounded-xl overflow-hidden">
-              <PromoCard promo={item} />
+              <PromoCard promo={item} mode="select" />
             </View>
           )}
           contentContainerStyle={{ paddingVertical: 16 }}

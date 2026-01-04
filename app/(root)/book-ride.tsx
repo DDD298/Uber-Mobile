@@ -2,7 +2,7 @@ import Payment from "@/components/Ride/Payment";
 import RideLayout from "@/components/Ride/RideLayout";
 import { icons } from "@/constants";
 import { formatTime } from "@/lib/utils";
-import { useDriverStore, useLocationStore } from "@/store";
+import { useDriverStore, useLocationStore, usePromoStore } from "@/store";
 import { useUser } from "@clerk/clerk-expo";
 import { StripeProvider } from "@stripe/stripe-react-native";
 import {
@@ -14,7 +14,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { fetchAPI } from "@/lib/fetch";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
@@ -31,6 +31,7 @@ const BookRide = () => {
     destinationLongitude,
   } = useLocationStore();
   const { drivers, selectedDriver } = useDriverStore();
+  const { selectedPromo, clearSelectedPromo } = usePromoStore();
 
   const driverDetails = drivers?.filter(
     (driver) => +driver.id === selectedDriver
@@ -45,36 +46,39 @@ const BookRide = () => {
   } | null>(null);
   const [isValidating, setIsValidating] = useState(false);
 
-  const handleApplyPromo = async () => {
-    if (!promoCode.trim()) {
-      Alert.alert(t("common.error"), t("promo.enterPromoCode"));
-      return;
+  // Auto-apply promo when selectedPromo changes
+  useEffect(() => {
+    if (selectedPromo) {
+      validateAndApplyPromo(selectedPromo.code);
     }
+  }, [selectedPromo]);
 
+  const validateAndApplyPromo = async (code: string) => {
     try {
       setIsValidating(true);
+
+      const requestPayload = {
+        code: code,
+        user_id: user?.id,
+        ride_amount: parseFloat(driverDetails?.price || "0"),
+      };
+
       const response = await fetchAPI("/(api)/promo/validate", {
         method: "POST",
-        body: JSON.stringify({
-          code: promoCode,
-          ride_amount: parseFloat(driverDetails?.price || "0"),
-        }),
+        body: JSON.stringify(requestPayload),
       });
 
-      if (response.success && response.data.valid) {
+      if (response.success) {
         setDiscountInfo({
           amount: response.data.discount_amount,
           finalPrice: response.data.final_amount,
-          code: promoCode,
-          id: response.data.promo_id,
+          code: code,
+          id: response.data.promo_code_id,
         });
-        Alert.alert(t("common.success"), t("promo.promoApplied"));
+        setPromoCode(code);
       } else {
         setDiscountInfo(null);
-        Alert.alert(
-          t("common.error"),
-          response.data.message || t("promo.notFound")
-        );
+        Alert.alert(t("common.error"), response.error || t("promo.notFound"));
       }
     } catch (error) {
       console.error("Promo validation error:", error);
@@ -135,43 +139,6 @@ const BookRide = () => {
           </View>
 
           <View className="flex flex-col justify-center items-start p-4 mt-4 w-full rounded-[24px] bg-green-50">
-            {/* Promo Code Input */}
-            <View className="flex-row items-center justify-between w-full mb-4 gap-2">
-              <TextInput
-                placeholder={t("promo.enterPromoCode")}
-                className="flex-1 bg-white p-3 rounded-xl border border-gray-200 font-JakartaMedium"
-                value={promoCode}
-                onChangeText={setPromoCode}
-                autoCapitalize="characters"
-                editable={!discountInfo} // Disable if applied
-              />
-              {discountInfo ? (
-                <TouchableOpacity
-                  onPress={() => {
-                    setDiscountInfo(null);
-                    setPromoCode("");
-                  }}
-                  className="bg-red-500 py-3 px-4 rounded-xl"
-                >
-                  <Text className="text-white font-JakartaBold">
-                    {t("common.cancel")}
-                  </Text>
-                </TouchableOpacity>
-              ) : (
-                <TouchableOpacity
-                  onPress={handleApplyPromo}
-                  disabled={isValidating}
-                  className={`bg-green-500 py-3 px-4 rounded-xl ${
-                    isValidating ? "opacity-50" : ""
-                  }`}
-                >
-                  <Text className="text-white font-JakartaBold">
-                    {isValidating ? "..." : t("promo.applyPromo")}
-                  </Text>
-                </TouchableOpacity>
-              )}
-            </View>
-
             <View className="flex flex-row justify-between items-center py-4 pt-0 w-full border-b-[1px] border-green-200">
               <Text className="text-lg font-JakartaRegular">
                 {t("ride.fare")}
@@ -222,6 +189,60 @@ const BookRide = () => {
               </Text>
             </View>
           </View>
+
+          {/* Promo Code Section */}
+          {discountInfo ? (
+            <View className="mt-2 p-4 bg-green-50 rounded-2xl border border-green-200">
+              <View className="flex-row items-center justify-between">
+                {/* Left: Icon + Code */}
+                <View className="flex-row items-center flex-shrink">
+                  <Ionicons name="pricetag" size={18} color="#16A34A" />
+                  <Text className="ml-2 text-base font-JakartaBold text-green-600">
+                    {discountInfo.code}
+                  </Text>
+                </View>
+
+                {/* Center: Savings */}
+                <Text className="text-sm font-JakartaMedium text-green-600 flex-1 text-center">
+                  -{discountInfo.amount.toLocaleString("vi-VN")}₫
+                </Text>
+
+                {/* Right: Cancel Button */}
+                <TouchableOpacity
+                  onPress={() => {
+                    setDiscountInfo(null);
+                    setPromoCode("");
+                    clearSelectedPromo();
+                  }}
+                  className="bg-red-500 py-2 px-3 rounded-lg"
+                >
+                  <Text className="text-white font-JakartaBold text-sm">
+                    Hủy
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          ) : (
+            <View className="mt-2 flex flex-row justify-between items-center">
+              <Text className="text-lg font-JakartaSemiBold">
+                Chọn mã giảm giá
+              </Text>
+              <TouchableOpacity
+                onPress={() => router.push("/(root)/promos")}
+                className="flex flex-row items-center"
+              >
+                <Text className="text-primary-600 text-lg font-JakartaBold">
+                  Xem mã khả dụng
+                </Text>
+                <Ionicons
+                  name="chevron-forward"
+                  size={20}
+                  color="#16A34A"
+                  className="mt-1"
+                />
+              </TouchableOpacity>
+            </View>
+          )}
 
           <Payment
             fullName={user?.fullName!}
