@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 
-const ITEMS_PER_PAGE = 5;
+const ITEMS_PER_PAGE = 6;
 
 const ConfirmRide = () => {
   const { t } = useTranslation();
@@ -31,7 +31,19 @@ const ConfirmRide = () => {
   };
 
   return (
-    <RideLayout title={t("booking.selectDriver")} snapPoints={["65%", "85%"]}>
+    <RideLayout snapPoints={["85%"]}>
+      {/* Custom Header with Back Button */}
+      <View className="flex-row items-center justify-between w-full -mt-4">
+        <TouchableOpacity
+          onPress={() => router.back()}
+          className="w-10 h-10 items-center justify-center rounded-full bg-white border border-gray-200 mr-4"
+        >
+          <Ionicons name="chevron-back" size={20} color="#000" />
+        </TouchableOpacity>
+        <Text className="text-xl font-JakartaBold">
+          {t("booking.selectDriver")}
+        </Text>
+      </View>
       <FlatList
         data={currentDrivers}
         keyExtractor={(item, index) => item.id?.toString() || index.toString()}
