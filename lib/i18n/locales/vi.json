@@ -18,7 +18,8 @@
     "sort": "Sắp xếp",
     "notProvided": "Người dùng chưa cung cấp",
     "currentLocation": "Vị trí hiện tại",
-    "status": "Trạng thái"
+    "status": "Trạng thái",
+    "page": "Trang"
   },
   "auth": {
     "welcome": "Chào mừng",

@@ -24,7 +24,7 @@ const GoogleTextInput = ({
         fetchDetails={true}
         placeholder={t("home.whereTo")}
         enablePoweredByContainer={false}
-        debounce={200}
+        debounce={0} // Tăng tốc độ phản hồi (mặc định 200)
         styles={{
           textInputContainer: {
             alignItems: "center",
@@ -43,6 +43,7 @@ const GoogleTextInput = ({
             fontSize: 16,
             fontWeight: "600",
             marginTop: 5,
+            paddingTop: 8, // Thêm padding để text không bị cắt
             width: "100%",
             borderTopWidth: 0,
             borderBottomWidth: 0,
@@ -71,6 +72,11 @@ const GoogleTextInput = ({
           key: googlePlacesApiKey,
           language: "vi",
           components: "country:vn",
+        }}
+        // Chỉ lấy các trường cần thiết để giảm tải payload
+        requestUrl={{
+          useOnPlatform: "web", // hoặc 'all' nếu muốn force
+          url: "https://maps.googleapis.com/maps/api",
         }}
         renderLeftButton={() => (
           <View className="justify-center items-center w-6 h-6">
