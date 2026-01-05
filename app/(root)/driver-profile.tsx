@@ -114,6 +114,7 @@ export default function DriverProfileScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
+      <PageHeader title={t("driver.driverProfile")} />
       <ScrollView
         className="flex-1"
         refreshControl={
@@ -121,7 +122,6 @@ export default function DriverProfileScreen() {
         }
         showsVerticalScrollIndicator={false}
       >
-        <PageHeader title={t("driver.driverProfile")} />
         {/* Profile Card */}
         <View className="mx-4 mt-4 bg-white rounded-3xl shadow-sm shadow-neutral-300 overflow-hidden">
           <LinearGradient
@@ -267,7 +267,7 @@ export default function DriverProfileScreen() {
 
             <View className="flex-row items-center py-3 border-b border-gray-100">
               <View className="w-10 h-10 items-center justify-center bg-green-50 rounded-full">
-                <Ionicons name="people-outline" size={20} color="#10B981" />
+                <Ionicons name="people-outline" size={20} color="#dcfce7" />
               </View>
               <View className="flex-1 ml-3">
                 <Text className="text-sm text-gray-500 font-JakartaMedium">
@@ -281,7 +281,7 @@ export default function DriverProfileScreen() {
 
             <View className="flex-row items-center py-3">
               <View className="w-10 h-10 items-center justify-center bg-green-50 rounded-full">
-                <Ionicons name="card-outline" size={20} color="#10B981" />
+                <Ionicons name="card-outline" size={20} color="#dcfce7" />
               </View>
               <View className="flex-1 ml-3">
                 <Text className="text-sm text-gray-500 font-JakartaMedium">

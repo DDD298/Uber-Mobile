@@ -24,6 +24,7 @@ export default function DriverRegistrationScreen() {
   const { t } = useTranslation();
   const { user } = useUser();
   const [loading, setLoading] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState("");
 
   const [form, setForm] = useState({
     phone: "",
@@ -74,21 +75,29 @@ export default function DriverRegistrationScreen() {
 
     setLoading(true);
 
+    const submitData = {
+      clerk_id: user?.id,
+      email: user?.primaryEmailAddress?.emailAddress,
+      first_name: user?.firstName || "",
+      last_name: user?.lastName || "",
+      phone: form.phone,
+      license_number: form.license_number,
+      vehicle_type: form.vehicle_type,
+      car_seats: parseInt(form.car_seats),
+    };
+
+    console.log(
+      "🚀 [Registration] Submitting data:",
+      JSON.stringify(submitData, null, 2)
+    );
+
     try {
       // Step 1: Register driver
+      setUploadStatus("Đang đăng ký tài xế...");
       const registerResponse = await fetchAPI("/(api)/driver/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          clerk_id: user?.id,
-          email: user?.primaryEmailAddress?.emailAddress,
-          first_name: user?.firstName || "",
-          last_name: user?.lastName || "",
-          phone: form.phone,
-          license_number: form.license_number,
-          vehicle_type: form.vehicle_type,
-          car_seats: parseInt(form.car_seats),
-        }),
+        body: JSON.stringify(submitData),
       });
 
       if (!registerResponse.success) {
@@ -99,14 +108,48 @@ export default function DriverRegistrationScreen() {
 
       const driverId = registerResponse.data.driver_id;
 
-      // Step 2: Upload documents
+      // Step 2: Upload documents with progress alerts
       const documentTypes = [
-        { type: "license", uri: form.license_photo },
-        { type: "vehicle_photo", uri: form.vehicle_photo },
-        { type: "profile_photo", uri: form.profile_photo },
+        {
+          type: "license",
+          uri: form.license_photo,
+          name: t("driver.licensePhoto"),
+          emoji: "📄",
+        },
+        {
+          type: "vehicle_photo",
+          uri: form.vehicle_photo,
+          name: t("driver.vehiclePhoto"),
+          emoji: "🚗",
+        },
+        {
+          type: "profile_photo",
+          uri: form.profile_photo,
+          name: t("driver.profilePhoto"),
+          emoji: "👤",
+        },
       ];
 
-      for (const doc of documentTypes) {
+      for (let i = 0; i < documentTypes.length; i++) {
+        const doc = documentTypes[i];
+
+        // Update status and show alert
+        const statusMessage = `${doc.emoji} Đang tải lên ${doc.name} (${i + 1}/${documentTypes.length})...`;
+        setUploadStatus(statusMessage);
+
+        // Show upload progress alert
+        console.log(
+          `📤 [Upload ${i + 1}/${documentTypes.length}] Đang tải lên ${doc.name}...`
+        );
+
+        // Show Alert for current upload
+        Alert.alert(
+          "📤 Đang tải ảnh lên",
+          `${doc.emoji} ${doc.name}\n\nTiến trình: ${i + 1}/${documentTypes.length}`,
+          [],
+          { cancelable: false }
+        );
+
         const formData = new FormData();
         formData.append("driver_id", driverId.toString());
         formData.append("document_type", doc.type);
@@ -122,11 +165,24 @@ export default function DriverRegistrationScreen() {
           type,
         } as any);
 
-        await fetchAPI("/(api)/driver/upload-document", {
+        const uploadResponse = await fetchAPI("/(api)/driver/upload-document", {
           method: "POST",
           body: formData,
         });
+
+        if (uploadResponse.success) {
+          console.log(
+            `✅ [Upload ${i + 1}/${documentTypes.length}] ${doc.name} đã tải lên thành công!`
+          );
+          console.log(`   URL: ${uploadResponse.data.document_url}`);
+        } else {
+          throw new Error(`Lỗi khi tải lên ${doc.name}`);
+        }
       }
+
+      console.log(
+        "🎉 [Registration] Tất cả giấy tờ đã được tải lên thành công!"
+      );
 
       Alert.alert(t("common.success"), t("driver.registrationSuccess"), [
         {
@@ -142,14 +198,17 @@ export default function DriverRegistrationScreen() {
       );
     } finally {
       setLoading(false);
+      setUploadStatus("");
     }
   };
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <ScrollView className="flex-1 px-4" showsVerticalScrollIndicator={false}>
-        <PageHeader title={t("driver.becomeDriver")} />
-
+      <PageHeader title={t("driver.becomeDriver")} />
+      <ScrollView
+        className="flex-1 px-4 pt-4"
+        showsVerticalScrollIndicator={false}
+      >
         {/* Info Card */}
         <View className="bg-green-50 p-4 rounded-2xl mb-4 border border-green-200">
           <View className="flex-row items-center mb-2">
@@ -175,6 +234,7 @@ export default function DriverRegistrationScreen() {
           label={t("profile.phone")}
           placeholder="+84 123 456 789"
           icon={icons.chat}
+          iconStyle="#22c55e"
           value={form.phone}
           onChangeText={(value) => setForm({ ...form, phone: value })}
           keyboardType="phone-pad"
@@ -184,6 +244,7 @@ export default function DriverRegistrationScreen() {
           label={t("driver.licenseNumber")}
           placeholder="123456789"
           icon={icons.list}
+          iconStyle="#22c55e"
           value={form.license_number}
           onChangeText={(value) => setForm({ ...form, license_number: value })}
         />
@@ -335,7 +396,11 @@ export default function DriverRegistrationScreen() {
 
         {/* Submit Button */}
         <CustomButton
-          title={t("driver.submitApplication")}
+          title={
+            loading && uploadStatus
+              ? uploadStatus
+              : t("driver.submitApplication")
+          }
           onPress={handleSubmit}
           disabled={loading}
           className="mb-8"

@@ -42,7 +42,13 @@ const InputField = ({
             bg-neutral-100 rounded-full border border-gray-100 focus:border-green-500  ${containerStyle}`}
           >
             {icon && (
-              <Image source={icon} className={`w-6 h-6 ml-4 ${iconStyle}`} />
+              <Image
+                source={icon}
+                className={`w-6 h-6 ml-4 ${iconStyle}`}
+                style={
+                  iconStyle?.startsWith("#") ? { tintColor: iconStyle } : {}
+                }
+              />
             )}
             <TextInput
               className={`rounded-full p-4 font-JakartaSemiBold text-[15px] flex-1 ${inputStyle} text-left`}

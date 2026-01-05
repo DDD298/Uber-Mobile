@@ -10,6 +10,10 @@ const Layout = () => {
       <Stack.Screen name="promos" options={{ headerShown: false }} />
       <Stack.Screen name="promo-detail" options={{ headerShown: false }} />
       <Stack.Screen name="driver-profile" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="driver-registration"
+        options={{ headerShown: false }}
+      />
     </Stack>
   );
 };

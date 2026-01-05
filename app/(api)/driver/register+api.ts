@@ -4,6 +4,7 @@ export async function POST(request: Request) {
   try {
     const sql = neon(`${process.env.DATABASE_URL}`);
     const body = await request.json();
+    console.log("📥 [API:Register] Received body:", JSON.stringify(body, null, 2));
 
     const {
       clerk_id,
@@ -17,20 +18,23 @@ export async function POST(request: Request) {
     } = body;
 
     // Validate required fields
-    if (
-      !clerk_id ||
-      !email ||
-      !first_name ||
-      !last_name ||
-      !phone ||
-      !license_number ||
-      !vehicle_type ||
-      !car_seats
-    ) {
+    const missingFields = [];
+    if (!clerk_id) missingFields.push("clerk_id");
+    if (!email) missingFields.push("email");
+    if (!first_name) missingFields.push("first_name");
+    // last_name can be empty
+    if (!phone) missingFields.push("phone");
+    if (!license_number) missingFields.push("license_number");
+    if (!vehicle_type) missingFields.push("vehicle_type");
+    if (!car_seats && car_seats !== 0) missingFields.push("car_seats");
+
+    if (missingFields.length > 0) {
+      console.log("⚠️ [API:Register] Missing fields:", missingFields);
       return Response.json(
         {
           success: false,
           error: "Thiếu thông tin bắt buộc",
+          missingFields,
         },
         { status: 400 }
       );

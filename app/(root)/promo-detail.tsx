@@ -77,9 +77,8 @@ export default function PromoDetailScreen() {
 
   return (
     <SafeAreaView className="flex-1">
+      <PageHeader title={t("promo.promoDetail")} />
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-        <PageHeader title={t("promo.promoDetail")} />
-
         {/* Promo Card */}
         <View className="mx-4 mt-4">
           <PromoCard promo={promo} />
