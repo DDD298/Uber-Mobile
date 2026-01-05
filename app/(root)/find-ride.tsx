@@ -1,12 +1,12 @@
 import CustomButton from "@/components/Common/CustomButton";
 import GoogleTextInput from "@/components/Common/GoogleTextInput";
+import PageHeader from "@/components/Common/PageHeader";
 import RideLayout from "@/components/Ride/RideLayout";
 import { icons } from "@/constants";
 import { useLocationStore } from "@/store";
 import { router } from "expo-router";
-import { Text, View, TouchableOpacity, Image } from "react-native";
+import { Text, View, Image } from "react-native";
 import { useTranslation } from "react-i18next";
-import { Ionicons } from "@expo/vector-icons";
 
 const FindRide = () => {
   const { t } = useTranslation();
@@ -19,18 +19,7 @@ const FindRide = () => {
 
   return (
     <RideLayout snapPoints={["85%"]}>
-      {/* Custom Header with Back Button */}
-      <View className="flex-row items-center justify-between w-full -mt-4">
-        <TouchableOpacity
-          onPress={() => router.back()}
-          className="w-10 h-10 items-center justify-center rounded-full bg-white border border-gray-200 mr-4"
-        >
-          <Ionicons name="chevron-back" size={20} color="#000" />
-        </TouchableOpacity>
-        <Text className="text-xl font-JakartaBold">
-          {t("booking.findRide")}
-        </Text>
-      </View>
+      <PageHeader title={t("booking.findRide")} />
 
       {/* Origin Location */}
       <View className="my-3">

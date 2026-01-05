@@ -1,18 +1,12 @@
 import Payment from "@/components/Ride/Payment";
 import RideLayout from "@/components/Ride/RideLayout";
+import PageHeader from "@/components/Common/PageHeader";
 import { icons } from "@/constants";
 import { formatTime } from "@/lib/utils";
 import { useDriverStore, useLocationStore, usePromoStore } from "@/store";
 import { useUser } from "@clerk/clerk-expo";
 import { StripeProvider } from "@stripe/stripe-react-native";
-import {
-  Image,
-  Text,
-  View,
-  TextInput,
-  Alert,
-  TouchableOpacity,
-} from "react-native";
+import { Image, Text, View, Alert, TouchableOpacity } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
 import { fetchAPI } from "@/lib/fetch";
@@ -101,18 +95,7 @@ const BookRide = () => {
     >
       <RideLayout>
         <>
-          {/* Custom Header with Back Button */}
-          <View className="flex-row items-center justify-between w-full -mt-4">
-            <TouchableOpacity
-              onPress={() => router.back()}
-              className="w-10 h-10 items-center justify-center rounded-full bg-white border border-gray-200 mr-4"
-            >
-              <Ionicons name="chevron-back" size={20} color="#000" />
-            </TouchableOpacity>
-            <Text className="text-xl font-JakartaBold">
-              {t("ride.rideDetails")}
-            </Text>
-          </View>
+          <PageHeader title={t("ride.rideDetails")} />
 
           <View className="flex flex-col justify-center items-center w-full">
             <Image

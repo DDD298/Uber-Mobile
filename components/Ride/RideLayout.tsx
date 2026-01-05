@@ -1,9 +1,8 @@
 import Map from "@/components/Common/Map";
-import { icons } from "@/constants";
+import PageHeader from "@/components/Common/PageHeader";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
-import { router } from "expo-router";
 import { useRef } from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const RideLayout = ({
@@ -21,20 +20,7 @@ const RideLayout = ({
     <GestureHandlerRootView>
       <View className="flex-1 bg-white">
         <View className="flex flex-col h-screen bg-green-500">
-          {title && (
-            <View className="flex absolute top-8 z-10 flex-row justify-start items-center px-4">
-              <TouchableOpacity onPress={() => router.back()}>
-                <View className="justify-center items-center w-10 h-10 bg-white rounded-full">
-                  <Image
-                    source={icons.backArrow}
-                    resizeMode="contain"
-                    className="w-6 h-6"
-                  />
-                </View>
-              </TouchableOpacity>
-              <Text className="ml-5 text-xl font-JakartaSemiBold">{title}</Text>
-            </View>
-          )}
+          {title && <PageHeader title={title} />}
           <Map />
         </View>
 

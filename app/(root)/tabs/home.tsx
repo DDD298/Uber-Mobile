@@ -32,7 +32,6 @@ export default function HomeScreen() {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const handleSignOut = () => {
     signOut();
-
     router.replace("/(auth)/sign-in");
   };
 

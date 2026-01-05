@@ -261,6 +261,23 @@ declare interface DriverProfile {
   warning_count: number;
   created_at: string;
   updated_at: string;
+  total_warnings: string;
+  active_warnings: string;
+  recentRides: {
+    ride_id: number;
+    origin_address: string;
+    destination_address: string;
+    fare_price: number;
+    ride_status: string;
+    created_at: string;
+  }[];
+  recentRatings: {
+    id: number;
+    stars: number;
+    comment: string;
+    created_at: string;
+    user_name: string;
+  }[];
 }
 
 declare interface DriverDocument {

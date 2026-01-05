@@ -14,6 +14,7 @@ import { router } from "expo-router";
 import { useUser } from "@clerk/clerk-expo";
 import * as ImagePicker from "expo-image-picker";
 
+import PageHeader from "@/components/Common/PageHeader";
 import CustomButton from "@/components/Common/CustomButton";
 import InputField from "@/components/Common/InputField";
 import { icons } from "@/constants";
@@ -147,19 +148,7 @@ export default function DriverRegistrationScreen() {
   return (
     <SafeAreaView className="flex-1 bg-white">
       <ScrollView className="flex-1 px-4" showsVerticalScrollIndicator={false}>
-        {/* Header */}
-        <View className="flex-row items-center justify-between py-4">
-          <TouchableOpacity
-            onPress={() => router.back()}
-            className="w-10 h-10 items-center justify-center bg-neutral-100 rounded-full"
-          >
-            <Ionicons name="arrow-back" size={20} color="#000" />
-          </TouchableOpacity>
-          <Text className="text-xl font-JakartaBold">
-            {t("driver.becomeDriver")}
-          </Text>
-          <View className="w-10" />
-        </View>
+        <PageHeader title={t("driver.becomeDriver")} />
 
         {/* Info Card */}
         <View className="bg-green-50 p-4 rounded-2xl mb-4 border border-green-200">

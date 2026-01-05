@@ -4,7 +4,6 @@ import {
   Text,
   ScrollView,
   Image,
-  TouchableOpacity,
   RefreshControl,
   Alert,
 } from "react-native";
@@ -15,6 +14,7 @@ import { router } from "expo-router";
 import { useUser } from "@clerk/clerk-expo";
 import { LinearGradient } from "expo-linear-gradient";
 
+import PageHeader from "@/components/Common/PageHeader";
 import { fetchAPI } from "@/lib/fetch";
 import { formatCurrencyByLanguage } from "@/lib/currency";
 import { DriverProfile as DriverProfileType } from "@/types/type";
@@ -27,10 +27,6 @@ export default function DriverProfileScreen() {
   const [driverProfile, setDriverProfile] = useState<DriverProfileType | null>(
     null
   );
-  const [stats, setStats] = useState({
-    recent_earnings: 0,
-    recent_rides: 0,
-  });
 
   const loadDriverProfile = async () => {
     try {
@@ -42,8 +38,7 @@ export default function DriverProfileScreen() {
       );
 
       if (response.success) {
-        setDriverProfile(response.data.driver);
-        setStats(response.data.stats);
+        setDriverProfile(response.data);
       } else {
         // Not a driver yet, redirect to registration
         Alert.alert(t("driver.notRegistered"), t("driver.registerFirst"), [
@@ -126,19 +121,7 @@ export default function DriverProfileScreen() {
         }
         showsVerticalScrollIndicator={false}
       >
-        {/* Header */}
-        <View className="relative flex-row items-center justify-center p-4 bg-white border-b border-gray-200">
-          <TouchableOpacity
-            onPress={() => router.back()}
-            className="absolute left-4 w-10 h-10 items-center justify-center rounded-full bg-white border border-gray-200 z-10"
-          >
-            <Ionicons name="chevron-back" size={20} color="#000" />
-          </TouchableOpacity>
-          <Text className="text-xl font-JakartaBold text-center">
-            {t("driver.driverProfile")}
-          </Text>
-        </View>
-
+        <PageHeader title={t("driver.driverProfile")} />
         {/* Profile Card */}
         <View className="mx-4 mt-4 bg-white rounded-3xl shadow-sm shadow-neutral-300 overflow-hidden">
           <LinearGradient
@@ -158,12 +141,12 @@ export default function DriverProfileScreen() {
               />
               <View className="flex-1 ml-4">
                 <Text className="text-2xl font-JakartaBold text-neutral-200">
-                  {driverProfile.first_name} {driverProfile.last_name}
+                  {driverProfile.last_name} {driverProfile.first_name}
                 </Text>
                 <View className="flex-row items-center mt-1">
                   <Ionicons name="star" size={16} color="#FCD34D" />
                   <Text className="ml-1 text-neutral-200 font-JakartaBold">
-                    {driverProfile.average_rating.toFixed(1)}
+                    {Number(driverProfile.average_rating || 0).toFixed(1)}
                   </Text>
                   <Text className="ml-1 text-neutral-200/80 font-JakartaMedium text-sm">
                     ({driverProfile.rating_count} {t("rating.ratings")})
@@ -174,7 +157,7 @@ export default function DriverProfileScreen() {
 
             {/* Status Badge */}
             <View
-              className="mt-4 px-4 py-2 rounded-full self-start"
+              className="mt-4 px-3 py-1 rounded-full self-start"
               style={{ backgroundColor: statusColor.bg }}
             >
               <View className="flex-row items-center">
@@ -182,9 +165,10 @@ export default function DriverProfileScreen() {
                   name={statusColor.icon as any}
                   size={16}
                   color={statusColor.text}
+                  className="mt-0.5"
                 />
                 <Text
-                  className="ml-2 font-JakartaBold"
+                  className="ml-2 font-JakartaBold mb-1"
                   style={{ color: statusColor.text }}
                 >
                   {getStatusText(driverProfile.approval_status)}
@@ -226,10 +210,10 @@ export default function DriverProfileScreen() {
               <View className="bg-purple-50 p-4 rounded-2xl">
                 <Ionicons name="calendar-outline" size={20} color="#8B5CF6" />
                 <Text className="mt-2 text-2xl font-JakartaBold text-purple-900">
-                  {stats.recent_rides}
+                  {driverProfile.recentRides?.length || 0}
                 </Text>
                 <Text className="text-sm font-JakartaMedium text-purple-700">
-                  {t("driver.last30Days")}
+                  {t("driver.recentRides")}
                 </Text>
               </View>
             </View>
@@ -242,13 +226,10 @@ export default function DriverProfileScreen() {
                   color="#F97316"
                 />
                 <Text className="mt-2 text-2xl font-JakartaBold text-orange-900">
-                  {formatCurrencyByLanguage(
-                    stats.recent_earnings,
-                    i18n.language
-                  )}
+                  {driverProfile.recentRatings?.length || 0}
                 </Text>
                 <Text className="text-sm font-JakartaMedium text-orange-700">
-                  {t("driver.recentEarnings")}
+                  {t("driver.recentRatings")}
                 </Text>
               </View>
             </View>

@@ -1,4 +1,4 @@
-import { useUser } from "@clerk/clerk-expo";
+import { useAuth, useUser } from "@clerk/clerk-expo";
 import { Image, ScrollView, Text, View, ImageBackground } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
@@ -6,7 +6,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { useState, useEffect } from "react";
-
 import { LanguageSwitcher } from "@/components/Common/LanguageSwitcher";
 import CustomButton from "@/components/Common/CustomButton";
 import { fetchAPI } from "@/lib/fetch";
@@ -17,6 +16,7 @@ export default function ProfileScreen() {
   const [isDriver, setIsDriver] = useState(false);
   const [driverStatus, setDriverStatus] = useState<string | null>(null);
   const [checkingDriver, setCheckingDriver] = useState(true);
+  const { signOut } = useAuth();
 
   useEffect(() => {
     checkDriverStatus();
@@ -25,7 +25,8 @@ export default function ProfileScreen() {
   const checkDriverStatus = async () => {
     if (!user?.id) {
       setCheckingDriver(false);
-      return;
+      setIsDriver(false);
+      return false;
     }
 
     try {
@@ -34,12 +35,19 @@ export default function ProfileScreen() {
         { method: "GET" }
       );
 
-      if (response.success && response.data?.driver) {
+      if (response.success && response.data?.id) {
         setIsDriver(true);
-        setDriverStatus(response.data.driver.approval_status);
+        setDriverStatus(response.data.approval_status);
+        return true;
+      } else {
+        setIsDriver(false);
+        setDriverStatus(null);
+        return false;
       }
     } catch (error) {
-      console.error(error);
+      setIsDriver(false);
+      setDriverStatus(null);
+      return false;
     } finally {
       setCheckingDriver(false);
     }
@@ -54,16 +62,11 @@ export default function ProfileScreen() {
   };
 
   const userId = user?.id || "default";
-  const imageId =
-    parseInt(
-      userId
-        .split("")
-        .reduce((acc, char) => acc + char.charCodeAt(0), 0)
-        .toString()
-        .slice(0, 4)
-    ) % 1000;
   const backgroundImageUrl = `https://picsum.photos/seed/${userId}/800/400`;
-
+  const handleSignOut = () => {
+    signOut();
+    router.replace("/(auth)/sign-in");
+  };
   return (
     <SafeAreaView className="flex-1">
       <ScrollView
@@ -74,7 +77,6 @@ export default function ProfileScreen() {
           {t("profile.profile")}
         </Text>
 
-        {/* Profile Image Section with Background */}
         <View className="relative overflow-hidden rounded-[24px] mb-4 shadow-lg shadow-neutral-400">
           <ImageBackground
             source={{ uri: backgroundImageUrl }}
@@ -259,7 +261,6 @@ export default function ProfileScreen() {
           <LanguageSwitcher />
         </View>
 
-        {/* Driver Mode Section - Only show at bottom if not a driver */}
         {!isDriver && !checkingDriver && (
           <>
             <Text className="mb-4 text-xl font-JakartaBold">
@@ -300,7 +301,7 @@ export default function ProfileScreen() {
         <CustomButton
           title={t("profile.logout")}
           bgVariant="danger"
-          onPress={() => {}}
+          onPress={handleSignOut}
           IconRight={() => (
             <Ionicons
               name="log-out-outline"

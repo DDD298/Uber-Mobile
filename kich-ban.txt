@@ -5,6 +5,7 @@ Deadline 15/1
 2. Admin: CRUD user, driver, xem chuyến, thống kê doanh thu
 ==================================================================
 3. Ứng dụng tài xế / Chế độ Driver
+3.1. Đã xem được Profile và Screen dành 
 Mật khẩu cho tất cả: UberDriver@2026#Secure
 Danh sách tài khoản:
 	Nguyễn Văn An (Xe hơi 4 chỗ - Đã duyệt)

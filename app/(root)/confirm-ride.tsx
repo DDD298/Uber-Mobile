@@ -1,5 +1,6 @@
 import CustomButton from "@/components/Common/CustomButton";
 import DriverCard from "@/components/Common/DriverCard";
+import PageHeader from "@/components/Common/PageHeader";
 import RideLayout from "@/components/Ride/RideLayout";
 import { useDriverStore } from "@/store";
 import { router } from "expo-router";
@@ -32,18 +33,7 @@ const ConfirmRide = () => {
 
   return (
     <RideLayout snapPoints={["85%"]}>
-      {/* Custom Header with Back Button */}
-      <View className="flex-row items-center justify-between w-full -mt-4">
-        <TouchableOpacity
-          onPress={() => router.back()}
-          className="w-10 h-10 items-center justify-center rounded-full bg-white border border-gray-200 mr-4"
-        >
-          <Ionicons name="chevron-back" size={20} color="#000" />
-        </TouchableOpacity>
-        <Text className="text-xl font-JakartaBold">
-          {t("booking.selectDriver")}
-        </Text>
-      </View>
+      <PageHeader title={t("booking.selectDriver")} />
       <FlatList
         data={currentDrivers}
         keyExtractor={(item, index) => item.id?.toString() || index.toString()}

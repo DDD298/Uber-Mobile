@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { View, Text, ScrollView, TouchableOpacity, Alert } from "react-native";
+import { View, Text, ScrollView, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
 import { Ionicons } from "@expo/vector-icons";
-import { router, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import * as Clipboard from "expo-clipboard";
+import PageHeader from "@/components/Common/PageHeader";
 import PromoCard from "@/components/Promo/PromoCard";
 import { fetchAPI } from "@/lib/fetch";
 import CustomButton from "@/components/Common/CustomButton";
@@ -77,18 +78,7 @@ export default function PromoDetailScreen() {
   return (
     <SafeAreaView className="flex-1">
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-        {/* Header */}
-        <View className="flex-row items-center p-4 border-b !border-b-gray-200">
-          <TouchableOpacity
-            onPress={() => router.back()}
-            className="w-10 h-10 items-center justify-center rounded-full bg-white border border-gray-200 mr-4"
-          >
-            <Ionicons name="chevron-back" size={20} color="#000" />
-          </TouchableOpacity>
-          <Text className="text-xl font-JakartaBold">
-            {t("promo.promoDetail")}
-          </Text>
-        </View>
+        <PageHeader title={t("promo.promoDetail")} />
 
         {/* Promo Card */}
         <View className="mx-4 mt-4">

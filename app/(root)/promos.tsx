@@ -1,19 +1,10 @@
 import { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  FlatList,
-  ActivityIndicator,
-  TouchableOpacity,
-  Image,
-} from "react-native";
+import { View, Text, FlatList, ActivityIndicator } from "react-native";
 import { useTranslation } from "react-i18next";
-import { router } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
-
+import PageHeader from "@/components/Common/PageHeader";
 import PromoCard from "@/components/Promo/PromoCard";
-import { fetchAPI } from "@/lib/fetch"; // Adjust import path if needed
+import { fetchAPI } from "@/lib/fetch";
 
 export default function PromoList() {
   const { t } = useTranslation();
@@ -43,15 +34,7 @@ export default function PromoList() {
 
   return (
     <SafeAreaView className="flex-1">
-      <View className="flex-row items-center p-4 border-b !border-b-gray-200">
-        <TouchableOpacity
-          onPress={() => router.back()}
-          className="w-10 h-10 items-center justify-center rounded-full bg-white border border-gray-200 mr-4"
-        >
-          <Ionicons name="chevron-back" size={20} color="#000" />
-        </TouchableOpacity>
-        <Text className="text-xl font-JakartaBold">Mã giảm giá</Text>
-      </View>
+      <PageHeader title="Mã giảm giá" />
 
       {loading ? (
         <View className="flex-1 items-center justify-center">
