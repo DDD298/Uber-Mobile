@@ -39,8 +39,7 @@ export default function ProfileScreen() {
         setDriverStatus(response.data.driver.approval_status);
       }
     } catch (error) {
-      // Not a driver, that's fine
-      console.log("Not a driver yet");
+      console.error(error);
     } finally {
       setCheckingDriver(false);
     }
@@ -115,97 +114,28 @@ export default function ProfileScreen() {
           </ImageBackground>
         </View>
         {/* Profile Info Section */}
-        <Text className="mb-4 text-xl font-JakartaBold">
-          {t("profile.profileInfo")}
-        </Text>
-        <View className="flex flex-col bg-white rounded-[24px] shadow-sm shadow-neutral-300 mb-4 p-2">
-          {/* Name Item */}
-          <View className="flex flex-row items-center px-4 py-3 border-b border-gray-100">
-            <View className="w-10 h-10 items-center justify-center bg-neutral-50 rounded-full mr-4">
-              <Ionicons name="person-outline" size={20} color="#10B981" />
-            </View>
-            <View className="flex flex-col flex-1">
-              <Text className="text-base text-neutral-400 font-JakartaMedium">
-                {t("profile.name")}
-              </Text>
-              <Text className="text-base font-JakartaBold text-neutral-800">
-                {user?.firstName && user?.lastName
-                  ? `${user.firstName} ${user.lastName}`
-                  : user?.firstName ||
-                    user?.lastName ||
-                    t("common.notProvided")}
-              </Text>
-            </View>
-          </View>
-
-          {/* Email Item */}
-          <View className="flex flex-row items-center px-4 py-3 border-b border-gray-100">
-            <View className="w-10 h-10 items-center justify-center bg-neutral-50 rounded-full mr-4">
-              <Ionicons name="mail-outline" size={20} color="#10B981" />
-            </View>
-            <View className="flex flex-col flex-1">
-              <Text className="text-base text-neutral-400 font-JakartaMedium">
-                {t("profile.email")}
-              </Text>
-              <Text className="text-base font-JakartaBold text-neutral-800">
-                {user?.primaryEmailAddress?.emailAddress ||
-                  t("common.notProvided")}
-              </Text>
-            </View>
-          </View>
-
-          {/* Phone Item */}
-          <View className="flex flex-row items-center px-4 py-3">
-            <View className="w-10 h-10 items-center justify-center bg-neutral-50 rounded-full mr-4">
-              <Ionicons name="call-outline" size={20} color="#10B981" />
-            </View>
-            <View className="flex flex-col flex-1">
-              <Text className="text-base text-neutral-400 font-JakartaMedium">
-                {t("profile.phone")}
-              </Text>
-              <Text className="text-base font-JakartaBold text-neutral-800">
-                {user?.primaryPhoneNumber?.phoneNumber ||
-                  t("common.notProvided")}
-              </Text>
-            </View>
-          </View>
-        </View>
-
-        {/* Language Settings Section */}
-        <Text className="mb-4 text-xl font-JakartaBold">
-          {t("profile.settings")}
-        </Text>
-        <View className="flex flex-col p-4 mb-4 bg-white rounded-[24px] shadow-sm shadow-neutral-300">
-          <LanguageSwitcher />
-        </View>
-
-        {/* Driver Mode Section */}
-        {!checkingDriver && (
+        {isDriver && !checkingDriver ? (
           <>
             <Text className="mb-4 text-xl font-JakartaBold">
-              {t("driver.driverMode")}
+              Chi tiết tài xế
             </Text>
-            <View className="flex flex-col p-4 mb-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-[24px] shadow-sm shadow-neutral-300 border border-green-200">
+            <View className="flex flex-col p-4 mb-4 bg-white rounded-[24px] shadow-sm shadow-neutral-300">
               <View className="flex-row items-center mb-4">
                 <View className="w-12 h-12 items-center justify-center bg-green-500 rounded-full mr-4">
                   <Ionicons name="car-sport" size={20} color="white" />
                 </View>
                 <View className="flex-1">
                   <Text className="text-lg font-JakartaBold text-gray-900">
-                    {isDriver
-                      ? t("driver.viewProfile")
-                      : t("driver.becomeDriver")}
+                    {t("driver.viewProfile")}
                   </Text>
                   <Text className="text-sm font-JakartaMedium text-gray-600">
-                    {isDriver
-                      ? t("driver.manageDriverAccount")
-                      : t("driver.earnMoney")}
+                    {t("driver.manageDriverAccount")}
                   </Text>
                 </View>
               </View>
 
-              {isDriver && driverStatus && (
-                <View className="mb-4 px-4 py-2 bg-white rounded-xl">
+              {driverStatus && (
+                <View className="mb-4 px-4 py-2 bg-gray-100 rounded-xl">
                   <View className="flex-row items-center">
                     <Ionicons
                       name={
@@ -247,16 +177,119 @@ export default function ProfileScreen() {
               )}
 
               <CustomButton
-                title={
-                  isDriver ? t("driver.viewProfile") : t("driver.registerNow")
-                }
+                title={t("driver.viewProfile")}
                 onPress={handleDriverAction}
-                bgVariant={isDriver ? "primary" : "success"}
-                IconLeft={() => (
+                bgVariant="primary"
+                IconRight={() => (
                   <Ionicons
-                    name={isDriver ? "person" : "add-circle"}
+                    name="person-outline"
                     size={20}
                     color="white"
+                    style={{ marginLeft: 8 }}
+                  />
+                )}
+              />
+            </View>
+          </>
+        ) : (
+          <>
+            <Text className="mb-4 text-xl font-JakartaBold">
+              {t("profile.profileInfo")}
+            </Text>
+            <View className="flex flex-col bg-white rounded-[24px] shadow-sm shadow-neutral-300 mb-4 p-2">
+              {/* Name Item */}
+              <View className="flex flex-row items-center px-4 py-3 border-b border-gray-100">
+                <View className="w-10 h-10 items-center justify-center bg-neutral-50 rounded-full mr-4">
+                  <Ionicons name="person-outline" size={20} color="#10B981" />
+                </View>
+                <View className="flex flex-col flex-1">
+                  <Text className="text-base text-neutral-400 font-JakartaMedium">
+                    {t("profile.name")}
+                  </Text>
+                  <Text className="text-base font-JakartaBold text-neutral-800">
+                    {user?.firstName && user?.lastName
+                      ? `${user.firstName} ${user.lastName}`
+                      : user?.firstName ||
+                        user?.lastName ||
+                        t("common.notProvided")}
+                  </Text>
+                </View>
+              </View>
+
+              {/* Email Item */}
+              <View className="flex flex-row items-center px-4 py-3 border-b border-gray-100">
+                <View className="w-10 h-10 items-center justify-center bg-neutral-50 rounded-full mr-4">
+                  <Ionicons name="mail-outline" size={20} color="#10B981" />
+                </View>
+                <View className="flex flex-col flex-1">
+                  <Text className="text-base text-neutral-400 font-JakartaMedium">
+                    {t("profile.email")}
+                  </Text>
+                  <Text className="text-base font-JakartaBold text-neutral-800">
+                    {user?.primaryEmailAddress?.emailAddress ||
+                      t("common.notProvided")}
+                  </Text>
+                </View>
+              </View>
+
+              {/* Phone Item */}
+              <View className="flex flex-row items-center px-4 py-3">
+                <View className="w-10 h-10 items-center justify-center bg-neutral-50 rounded-full mr-4">
+                  <Ionicons name="call-outline" size={20} color="#10B981" />
+                </View>
+                <View className="flex flex-col flex-1">
+                  <Text className="text-base text-neutral-400 font-JakartaMedium">
+                    {t("profile.phone")}
+                  </Text>
+                  <Text className="text-base font-JakartaBold text-neutral-800">
+                    {user?.primaryPhoneNumber?.phoneNumber ||
+                      t("common.notProvided")}
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </>
+        )}
+
+        {/* Language Settings Section */}
+        <Text className="mb-4 text-xl font-JakartaBold">
+          {t("profile.settings")}
+        </Text>
+        <View className="flex flex-col p-4 mb-4 bg-white rounded-[24px] shadow-sm shadow-neutral-300">
+          <LanguageSwitcher />
+        </View>
+
+        {/* Driver Mode Section - Only show at bottom if not a driver */}
+        {!isDriver && !checkingDriver && (
+          <>
+            <Text className="mb-4 text-xl font-JakartaBold">
+              {t("driver.driverMode")}
+            </Text>
+            <View className="flex flex-col p-4 mb-4 bg-white rounded-[24px] shadow-sm shadow-neutral-300">
+              <View className="flex-row items-center mb-4">
+                <View className="w-12 h-12 items-center justify-center bg-green-500 rounded-full mr-4">
+                  <Ionicons name="car-sport" size={20} color="white" />
+                </View>
+                <View className="flex-1">
+                  <Text className="text-lg font-JakartaBold text-gray-900">
+                    {t("driver.becomeDriver")}
+                  </Text>
+                  <Text className="text-sm font-JakartaMedium text-gray-600">
+                    {t("driver.earnMoney")}
+                  </Text>
+                </View>
+              </View>
+
+              <CustomButton
+                title={t("driver.registerNow")}
+                onPress={handleDriverAction}
+                bgVariant="success"
+                IconRight={() => (
+                  <Ionicons
+                    name="add-circle-outline"
+                    size={20}
+                    color="white"
+                    style={{ marginLeft: 8 }}
                   />
                 )}
               />
@@ -268,6 +301,14 @@ export default function ProfileScreen() {
           title={t("profile.logout")}
           bgVariant="danger"
           onPress={() => {}}
+          IconRight={() => (
+            <Ionicons
+              name="log-out-outline"
+              size={20}
+              color="white"
+              style={{ marginLeft: 8 }}
+            />
+          )}
         />
       </ScrollView>
     </SafeAreaView>

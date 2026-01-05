@@ -22,13 +22,7 @@ class RideStatusPoller {
       console.warn("⚠️ Poller already running");
       return;
     }
-
-    console.log(
-      `🔄 Starting ride status poller for ride ${this.config.rideId}`
-    );
-
     this.isRunning = true;
-
     // Poll immediately
     this.poll();
 
@@ -45,7 +39,6 @@ class RideStatusPoller {
       clearInterval(this.intervalId);
       this.intervalId = null;
       this.isRunning = false;
-      console.log("🛑 Stopped ride status poller");
     }
   }
 
@@ -57,12 +50,10 @@ class RideStatusPoller {
       );
 
       if (response.success && response.data.has_updates) {
-        console.log("📥 Received status update:", response.data);
         this.lastCheck = new Date().toISOString();
         this.config.onUpdate(response.data);
       }
     } catch (error) {
-      console.error("❌ Polling error:", error);
       this.config.onError?.(error);
     }
   }

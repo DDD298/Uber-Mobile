@@ -49,12 +49,7 @@ class PushNotificationService {
       });
 
       this.expoPushToken = token.data;
-      console.log("✅ Expo Push Token:", this.expoPushToken);
-
-      // Register token with backend
       await this.registerTokenWithBackend(userId, driverId);
-
-      // Setup notification channels for Android
       if (Platform.OS === "android") {
         await Notifications.setNotificationChannelAsync("ride-updates", {
           name: "Ride Updates",
@@ -83,9 +78,8 @@ class PushNotificationService {
           device_type: Platform.OS,
         }),
       });
-      console.log("✅ Push token registered with backend");
     } catch (error) {
-      console.error("❌ Failed to register push token:", error);
+      console.error(error);
     }
   }
 

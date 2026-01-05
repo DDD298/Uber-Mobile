@@ -162,7 +162,7 @@ export default function DriverRegistrationScreen() {
         </View>
 
         {/* Info Card */}
-        <View className="bg-green-50 p-4 rounded-2xl mb-6 border border-green-200">
+        <View className="bg-green-50 p-4 rounded-2xl mb-4 border border-green-200">
           <View className="flex-row items-center mb-2">
             <Ionicons name="information-circle" size={20} color="#10B981" />
             <Text className="ml-2 text-lg font-JakartaBold text-green-800">
@@ -203,7 +203,7 @@ export default function DriverRegistrationScreen() {
         <Text className="text-lg font-JakartaBold mb-4 mt-2">
           {t("driver.vehicleType")}
         </Text>
-        <View className="flex-row justify-between mb-6">
+        <View className="flex-row justify-between mb-4">
           {vehicleTypes.map((type) => (
             <TouchableOpacity
               key={type.value}
@@ -314,7 +314,7 @@ export default function DriverRegistrationScreen() {
         {/* Profile Photo */}
         <TouchableOpacity
           onPress={() => pickImage("profile")}
-          className="mb-6 p-4 border-2 border-dashed border-gray-300 rounded-2xl bg-gray-50"
+          className="mb-4 p-4 border-2 border-dashed border-gray-300 rounded-2xl bg-gray-50"
         >
           {form.profile_photo ? (
             <View>

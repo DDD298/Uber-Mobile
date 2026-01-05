@@ -129,7 +129,7 @@ export default function RidesScreen() {
                       alt={t("ride.noRidesFound")}
                       resizeMode="contain"
                     />
-                    <Text className="mt-4 text-sm">
+                    <Text className="mt-4 text-base font-JakartaBold">
                       {t("ride.noRidesFound")}
                     </Text>
                   </>

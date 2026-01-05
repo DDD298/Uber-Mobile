@@ -127,14 +127,14 @@ export default function DriverProfileScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* Header */}
-        <View className="px-4 py-4 bg-white">
+        <View className="relative flex-row items-center justify-center p-4 bg-white border-b border-gray-200">
           <TouchableOpacity
             onPress={() => router.back()}
-            className="w-10 h-10 items-center justify-center bg-neutral-100 rounded-full mb-4"
+            className="absolute left-4 w-10 h-10 items-center justify-center rounded-full bg-white border border-gray-200 z-10"
           >
-            <Ionicons name="arrow-back" size={20} color="#000" />
+            <Ionicons name="chevron-back" size={20} color="#000" />
           </TouchableOpacity>
-          <Text className="text-2xl font-JakartaBold">
+          <Text className="text-xl font-JakartaBold text-center">
             {t("driver.driverProfile")}
           </Text>
         </View>
@@ -315,7 +315,7 @@ export default function DriverProfileScreen() {
         </View>
 
         {/* Contact Info */}
-        <View className="mx-4 mt-4 mb-6 bg-white rounded-3xl shadow-sm shadow-neutral-300 p-4">
+        <View className="mx-4 mt-4 mb-4 bg-white rounded-3xl shadow-sm shadow-neutral-300 p-4">
           <Text className="text-lg font-JakartaBold mb-4">
             {t("driver.contactInfo")}
           </Text>

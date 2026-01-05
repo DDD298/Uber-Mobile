@@ -31,14 +31,10 @@ export const useRideStatusSync = ({
       return;
     }
 
-    console.log(`🔄 Setting up ride status sync for ride ${rideId}`);
-
-    // Start polling
     pollerRef.current = new RideStatusPoller({
       rideId,
       interval: pollingInterval,
       onUpdate: (data) => {
-        console.log("📥 Ride status update received:", data);
         setLastUpdate(data);
         onStatusChange?.(data);
       },
@@ -53,23 +49,15 @@ export const useRideStatusSync = ({
     // Setup push notification listener
     const notificationListener =
       pushNotificationService.addNotificationListener((notification) => {
-        console.log("📬 Received notification:", notification);
-        
-        // Check if notification is related to this ride
         const notificationData = notification.request.content.data;
         if (notificationData?.ride_id === rideId) {
-          console.log("🔔 Notification for current ride, triggering poll");
-          // Trigger immediate poll when notification received
           if (pollerRef.current) {
-            // Force a poll by calling the private method via type assertion
             (pollerRef.current as any).poll?.();
           }
         }
       });
 
-    // Cleanup
     return () => {
-      console.log("🧹 Cleaning up ride status sync");
       pollerRef.current?.stop();
       setIsPolling(false);
       notificationListener.remove();

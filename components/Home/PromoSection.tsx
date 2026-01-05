@@ -40,11 +40,7 @@ export default function PromoSection() {
   };
 
   const scrollToIndex = (index: number) => {
-    console.log(
-      `[PromoSection] scrollToIndex: Attempting to scroll to index ${index}`
-    );
     if (index >= 0 && index < promoCodes.length) {
-      // Update state immediately for UI feedback
       setCurrentIndex(index);
 
       try {
@@ -65,9 +61,6 @@ export default function PromoSection() {
   const handleNext = () => {
     if (promoCodes.length === 0) return;
     const nextIndex = (currentIndex + 1) % promoCodes.length;
-    console.log(
-      `[PromoSection] handleNext: Current ${currentIndex} -> Next ${nextIndex}`
-    );
     scrollToIndex(nextIndex);
   };
 
@@ -75,18 +68,12 @@ export default function PromoSection() {
     if (promoCodes.length === 0) return;
     let prevIndex = currentIndex - 1;
     if (prevIndex < 0) prevIndex = promoCodes.length - 1;
-    console.log(
-      `[PromoSection] handlePrev: Current ${currentIndex} -> Prev ${prevIndex}`
-    );
     scrollToIndex(prevIndex);
   };
 
   // Called when manual scroll manually updates
   const onMomentumScrollEnd = (event: any) => {
     const newIndex = Math.round(event.nativeEvent.contentOffset.x / CARD_WIDTH);
-    console.log(
-      `[PromoSection] onMomentumScrollEnd: Scrolled to index ${newIndex}`
-    );
     setCurrentIndex(newIndex);
   };
 
@@ -95,7 +82,7 @@ export default function PromoSection() {
   }
 
   return (
-    <View className="mb-6">
+    <View className="mb-4">
       <View className="flex-row justify-between items-center mb-3 pr-2">
         <Text className="text-lg font-JakartaBold text-neutral-200">
           {t("promo.availablePromoCodes")}

@@ -1,0 +1,43 @@
+Deadline 15/1
+==================================================================
+[DONE] 1. Đánh giá
+==================================================================
+2. Admin: CRUD user, driver, xem chuyến, thống kê doanh thu
+==================================================================
+3. Ứng dụng tài xế / Chế độ Driver
+Mật khẩu cho tất cả: UberDriver@2026#Secure
+Danh sách tài khoản:
+	Nguyễn Văn An (Xe hơi 4 chỗ - Đã duyệt)
+	Email: nguyenvanan@gmail.com
+
+	Phạm Thị Dung (Xe máy 1 chỗ - Đã duyệt)
+	Email: phamthidung@gmail.com
+
+	Đỗ Thị Phương (Xe hơi 4 chỗ - Chờ duyệt)
+	Email: dothiphuong@gmail.com
+==================================================================
+4. Hủy chuyến bên khách --> realtime bên Driver
+	1. confirmed (Đã xác nhận/Tài xế đã nhận): Chuyến đi đã có tài xế nhận lời.
+	2. driver_arrived (Tài xế đã đến): Tài xế đã có mặt tại điểm đón.
+	3. in_progress (Đang trong chuyến): Khách đã lên xe và đang di chuyển đến điểm đến.
+	4. completed (Hoàn thành): Chuyến đi kết thúc thành công.
+	5. cancelled (Đã hủy): Chuyến đi bị hủy bởi khách hàng hoặc tài xế.
+	6. no_show (Khách không xuất hiện): Tài xế đã đến nhưng không gặp được khách.
+==================================================================
+
+[DONE] 5. Thanh toán --> Áp mã giảm giá 
+Kịch bản
+==================================================================
+6. Gửi mail SMTP thanh toán thành công
+==================================================================
+7. Đa ngôn ngữ, multi-lang
+==================================================================
+8. Cải thiện giao diện
+9. Fix AI Chat
+==================================================================
+git config --global user.name "DDD298"
+git config --global user.email "doduoc2908@gmail.com"
+Ưu tiên chạy: npx expo start --lan
+npx expo start --tunnel
+Acc Admin: adminuber@gmail.com / Admin123!
+

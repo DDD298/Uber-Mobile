@@ -12,13 +12,24 @@ const SignIn = () => {
   const { t } = useTranslation();
   const { signIn, setActive, isLoaded } = useSignIn();
 
+  console.log("📍 [SignIn] Rendering component. isLoaded:", isLoaded);
+
+  // Test alert that triggers on render
+  // Alert.alert("DEBUG", "SignIn Component Rendered");
+
+  const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
 
   const onSignInPress = useCallback(async () => {
+    console.log("🖱️ [SignIn] Button clicked!");
     if (!isLoaded) return;
+
+    setLoading(true);
+    console.log("🚀 [SignIn] Starting sign-in process...");
+    console.log("📧 [SignIn] Identifier:", form.email);
 
     try {
       const signInAttempt = await signIn.create({
@@ -26,14 +37,38 @@ const SignIn = () => {
         password: form.password,
       });
 
+      console.log("📥 [SignIn] Clerk Response Status:", signInAttempt.status);
+
       if (signInAttempt.status === "complete") {
+        console.log(
+          "✅ [SignIn] Successful! Session ID:",
+          signInAttempt.createdSessionId
+        );
         await setActive({ session: signInAttempt.createdSessionId });
         router.replace("/(root)/tabs/home");
       } else {
+        console.warn("⚠️ [SignIn] Incomplete status:", signInAttempt.status);
+        console.log(
+          "🔍 [SignIn] Full attempt object:",
+          JSON.stringify(signInAttempt, null, 2)
+        );
         Alert.alert(t("common.error"), t("errors.tryAgain"));
       }
     } catch (err: any) {
-      Alert.alert(t("common.error"), err.errors[0].longMessage);
+      console.error("❌ [SignIn] Error occurred during sign-in:");
+      console.error(JSON.stringify(err, null, 2));
+
+      const errorMessage =
+        err.errors?.[0]?.longMessage || "An unknown error occurred";
+      const errorCode = err.errors?.[0]?.code || "unknown_error";
+
+      console.error(
+        `🔴 [SignIn] Error Code: ${errorCode}, Message: ${errorMessage}`
+      );
+
+      Alert.alert(t("common.error"), `${errorMessage}\n\n(Code: ${errorCode})`);
+    } finally {
+      setLoading(false);
     }
   }, [isLoaded, form.email, form.password]);
 
@@ -71,7 +106,7 @@ const SignIn = () => {
           <CustomButton
             title={t("auth.signIn")}
             onPress={onSignInPress}
-            className="mt-6"
+            className="mt-4"
           />
 
           <OAuth />

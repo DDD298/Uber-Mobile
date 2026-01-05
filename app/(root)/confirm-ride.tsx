@@ -58,7 +58,7 @@ const ConfirmRide = () => {
           <View className="mx-4 mt-4 mb-20">
             {/* Pagination Controls */}
             {totalPages > 1 && (
-              <View className="flex-row justify-between items-center mb-6 px-2">
+              <View className="flex-row justify-between items-center mb-4 px-2">
                 <TouchableOpacity
                   onPress={handlePrevPage}
                   disabled={currentPage === 1}
