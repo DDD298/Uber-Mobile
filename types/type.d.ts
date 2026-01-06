@@ -79,6 +79,12 @@ declare interface Ride {
     rating?: number;
     vehicle_type: string;
   };
+  passenger?: {
+    clerk_id: string;
+    name: string;
+    email: string;
+    profile_image_url?: string;
+  };
 }
 
 declare interface Rating {

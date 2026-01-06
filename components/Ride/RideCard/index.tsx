@@ -4,21 +4,41 @@ import { formatDateVN, formatTimeVN } from "@/lib/utils";
 import { formatCurrencyByLanguage } from "@/lib/currency";
 import { Ride } from "@/types/type";
 import { Ionicons } from "@expo/vector-icons";
-import { Alert, Image, Text, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  Image,
+  Text,
+  TouchableOpacity,
+  View,
+  ActivityIndicator,
+} from "react-native";
 import { useTranslation } from "react-i18next";
 import { RatingModal } from "@/components/Ride/RatingModal";
 import { useState } from "react";
+import { useAuth } from "@clerk/clerk-expo";
+import { fetchAPI } from "@/lib/fetch";
+import CustomButton from "@/components/Common/CustomButton";
 
 interface RideCardProps {
   ride: Ride;
   onCancel?: () => void;
   onRatingSubmitted?: () => void;
+  onStatusUpdated?: () => void;
 }
 
-const RideCard = ({ ride, onCancel, onRatingSubmitted }: RideCardProps) => {
+const RideCard = ({
+  ride,
+  onCancel,
+  onRatingSubmitted,
+  onStatusUpdated,
+}: RideCardProps) => {
   const { t, i18n } = useTranslation();
+  const { userId } = useAuth();
   const [showRatingModal, setShowRatingModal] = useState(false);
+  const [updatingStatus, setUpdatingStatus] = useState(false);
+
   const {
+    ride_id,
     destination_longitude,
     destination_latitude,
     destination_address,
@@ -26,12 +46,16 @@ const RideCard = ({ ride, onCancel, onRatingSubmitted }: RideCardProps) => {
     created_at,
     ride_time,
     driver,
+    passenger,
     payment_status,
     ride_status,
     fare_price,
     cancelled_at,
     cancel_reason,
   } = ride;
+
+  const isDriverView =
+    ride.driver?.driver_id !== undefined && ride.user_id !== userId;
 
   const handleCancel = () => {
     Alert.alert(
@@ -49,6 +73,34 @@ const RideCard = ({ ride, onCancel, onRatingSubmitted }: RideCardProps) => {
         },
       ]
     );
+  };
+
+  const handleUpdateStatus = async (newStatus: string) => {
+    try {
+      setUpdatingStatus(true);
+      const response = await fetchAPI("/(api)/ride/update-status-v2", {
+        method: "POST",
+        body: JSON.stringify({
+          ride_id,
+          new_status: newStatus,
+          changed_by: isDriverView ? "driver" : "passenger",
+          changed_by_id: userId,
+        }),
+      });
+
+      if (response.success) {
+        onStatusUpdated?.();
+      } else {
+        Alert.alert(
+          t("common.error"),
+          response.error || "Không thể cập nhật trạng thái"
+        );
+      }
+    } catch (error: any) {
+      Alert.alert(t("common.error"), error.message || "Lỗi hệ thống");
+    } finally {
+      setUpdatingStatus(false);
+    }
   };
 
   const getRideStatusInfo = (status: string | undefined) => {
@@ -197,32 +249,43 @@ const RideCard = ({ ride, onCancel, onRatingSubmitted }: RideCardProps) => {
           </View>
         </View>
 
-        {/* Driver Info and Price */}
+        {/* User Info (Driver or Passenger) and Price */}
         <View className="flex-row justify-between items-center py-3 border-t border-gray-100">
           <View className="flex-row items-center flex-1">
             <Image
               source={{
-                uri:
-                  driver.profile_image_url || "https://via.placeholder.com/40",
+                uri: isDriverView
+                  ? passenger?.profile_image_url ||
+                    "https://via.placeholder.com/40"
+                  : driver.profile_image_url ||
+                    "https://via.placeholder.com/40",
               }}
               className="w-10 h-10 rounded-full mr-4"
             />
             <View className="flex-1">
               <Text className="text-sm font-JakartaBold text-gray-900">
-                {driver.first_name} {driver.last_name}
+                {isDriverView
+                  ? passenger?.name || t("ride.passenger")
+                  : `${driver.first_name} ${driver.last_name}`}
               </Text>
-              <View className="flex-row items-center">
-                <Text className="text-sm text-gray-500 font-JakartaMedium mr-2">
-                  {driver.car_seats} {t("booking.seats")} •{" "}
-                  {driver.vehicle_type || "Car"}
-                </Text>
+              {!isDriverView ? (
                 <View className="flex-row items-center">
-                  <Ionicons name="star" size={12} color="#FBBF24" />
-                  <Text className="text-sm text-gray-600 font-JakartaMedium ml-1">
-                    {driver.rating || "5.0"}
+                  <Text className="text-sm text-gray-500 font-JakartaMedium mr-2">
+                    {driver.car_seats} {t("booking.seats")} •{" "}
+                    {driver.vehicle_type || "Car"}
                   </Text>
+                  <View className="flex-row items-center">
+                    <Ionicons name="star" size={12} color="#FBBF24" />
+                    <Text className="text-sm text-gray-600 font-JakartaMedium ml-1">
+                      {driver.rating || "5.0"}
+                    </Text>
+                  </View>
                 </View>
-              </View>
+              ) : (
+                <Text className="text-sm text-gray-500 font-JakartaMedium">
+                  {passenger?.email || ""}
+                </Text>
+              )}
             </View>
           </View>
 
@@ -268,33 +331,116 @@ const RideCard = ({ ride, onCancel, onRatingSubmitted }: RideCardProps) => {
           </View>
         )}
 
-        {/* Action Buttons */}
-        {ride_status === "in_progress" && (
-          <View className="mt-4 p-4 bg-purple-50 rounded-xl border border-purple-200">
-            <View className="flex-row items-center justify-center">
-              <Ionicons name="time-outline" size={16} color="#8B5CF6" />
-              <Text className="text-sm text-purple-700 font-JakartaMedium ml-2">
-                {t("ride.inProgress")} -{" "}
-                {t("ride.arriving") || "Arriving in 5 min"}
-              </Text>
-            </View>
+        {/* Driver Action Buttons */}
+        {isDriverView && !updatingStatus && (
+          <View className="mt-4 gap-y-2">
+            {ride_status === "confirmed" && (
+              <CustomButton
+                title={t("ride.driverArrived") || "Tôi đã đến điểm đón"}
+                onPress={() => handleUpdateStatus("driver_arrived")}
+                bgVariant="success"
+              />
+            )}
+            {ride_status === "driver_arrived" && (
+              <View className="flex-row gap-x-2">
+                <View className="flex-1">
+                  <CustomButton
+                    title={t("ride.startRide") || "Bắt đầu chuyến đi"}
+                    onPress={() => handleUpdateStatus("in_progress")}
+                    bgVariant="primary"
+                  />
+                </View>
+                <View className="px-1 justify-center">
+                  <TouchableOpacity
+                    onPress={() => handleUpdateStatus("no_show")}
+                    className="p-3 bg-gray-100 rounded-xl border border-gray-200"
+                  >
+                    <Ionicons
+                      name="person-remove-outline"
+                      size={24}
+                      color="#6B7280"
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            )}
+            {ride_status === "in_progress" && (
+              <CustomButton
+                title={t("ride.completeRide") || "Hoàn thành chuyến đi"}
+                onPress={() => handleUpdateStatus("completed")}
+                bgVariant="success"
+              />
+            )}
+
+            {(ride_status === "confirmed" ||
+              ride_status === "driver_arrived") && (
+              <TouchableOpacity
+                onPress={() => {
+                  Alert.alert(
+                    t("ride.cancelRide"),
+                    t("ride.confirmCancel") ||
+                      "Bạn có chắc chắn muốn hủy chuyến này?",
+                    [
+                      { text: t("common.cancel"), style: "cancel" },
+                      {
+                        text: t("common.confirm"),
+                        onPress: () => handleUpdateStatus("cancelled"),
+                      },
+                    ]
+                  );
+                }}
+                className="py-2 items-center"
+              >
+                <Text className="text-red-500 font-JakartaBold">
+                  {t("ride.cancelRide")}
+                </Text>
+              </TouchableOpacity>
+            )}
           </View>
         )}
 
-        {checkCanCancelRide().canCancel && onCancel && (
-          <TouchableOpacity
-            onPress={handleCancel}
-            className="flex-row justify-center items-center py-3 mt-4 bg-red-50 rounded-xl border border-red-200"
-          >
-            <Ionicons name="close-circle-outline" size={20} color="#EF4444" />
-            <Text className="text-base text-red-600 font-JakartaBold ml-2">
-              {t("ride.cancelRide")}
-            </Text>
-          </TouchableOpacity>
+        {updatingStatus && (
+          <View className="mt-4 py-4 items-center">
+            <ActivityIndicator color="#06b6d4" />
+          </View>
         )}
 
-        {/* Rating Section */}
-        {ride_status === "completed" && (
+        {/* Passenger Action Buttons */}
+        {!isDriverView && (
+          <>
+            {ride_status === "in_progress" && (
+              <View className="mt-4 p-4 bg-purple-50 rounded-xl border border-purple-200">
+                <View className="flex-row items-center justify-center">
+                  <Ionicons name="time-outline" size={16} color="#8B5CF6" />
+                  <Text className="text-sm text-purple-700 font-JakartaMedium ml-2">
+                    {t("ride.inProgress")} -{" "}
+                    {t("ride.arrivingAtDestination") ||
+                      "Đang di chuyển đến điểm đến"}
+                  </Text>
+                </View>
+              </View>
+            )}
+
+            {checkCanCancelRide().canCancel && onCancel && (
+              <TouchableOpacity
+                onPress={handleCancel}
+                className="flex-row justify-center items-center py-3 mt-4 bg-red-50 rounded-xl border border-red-200"
+              >
+                <Ionicons
+                  name="close-circle-outline"
+                  size={20}
+                  color="#EF4444"
+                />
+                <Text className="text-base text-red-600 font-JakartaBold ml-2">
+                  {t("ride.cancelRide")}
+                </Text>
+              </TouchableOpacity>
+            )}
+          </>
+        )}
+
+        {/* Rating Section (Only for Passenger) */}
+        {!isDriverView && ride_status === "completed" && (
           <>
             {ride.rating ? (
               // Show submitted rating
@@ -349,8 +495,8 @@ const RideCard = ({ ride, onCancel, onRatingSubmitted }: RideCardProps) => {
         )}
       </View>
 
-      {/* Rating Modal - Always render for completed rides */}
-      {ride_status === "completed" && (
+      {/* Rating Modal - Always render for completed rides for passenger */}
+      {!isDriverView && ride_status === "completed" && (
         <RatingModal
           visible={showRatingModal}
           onClose={() => {

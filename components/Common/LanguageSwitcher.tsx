@@ -1,20 +1,20 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { useTranslation } from 'react-i18next';
+import React from "react";
+import { View, Text, TouchableOpacity } from "react-native";
+import { useTranslation } from "react-i18next";
 
 interface LanguageOption {
-  code: 'vi' | 'en' | 'zh' | 'ko' | 'th';
+  code: "vi" | "en" | "zh" | "ko" | "th";
   name: string;
   nativeName: string;
   flag: string;
 }
 
 const languages: LanguageOption[] = [
-  { code: 'vi', name: 'Vietnamese', nativeName: 'Tiếng Việt', flag: '🇻🇳' },
-  { code: 'en', name: 'English', nativeName: 'English', flag: '🇬🇧' },
-  { code: 'zh', name: 'Chinese', nativeName: '中文', flag: '🇨🇳' },
-  { code: 'ko', name: 'Korean', nativeName: '한국어', flag: '🇰🇷' },
-  { code: 'th', name: 'Thai', nativeName: 'ภาษาไทย', flag: '🇹🇭' },
+  { code: "vi", name: "Vietnamese", nativeName: "Tiếng Việt", flag: "🇻🇳" },
+  { code: "en", name: "English", nativeName: "English", flag: "🇬🇧" },
+  { code: "zh", name: "Chinese", nativeName: "中文", flag: "🇨🇳" },
+  { code: "ko", name: "Korean", nativeName: "한국어", flag: "🇰🇷" },
+  { code: "th", name: "Thai", nativeName: "ภาษาไทย", flag: "🇹🇭" },
 ];
 
 export const LanguageSwitcher: React.FC = () => {
@@ -26,41 +26,36 @@ export const LanguageSwitcher: React.FC = () => {
   };
 
   return (
-    <View style={styles.container}>
-      {languages.map((language, index) => {
+    <View className="rounded-2xl gap-2">
+      {languages.map((language) => {
         const isActive = currentLanguage === language.code;
-        
+
         return (
           <TouchableOpacity
             key={language.code}
-            style={[
-              styles.languageButton,
-              isActive && styles.languageButtonActive,
-            ]}
+            className={`p-4 py-3 rounded-[20px] ${isActive ? "bg-emerald-100" : "bg-transparent"}`}
             onPress={() => changeLanguage(language.code)}
             activeOpacity={0.7}
           >
-            <View style={styles.languageContent}>
-              <View style={styles.leftContent}>
-                <Text style={styles.flag}>{language.flag}</Text>
-                <View style={styles.textContainer}>
-                  <Text style={[
-                    styles.nativeName, 
-                    isActive && styles.nativeNameActive
-                  ]}>
+            <View className="flex-row items-center justify-between">
+              <View className="flex-row items-center flex-1">
+                <Text className="text-[32px] mr-4">{language.flag}</Text>
+                <View className="flex-1">
+                  <Text
+                    className={`text-base font-semibold ${isActive ? "text-emerald-600" : "text-gray-800"} mb-0.5`}
+                  >
                     {language.nativeName}
                   </Text>
-                  <Text style={[
-                    styles.englishName,
-                    isActive && styles.englishNameActive
-                  ]}>
+                  <Text
+                    className={`text-sm ${isActive ? "text-emerald-500" : "text-gray-400"}`}
+                  >
                     {language.name}
                   </Text>
                 </View>
               </View>
               {isActive && (
-                <View style={styles.checkmark}>
-                  <Text style={styles.checkmarkText}>✓</Text>
+                <View className="w-7 h-7 rounded-full bg-emerald-500 items-center justify-center">
+                  <Text className="text-white text-base font-bold">✓</Text>
                 </View>
               )}
             </View>
@@ -70,65 +65,3 @@ export const LanguageSwitcher: React.FC = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    borderRadius: 16,
-    gap: 8,
-  },
-  languageButton: {
-    paddingVertical: 16,
-    paddingHorizontal: 16,
-    backgroundColor: 'transparent',
-    borderRadius: 20,
-  },
-  languageButtonActive: {
-    backgroundColor: '#D1FAE5',
-  },
-  languageContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  leftContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-  },
-  flag: {
-    fontSize: 32,
-    marginRight: 16,
-  },
-  textContainer: {
-    flex: 1,
-  },
-  nativeName: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#1F2937',
-    marginBottom: 2,
-  },
-  nativeNameActive: {
-    color: '#059669',
-  },
-  englishName: {
-    fontSize: 14,
-    color: '#9CA3AF',
-  },
-  englishNameActive: {
-    color: '#10B981',
-  },
-  checkmark: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: '#10B981',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  checkmarkText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '700',
-  },
-});

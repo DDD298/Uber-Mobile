@@ -253,7 +253,6 @@ export default function ProfileScreen() {
           </>
         )}
 
-        {/* Language Settings Section */}
         <Text className="mb-4 text-xl font-JakartaBold">
           {t("profile.settings")}
         </Text>

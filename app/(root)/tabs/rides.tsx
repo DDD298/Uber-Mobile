@@ -96,6 +96,7 @@ export default function RidesScreen() {
                     : undefined
                 }
                 onRatingSubmitted={fetchRides}
+                onStatusUpdated={fetchRides}
               />
             )}
             keyExtractor={(item) => item.ride_id?.toString() || "0"}

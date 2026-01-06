@@ -27,243 +27,250 @@ export async function GET(request: Request) {
 
     const sql = neon(`${process.env.DATABASE_URL}`);
 
+    // Find driver_id if this user is also a driver
+    const driverResult = await sql`
+      SELECT id FROM drivers WHERE clerk_id = ${user_id} LIMIT 1
+    `;
+    const driver_id = driverResult.length > 0 ? driverResult[0].id : null;
 
-    // Build query with template literals for proper parameterization
-    let response;
+    // Helper to build the query conditions
+    const getConditions = (statusCondition: string) => {
+      if (driver_id) {
+        return `(rides.user_id = '${user_id}' OR rides.driver_id = ${driver_id}) ${statusCondition ? `AND ${statusCondition}` : ''}`;
+      }
+      return `rides.user_id = '${user_id}' ${statusCondition ? `AND ${statusCondition}` : ''}`;
+    };
+
+    // Columns to select
+    const selectColumns = `
+      rides.ride_id,
+      rides.origin_address,
+      rides.destination_address,
+      rides.origin_latitude,
+      rides.origin_longitude,
+      rides.destination_latitude,
+      rides.destination_longitude,
+      rides.ride_time,
+      rides.fare_price,
+      rides.payment_status,
+      rides.ride_status,
+      rides.created_at,
+      rides.cancelled_at,
+      rides.cancel_reason,
+      rides.user_id AS passenger_id,
+      json_build_object(
+          'driver_id', drivers.id,
+          'first_name', drivers.first_name,
+          'last_name', drivers.last_name,
+          'profile_image_url', drivers.profile_image_url,
+          'car_image_url', drivers.car_image_url,
+          'car_seats', drivers.car_seats,
+          'rating', drivers.rating,
+          'vehicle_type', drivers.vehicle_type
+      ) AS driver,
+      json_build_object(
+          'clerk_id', users.clerk_id,
+          'name', users.name,
+          'email', users.email,
+          'profile_image_url', users.profile_image_url
+      ) AS passenger
+    `;
+
+    let statusCondition = '';
     if (status && status !== 'all') {
       switch (status) {
         case 'active':
-          response = await sql`
-            SELECT
-                rides.ride_id,
-                rides.origin_address,
-                rides.destination_address,
-                rides.origin_latitude,
-                rides.origin_longitude,
-                rides.destination_latitude,
-                rides.destination_longitude,
-                rides.ride_time,
-                rides.fare_price,
-                rides.payment_status,
-                rides.ride_status,
-                rides.created_at,
-                rides.cancelled_at,
-                rides.cancel_reason,
-                json_build_object(
-                    'driver_id', drivers.id,
-                    'first_name', drivers.first_name,
-                    'last_name', drivers.last_name,
-                    'profile_image_url', drivers.profile_image_url,
-                    'car_image_url', drivers.car_image_url,
-                    'car_seats', drivers.car_seats,
-                    'rating', drivers.rating,
-                    'vehicle_type', drivers.vehicle_type
-                ) AS driver 
-            FROM 
-                rides
-            INNER JOIN
-                drivers ON rides.driver_id = drivers.id
-            WHERE rides.user_id = ${user_id} AND rides.ride_status IN ('confirmed', 'driver_arrived', 'in_progress')
-            ORDER BY rides.created_at DESC
-            LIMIT ${parseInt(limit)} OFFSET ${parseInt(offset)}
-          `;
+          statusCondition = "rides.ride_status IN ('confirmed', 'driver_arrived', 'in_progress')";
           break;
         case 'completed':
-          response = await sql`
-            SELECT
-                rides.ride_id,
-                rides.origin_address,
-                rides.destination_address,
-                rides.origin_latitude,
-                rides.origin_longitude,
-                rides.destination_latitude,
-                rides.destination_longitude,
-                rides.ride_time,
-                rides.fare_price,
-                rides.payment_status,
-                rides.ride_status,
-                rides.created_at,
-                rides.cancelled_at,
-                rides.cancel_reason,
-                json_build_object(
-                    'driver_id', drivers.id,
-                    'first_name', drivers.first_name,
-                    'last_name', drivers.last_name,
-                    'profile_image_url', drivers.profile_image_url,
-                    'car_image_url', drivers.car_image_url,
-                    'car_seats', drivers.car_seats,
-                    'rating', drivers.rating,
-                    'vehicle_type', drivers.vehicle_type
-                ) AS driver,
-                CASE 
-                    WHEN ratings.id IS NOT NULL THEN json_build_object(
-                        'id', ratings.id,
-                        'stars', ratings.stars,
-                        'comment', ratings.comment,
-                        'created_at', ratings.created_at
-                    )
-                    ELSE NULL
-                END AS rating
-            FROM 
-                rides
-            INNER JOIN
-                drivers ON rides.driver_id = drivers.id
-            LEFT JOIN
-                ratings ON rides.ride_id = ratings.ride_id
-            WHERE rides.user_id = ${user_id} AND rides.ride_status = 'completed'
-            ORDER BY rides.created_at DESC
-            LIMIT ${parseInt(limit)} OFFSET ${parseInt(offset)}
-          `;
+          statusCondition = "rides.ride_status = 'completed'";
           break;
         case 'cancelled':
-          response = await sql`
-            SELECT
-                rides.ride_id,
-                rides.origin_address,
-                rides.destination_address,
-                rides.origin_latitude,
-                rides.origin_longitude,
-                rides.destination_latitude,
-                rides.destination_longitude,
-                rides.ride_time,
-                rides.fare_price,
-                rides.payment_status,
-                rides.ride_status,
-                rides.created_at,
-                rides.cancelled_at,
-                rides.cancel_reason,
-                json_build_object(
-                    'driver_id', drivers.id,
-                    'first_name', drivers.first_name,
-                    'last_name', drivers.last_name,
-                    'profile_image_url', drivers.profile_image_url,
-                    'car_image_url', drivers.car_image_url,
-                    'car_seats', drivers.car_seats,
-                    'rating', drivers.rating,
-                    'vehicle_type', drivers.vehicle_type
-                ) AS driver 
-            FROM 
-                rides
-            INNER JOIN
-                drivers ON rides.driver_id = drivers.id
-            WHERE rides.user_id = ${user_id} AND rides.ride_status IN ('cancelled', 'no_show')
-            ORDER BY rides.created_at DESC
-            LIMIT ${parseInt(limit)} OFFSET ${parseInt(offset)}
-          `;
+          statusCondition = "rides.ride_status IN ('cancelled', 'no_show')";
           break;
-        default:
-          response = await sql`
-            SELECT
-                rides.ride_id,
-                rides.origin_address,
-                rides.destination_address,
-                rides.origin_latitude,
-                rides.origin_longitude,
-                rides.destination_latitude,
-                rides.destination_longitude,
-                rides.ride_time,
-                rides.fare_price,
-                rides.payment_status,
-                rides.ride_status,
-                rides.created_at,
-                rides.cancelled_at,
-                rides.cancel_reason,
-                json_build_object(
-                    'driver_id', drivers.id,
-                    'first_name', drivers.first_name,
-                    'last_name', drivers.last_name,
-                    'profile_image_url', drivers.profile_image_url,
-                    'car_image_url', drivers.car_image_url,
-                    'car_seats', drivers.car_seats,
-                    'rating', drivers.rating,
-                    'vehicle_type', drivers.vehicle_type
-                ) AS driver 
-            FROM 
-                rides
-            INNER JOIN
-                drivers ON rides.driver_id = drivers.id
-            WHERE rides.user_id = ${user_id}
-            ORDER BY rides.created_at DESC
-            LIMIT ${parseInt(limit)} OFFSET ${parseInt(offset)}
-          `;
       }
-    } else {
-      response = await sql`
-        SELECT
-            rides.ride_id,
-            rides.origin_address,
-            rides.destination_address,
-            rides.origin_latitude,
-            rides.origin_longitude,
-            rides.destination_latitude,
-            rides.destination_longitude,
-            rides.ride_time,
-            rides.fare_price,
-            rides.payment_status,
-            rides.ride_status,
-            rides.created_at,
-            rides.cancelled_at,
-            rides.cancel_reason,
+    }
+
+    let response;
+    const offsetNum = parseInt(offset);
+    const limitNum = parseInt(limit);
+
+    if (driver_id) {
+      if (statusCondition) {
+        // Driver with status filter
+        response = await sql`
+          SELECT 
+            rides.ride_id, rides.origin_address, rides.destination_address,
+            rides.origin_latitude, rides.origin_longitude, rides.destination_latitude,
+            rides.destination_longitude, rides.ride_time, rides.fare_price,
+            rides.payment_status, rides.ride_status, rides.created_at,
+            rides.cancelled_at, rides.cancel_reason, rides.user_id AS passenger_id,
             json_build_object(
-                'driver_id', drivers.id,
-                'first_name', drivers.first_name,
-                'last_name', drivers.last_name,
-                'profile_image_url', drivers.profile_image_url,
-                'car_image_url', drivers.car_image_url,
-                'car_seats', drivers.car_seats,
-                'rating', drivers.rating,
-                'vehicle_type', drivers.vehicle_type
+                'driver_id', drivers.id, 'first_name', drivers.first_name,
+                'last_name', drivers.last_name, 'profile_image_url', drivers.profile_image_url,
+                'car_image_url', drivers.car_image_url, 'car_seats', drivers.car_seats,
+                'rating', drivers.rating, 'vehicle_type', drivers.vehicle_type
             ) AS driver,
+            json_build_object(
+                'clerk_id', users.clerk_id, 'name', users.name,
+                'email', users.email, 'profile_image_url', users.profile_image_url
+            ) AS passenger,
             CASE 
                 WHEN ratings.id IS NOT NULL THEN json_build_object(
-                    'id', ratings.id,
-                    'stars', ratings.stars,
-                    'comment', ratings.comment,
-                    'created_at', ratings.created_at
+                    'id', ratings.id, 'stars', ratings.stars,
+                    'comment', ratings.comment, 'created_at', ratings.created_at
                 )
                 ELSE NULL
             END AS rating
-        FROM 
-            rides
-        INNER JOIN
-            drivers ON rides.driver_id = drivers.id
-        LEFT JOIN
-            ratings ON rides.ride_id = ratings.ride_id
-        WHERE rides.user_id = ${user_id}
-        ORDER BY rides.created_at DESC
-        LIMIT ${parseInt(limit)} OFFSET ${parseInt(offset)}
-      `;
-    }
-
-
-    // Đếm tổng số records
-    let countResponse;
-    if (status && status !== 'all') {
-      switch (status) {
-        case 'active':
-          countResponse = await sql`
-            SELECT COUNT(*) as total FROM rides WHERE rides.user_id = ${user_id} AND rides.ride_status IN ('confirmed', 'driver_arrived', 'in_progress')
-          `;
-          break;
-        case 'completed':
-          countResponse = await sql`
-            SELECT COUNT(*) as total FROM rides WHERE rides.user_id = ${user_id} AND rides.ride_status = 'completed'
-          `;
-          break;
-        case 'cancelled':
-          countResponse = await sql`
-            SELECT COUNT(*) as total FROM rides WHERE rides.user_id = ${user_id} AND rides.ride_status IN ('cancelled', 'no_show')
-          `;
-          break;
-        default:
-          countResponse = await sql`
-            SELECT COUNT(*) as total FROM rides WHERE rides.user_id = ${user_id}
-          `;
+          FROM rides
+          INNER JOIN drivers ON rides.driver_id = drivers.id
+          INNER JOIN users ON rides.user_id = users.clerk_id
+          LEFT JOIN ratings ON rides.ride_id = ratings.ride_id
+          WHERE (rides.user_id = ${user_id} OR rides.driver_id = ${driver_id})
+            AND (
+              (${status === 'active'} AND rides.ride_status IN ('confirmed', 'driver_arrived', 'in_progress')) OR
+              (${status === 'completed'} AND rides.ride_status = 'completed') OR
+              (${status === 'cancelled'} AND rides.ride_status IN ('cancelled', 'no_show'))
+            )
+          ORDER BY rides.created_at DESC
+          LIMIT ${limitNum} OFFSET ${offsetNum}
+        `;
+      } else {
+        // Driver no status filter
+        response = await sql`
+          SELECT 
+            rides.ride_id, rides.origin_address, rides.destination_address,
+            rides.origin_latitude, rides.origin_longitude, rides.destination_latitude,
+            rides.destination_longitude, rides.ride_time, rides.fare_price,
+            rides.payment_status, rides.ride_status, rides.created_at,
+            rides.cancelled_at, rides.cancel_reason, rides.user_id AS passenger_id,
+            json_build_object(
+                'driver_id', drivers.id, 'first_name', drivers.first_name,
+                'last_name', drivers.last_name, 'profile_image_url', drivers.profile_image_url,
+                'car_image_url', drivers.car_image_url, 'car_seats', drivers.car_seats,
+                'rating', drivers.rating, 'vehicle_type', drivers.vehicle_type
+            ) AS driver,
+            json_build_object(
+                'clerk_id', users.clerk_id, 'name', users.name,
+                'email', users.email, 'profile_image_url', users.profile_image_url
+            ) AS passenger,
+            CASE 
+                WHEN ratings.id IS NOT NULL THEN json_build_object(
+                    'id', ratings.id, 'stars', ratings.stars,
+                    'comment', ratings.comment, 'created_at', ratings.created_at
+                )
+                ELSE NULL
+            END AS rating
+          FROM rides
+          INNER JOIN drivers ON rides.driver_id = drivers.id
+          INNER JOIN users ON rides.user_id = users.clerk_id
+          LEFT JOIN ratings ON rides.ride_id = ratings.ride_id
+          WHERE (rides.user_id = ${user_id} OR rides.driver_id = ${driver_id})
+          ORDER BY rides.created_at DESC
+          LIMIT ${limitNum} OFFSET ${offsetNum}
+        `;
       }
     } else {
-      countResponse = await sql`
-        SELECT COUNT(*) as total FROM rides WHERE rides.user_id = ${user_id}
-      `;
+      if (statusCondition) {
+        // Passenger with status filter
+        response = await sql`
+          SELECT 
+            rides.ride_id, rides.origin_address, rides.destination_address,
+            rides.origin_latitude, rides.origin_longitude, rides.destination_latitude,
+            rides.destination_longitude, rides.ride_time, rides.fare_price,
+            rides.payment_status, rides.ride_status, rides.created_at,
+            rides.cancelled_at, rides.cancel_reason, rides.user_id AS passenger_id,
+            json_build_object(
+                'driver_id', drivers.id, 'first_name', drivers.first_name,
+                'last_name', drivers.last_name, 'profile_image_url', drivers.profile_image_url,
+                'car_image_url', drivers.car_image_url, 'car_seats', drivers.car_seats,
+                'rating', drivers.rating, 'vehicle_type', drivers.vehicle_type
+            ) AS driver,
+            json_build_object(
+                'clerk_id', users.clerk_id, 'name', users.name,
+                'email', users.email, 'profile_image_url', users.profile_image_url
+            ) AS passenger,
+            CASE 
+                WHEN ratings.id IS NOT NULL THEN json_build_object(
+                    'id', ratings.id, 'stars', ratings.stars,
+                    'comment', ratings.comment, 'created_at', ratings.created_at
+                )
+                ELSE NULL
+            END AS rating
+          FROM rides
+          INNER JOIN drivers ON rides.driver_id = drivers.id
+          INNER JOIN users ON rides.user_id = users.clerk_id
+          LEFT JOIN ratings ON rides.ride_id = ratings.ride_id
+          WHERE rides.user_id = ${user_id}
+            AND (
+              (${status === 'active'} AND rides.ride_status IN ('confirmed', 'driver_arrived', 'in_progress')) OR
+              (${status === 'completed'} AND rides.ride_status = 'completed') OR
+              (${status === 'cancelled'} AND rides.ride_status IN ('cancelled', 'no_show'))
+            )
+          ORDER BY rides.created_at DESC
+          LIMIT ${limitNum} OFFSET ${offsetNum}
+        `;
+      } else {
+        // Passenger no status filter
+        response = await sql`
+          SELECT 
+            rides.ride_id, rides.origin_address, rides.destination_address,
+            rides.origin_latitude, rides.origin_longitude, rides.destination_latitude,
+            rides.destination_longitude, rides.ride_time, rides.fare_price,
+            rides.payment_status, rides.ride_status, rides.created_at,
+            rides.cancelled_at, rides.cancel_reason, rides.user_id AS passenger_id,
+            json_build_object(
+                'driver_id', drivers.id, 'first_name', drivers.first_name,
+                'last_name', drivers.last_name, 'profile_image_url', drivers.profile_image_url,
+                'car_image_url', drivers.car_image_url, 'car_seats', drivers.car_seats,
+                'rating', drivers.rating, 'vehicle_type', drivers.vehicle_type
+            ) AS driver,
+            json_build_object(
+                'clerk_id', users.clerk_id, 'name', users.name,
+                'email', users.email, 'profile_image_url', users.profile_image_url
+            ) AS passenger,
+            CASE 
+                WHEN ratings.id IS NOT NULL THEN json_build_object(
+                    'id', ratings.id, 'stars', ratings.stars,
+                    'comment', ratings.comment, 'created_at', ratings.created_at
+                )
+                ELSE NULL
+            END AS rating
+          FROM rides
+          INNER JOIN drivers ON rides.driver_id = drivers.id
+          INNER JOIN users ON rides.user_id = users.clerk_id
+          LEFT JOIN ratings ON rides.ride_id = ratings.ride_id
+          WHERE rides.user_id = ${user_id}
+          ORDER BY rides.created_at DESC
+          LIMIT ${limitNum} OFFSET ${offsetNum}
+        `;
+      }
+    }
+
+    // Count total records
+    let countResponse;
+    if (driver_id) {
+        countResponse = await sql`
+          SELECT COUNT(*) as total FROM rides 
+          WHERE (user_id = ${user_id} OR driver_id = ${driver_id})
+          AND (
+            (${!status || status === 'all'}) OR
+            (${status === 'active'} AND ride_status IN ('confirmed', 'driver_arrived', 'in_progress')) OR
+            (${status === 'completed'} AND ride_status = 'completed') OR
+            (${status === 'cancelled'} AND ride_status IN ('cancelled', 'no_show'))
+          )
+        `;
+    } else {
+        countResponse = await sql`
+          SELECT COUNT(*) as total FROM rides 
+          WHERE user_id = ${user_id}
+          AND (
+            (${!status || status === 'all'}) OR
+            (${status === 'active'} AND ride_status IN ('confirmed', 'driver_arrived', 'in_progress')) OR
+            (${status === 'completed'} AND ride_status = 'completed') OR
+            (${status === 'cancelled'} AND ride_status IN ('cancelled', 'no_show'))
+          )
+        `;
     }
 
     const totalCount = parseInt(countResponse[0].total);
@@ -287,6 +294,7 @@ export async function GET(request: Request) {
       }
     );
   } catch (error) {
+    console.error("Ride list error:", error);
     return new Response(
       JSON.stringify({ 
         error: "Lỗi máy chủ nội bộ",
@@ -301,3 +309,4 @@ export async function GET(request: Request) {
     );
   }
 }
+

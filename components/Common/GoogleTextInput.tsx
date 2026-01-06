@@ -26,7 +26,7 @@ const GoogleTextInput = ({
         fetchDetails={true}
         placeholder={t("home.whereTo")}
         enablePoweredByContainer={false}
-        debounce={200} // Giảm xuống 200ms để phản hồi nhanh hơn
+        debounce={400}
         minLength={2}
         styles={{
           textInputContainer: {
@@ -82,9 +82,8 @@ const GoogleTextInput = ({
           components: "country:vn",
           types: "geocode",
         }}
-        requestUrl={{
-          useOnPlatform: "web",
-          url: "https://maps.googleapis.com/maps/api",
+        GooglePlacesDetailsQuery={{
+          fields: "geometry,formatted_address",
         }}
         nearbyPlacesAPI="GooglePlacesSearch"
         renderLeftButton={() => (
@@ -104,7 +103,7 @@ const GoogleTextInput = ({
           placeholderTextColor: "gray",
           placeholder: initialLocation ?? t("home.whereTo"),
           numberOfLines: 1,
-          editable: !isLoading, // Disable khi đang loading
+          editable: !isLoading,
         }}
       />
     </View>

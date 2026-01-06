@@ -62,7 +62,7 @@ export default function DriverRegistrationScreen() {
 
   const pickImage = async (type: "license" | "vehicle" | "profile") => {
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: "images",
       allowsEditing: true,
       aspect: type === "profile" ? [1, 1] : [4, 3],
       quality: 0.8,
@@ -72,10 +72,8 @@ export default function DriverRegistrationScreen() {
       const uri = result.assets[0].uri;
       const photoKey = `${type}_photo_uri`;
 
-      // Update local URI first to show preview
-      setForm({ ...form, [photoKey]: uri });
+      setForm((prev) => ({ ...prev, [photoKey]: uri }));
 
-      // Upload to Cloudinary immediately
       await uploadImageToCloudinary(type, uri);
     }
   };
@@ -112,6 +110,7 @@ export default function DriverRegistrationScreen() {
       }
 
       const cloudinaryUrl = uploadResponse.data.url;
+      console.log(`[Upload Success] ${type}:`, cloudinaryUrl);
 
       // Map type to URL field name
       const urlFieldMap = {
@@ -122,8 +121,15 @@ export default function DriverRegistrationScreen() {
 
       // Store the Cloudinary URL
       const urlKey = urlFieldMap[type];
-      setForm((prev) => ({ ...prev, [urlKey]: cloudinaryUrl }));
+      console.log(`[Updating Form] Setting ${urlKey} to:`, cloudinaryUrl);
+
+      setForm((prev) => {
+        const updatedForm = { ...prev, [urlKey]: cloudinaryUrl };
+        console.log("[Current Form State]:", updatedForm);
+        return updatedForm;
+      });
     } catch (error: any) {
+      console.error(`[Upload Error] ${type}:`, error);
       Alert.alert(
         t("common.error"),
         `Lỗi khi tải ảnh ${type} lên: ${error.message}`
@@ -138,6 +144,8 @@ export default function DriverRegistrationScreen() {
   };
 
   const handleSubmit = async () => {
+    console.log("[Submit] Form data before validation:", form);
+
     // Validate required fields with specific error messages
     const missingFields: string[] = [];
 
@@ -157,6 +165,11 @@ export default function DriverRegistrationScreen() {
     }
 
     const missingPhotos: string[] = [];
+
+    console.log("--- Image Check ---");
+    console.log("License URL:", form.license_image_url);
+    console.log("Vehicle URL:", form.car_image_url);
+    console.log("Profile URL:", form.profile_image_url);
 
     if (!form.license_image_url) {
       missingPhotos.push(t("driver.licensePhoto"));
@@ -260,7 +273,9 @@ export default function DriverRegistrationScreen() {
           icon={icons.chat}
           iconStyle="#22c55e"
           value={form.phone}
-          onChangeText={(value) => setForm({ ...form, phone: value })}
+          onChangeText={(value) =>
+            setForm((prev) => ({ ...prev, phone: value }))
+          }
           keyboardType="phone-pad"
         />
 
@@ -270,7 +285,9 @@ export default function DriverRegistrationScreen() {
           icon={icons.list}
           iconStyle="#22c55e"
           value={form.license_number}
-          onChangeText={(value) => setForm({ ...form, license_number: value })}
+          onChangeText={(value) =>
+            setForm((prev) => ({ ...prev, license_number: value }))
+          }
         />
 
         {/* Vehicle Type Selection */}
@@ -282,11 +299,11 @@ export default function DriverRegistrationScreen() {
             <TouchableOpacity
               key={type.value}
               onPress={() =>
-                setForm({
-                  ...form,
+                setForm((prev) => ({
+                  ...prev,
                   vehicle_type: type.value,
                   car_seats: type.seats.toString(),
-                })
+                }))
               }
               className={`flex-1 mx-1 p-4 rounded-2xl border-2 ${
                 form.vehicle_type === type.value
