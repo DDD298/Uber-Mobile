@@ -189,7 +189,7 @@ export const RatingModal: React.FC<RatingModalProps> = ({
         </View>
 
         {/* Star Rating */}
-        <View className="items-center mb-4 py-4">
+        <View className="items-center mb-4 py-3">
           <StarRating
             rating={stars}
             onRatingChange={setStars}

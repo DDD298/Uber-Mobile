@@ -351,7 +351,7 @@ export default function DriverRegistrationScreen() {
               )}
             </View>
           ) : (
-            <View className="items-center py-4">
+            <View className="items-center py-3">
               <Ionicons name="card-outline" size={48} color="#9CA3AF" />
               <Text className="mt-2 text-gray-600 font-JakartaBold">
                 {t("driver.uploadLicense")}
@@ -387,7 +387,7 @@ export default function DriverRegistrationScreen() {
               )}
             </View>
           ) : (
-            <View className="items-center py-4">
+            <View className="items-center py-3">
               <Ionicons name="car-outline" size={48} color="#9CA3AF" />
               <Text className="mt-2 text-gray-600 font-JakartaBold">
                 {t("driver.uploadVehicle")}
@@ -423,7 +423,7 @@ export default function DriverRegistrationScreen() {
               )}
             </View>
           ) : (
-            <View className="items-center py-4">
+            <View className="items-center py-3">
               <Ionicons
                 name="person-circle-outline"
                 size={48}

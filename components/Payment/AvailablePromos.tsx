@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { fetchAPI } from "@/lib/fetch";
 import { Ionicons } from "@expo/vector-icons";
+import { PromoCode } from "@/types/type";
 
 interface AvailablePromosProps {
   userId: string;
@@ -49,7 +50,7 @@ const AvailablePromos = ({ userId, onSelectPromo }: AvailablePromosProps) => {
 
   if (loading) {
     return (
-      <View className="mb-4 py-4">
+      <View className="mb-4 py-3">
         <ActivityIndicator size="small" color="#0286FF" />
       </View>
     );

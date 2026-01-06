@@ -15,7 +15,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // Upload to Cloudinary
     const result = await uploadImageToCloudinary(
       base64,
       folder || "uber-clone/driver-temp",

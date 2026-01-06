@@ -3,7 +3,6 @@ import * as Device from "expo-device";
 import { Platform } from "react-native";
 import { fetchAPI } from "@/lib/fetch";
 
-// Configure notification handler
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,

@@ -91,48 +91,50 @@ export const calculateDriverTimes = async ({
     !userLongitude ||
     !destinationLatitude ||
     !destinationLongitude
-  )
-    return;
-
-  try {
-    const timesPromises = markers.map(async (marker) => {
-      const responseToUser = await fetch(
-        `https://maps.googleapis.com/maps/api/directions/json?origin=${marker.latitude},${marker.longitude}&destination=${userLatitude},${userLongitude}&key=${directionsAPI}`,
-      );
-      const dataToUser = await responseToUser.json();
-      const timeToUser = dataToUser.routes[0].legs[0].duration.value; // Time in seconds
-
-      const responseToDestination = await fetch(
-        `https://maps.googleapis.com/maps/api/directions/json?origin=${userLatitude},${userLongitude}&destination=${destinationLatitude},${destinationLongitude}&key=${directionsAPI}`,
-      );
-      const dataToDestination = await responseToDestination.json();
-      const timeToDestination =
-        dataToDestination.routes[0].legs[0].duration.value; // Time in seconds
-
-      const totalTime = (timeToUser + timeToDestination) / 60; // Total time in minutes
-      const distanceInMeters = dataToDestination.routes[0].legs[0].distance.value;
-      
-      // Tính surge multiplier dựa trên thời gian hiện tại
-      const surgeMultiplier = calculateSurgeMultiplier(new Date());
-      
-      // Tính giá sử dụng utility function
-      const pricingResult = calculateRidePrice({
-        basePrice: 15000, // Giá khởi điểm cơ bản (15,000 VND)
-        timeInMinutes: totalTime, // Tổng thời gian di chuyển (phút) = thời gian tài xế đến + thời gian đi đến đích
-        distanceInMeters: distanceInMeters, // Khoảng cách từ vị trí người dùng đến điểm đến (mét)
-        serviceFeeRate: 0.1, // Tỷ lệ phí dịch vụ (10% trên giá cơ bản)
-        taxRate: 0.1, // Tỷ lệ thuế VAT (10% trên tổng phụ)
-        surgeMultiplier: surgeMultiplier, // Hệ số tăng giá theo thời gian cao điểm (1.0 - 2.5x)
-        vehicleType: marker.vehicle_type, // Loại phương tiện (motorbike, car, suv, van, luxury)
-        carSeats: marker.car_seats // Số chỗ ngồi của xe (ảnh hưởng đến hệ số giá)
+    )
+      return [];
+  
+    try {
+      const timesPromises = markers.map(async (marker) => {
+        const responseToUser = await fetch(
+          `https://maps.googleapis.com/maps/api/directions/json?origin=${marker.latitude},${marker.longitude}&destination=${userLatitude},${userLongitude}&key=${directionsAPI}`,
+        );
+        const dataToUser = await responseToUser.json();
+        const timeToUser = dataToUser.routes[0].legs[0].duration.value; // Time in seconds
+  
+        const responseToDestination = await fetch(
+          `https://maps.googleapis.com/maps/api/directions/json?origin=${userLatitude},${userLongitude}&destination=${destinationLatitude},${destinationLongitude}&key=${directionsAPI}`,
+        );
+        const dataToDestination = await responseToDestination.json();
+        const timeToDestination =
+          dataToDestination.routes[0].legs[0].duration.value; // Time in seconds
+  
+        const totalTime = (timeToUser + timeToDestination) / 60; // Total time in minutes
+        const distanceInMeters = dataToDestination.routes[0].legs[0].distance.value;
+        
+        // Tính surge multiplier dựa trên thời gian hiện tại
+        const surgeMultiplier = calculateSurgeMultiplier(new Date());
+        
+        // Tính giá sử dụng utility function
+        const pricingResult = calculateRidePrice({
+          basePrice: 15000, // Giá khởi điểm cơ bản (15,000 VND)
+          timeInMinutes: totalTime, // Tổng thời gian di chuyển (phút) = thời gian tài xế đến + thời gian đi đến đích
+          distanceInMeters: distanceInMeters, // Khoảng cách từ vị trí người dùng đến điểm đến (mét)
+          serviceFeeRate: 0.1, // Tỷ lệ phí dịch vụ (10% trên giá cơ bản)
+          taxRate: 0.1, // Tỷ lệ thuế VAT (10% trên tổng phụ)
+          surgeMultiplier: surgeMultiplier, // Hệ số tăng giá theo thời gian cao điểm (1.0 - 2.5x)
+          vehicleType: marker.vehicle_type, // Loại phương tiện (motorbike, car, suv, van, luxury)
+          carSeats: marker.car_seats // Số chỗ ngồi của xe (ảnh hưởng đến hệ số giá)
+        });
+        
+        const price = pricingResult.totalPrice.toString();
+  
+        return { ...marker, time: totalTime, price };
       });
-      
-      const price = pricingResult.totalPrice.toString();
-
-      return { ...marker, time: totalTime, price };
-    });
-
-    return await Promise.all(timesPromises);
-  } catch (error) {
-  }
-};
+  
+      return await Promise.all(timesPromises);
+    } catch (error) {
+      console.error("Error calculating driver times:", error);
+      return [];
+    }
+  };
