@@ -17,6 +17,7 @@ import * as ImagePicker from "expo-image-picker";
 import PageHeader from "@/components/Common/PageHeader";
 import CustomButton from "@/components/Common/CustomButton";
 import InputField from "@/components/Common/InputField";
+import CustomAlert from "@/components/Common/CustomAlert";
 import { icons } from "@/constants";
 import { fetchAPI } from "@/lib/fetch";
 
@@ -25,15 +26,52 @@ export default function DriverRegistrationScreen() {
   const { user } = useUser();
   const [loading, setLoading] = useState(false);
   const [uploadStatus, setUploadStatus] = useState("");
+  const [alertConfig, setAlertConfig] = useState({
+    isVisible: false,
+    title: "",
+    description: "",
+    type: "info" as "success" | "error" | "info" | "warning",
+    onConfirm: () => {},
+  });
+
+  const showAlert = (
+    title: string,
+    description: string,
+    type: "success" | "error" | "info" | "warning" = "info",
+    onConfirm?: () => void
+  ) => {
+    setAlertConfig({
+      isVisible: true,
+      title,
+      description,
+      type,
+      onConfirm:
+        onConfirm ||
+        (() => setAlertConfig((prev) => ({ ...prev, isVisible: false }))),
+    });
+  };
 
   const [form, setForm] = useState({
     phone: "",
     license_number: "",
     vehicle_type: "car",
     car_seats: "4",
-    license_photo: null as string | null,
-    vehicle_photo: null as string | null,
-    profile_photo: null as string | null,
+    license_photo_uri: null as string | null,
+    vehicle_photo_uri: null as string | null,
+    profile_photo_uri: null as string | null,
+    license_image_url: null as string | null,
+    car_image_url: null as string | null,
+    profile_image_url: null as string | null,
+  });
+
+  const [uploadingImage, setUploadingImage] = useState<{
+    license: boolean;
+    vehicle: boolean;
+    profile: boolean;
+  }>({
+    license: false,
+    vehicle: false,
+    profile: false,
   });
 
   const vehicleTypes = [
@@ -56,20 +94,147 @@ export default function DriverRegistrationScreen() {
     });
 
     if (!result.canceled && result.assets[0]) {
-      const key = `${type}_photo`;
-      setForm({ ...form, [key]: result.assets[0].uri });
+      const uri = result.assets[0].uri;
+      const photoKey = `${type}_photo_uri`;
+
+      // Update local URI first to show preview
+      setForm({ ...form, [photoKey]: uri });
+
+      // Upload to Cloudinary immediately
+      await uploadImageToCloudinary(type, uri);
+    }
+  };
+
+  const uploadImageToCloudinary = async (
+    type: "license" | "vehicle" | "profile",
+    uri: string
+  ) => {
+    try {
+      setUploadingImage((prev) => ({ ...prev, [type]: true }));
+
+      console.log(`📤 [Upload] Starting upload for ${type}...`);
+
+      // Convert URI to base64
+      const response = await fetch(uri);
+      const blob = await response.blob();
+      const base64 = await new Promise<string>((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.readAsDataURL(blob);
+      });
+
+      // Upload to Cloudinary via API
+      const uploadResponse = await fetchAPI("/(api)/upload-image", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          base64,
+          folder: `uber-clone/driver-documents/${type}`,
+          publicId: `driver_${user?.id}_${type}_${Date.now()}`,
+        }),
+      });
+
+      if (!uploadResponse.success) {
+        throw new Error(uploadResponse.error || "Upload failed");
+      }
+
+      const cloudinaryUrl = uploadResponse.data.url;
+
+      // Map type to URL field name
+      const urlFieldMap = {
+        license: "license_image_url",
+        vehicle: "car_image_url",
+        profile: "profile_image_url",
+      };
+
+      // Store the Cloudinary URL
+      const urlKey = urlFieldMap[type];
+      setForm((prev) => {
+        const updated = { ...prev, [urlKey]: cloudinaryUrl };
+        console.log(`📝 [Upload] Updated form.${urlKey}:`, cloudinaryUrl);
+        return updated;
+      });
+
+      console.log(
+        `✅ [Upload] ${type} uploaded successfully to:`,
+        cloudinaryUrl
+      );
+    } catch (error: any) {
+      console.error(`❌ [Upload] Failed to upload ${type} image:`, error);
+      showAlert(
+        t("common.error"),
+        `Lỗi khi tải ảnh ${type} lên: ${error.message}`,
+        "error"
+      );
+
+      // Clear the local URI on error
+      const photoKey = `${type}_photo_uri`;
+      setForm((prev) => ({ ...prev, [photoKey]: null }));
+    } finally {
+      setUploadingImage((prev) => ({ ...prev, [type]: false }));
     }
   };
 
   const handleSubmit = async () => {
-    // Validate required fields
-    if (!form.phone || !form.license_number) {
-      Alert.alert(t("common.error"), t("driver.fillAllFields"));
+    // Debug: Log current form state
+    console.log("🔍 [Submit] Current form state:");
+    console.log("  - phone:", form.phone);
+    console.log("  - license_number:", form.license_number);
+    console.log(
+      "  - license_image_url:",
+      form.license_image_url ? "✅ Present" : "❌ Missing"
+    );
+    console.log(
+      "  - car_image_url:",
+      form.car_image_url ? "✅ Present" : "❌ Missing"
+    );
+    console.log(
+      "  - profile_image_url:",
+      form.profile_image_url ? "✅ Present" : "❌ Missing"
+    );
+    console.log("  - Full URLs:");
+    console.log("    License:", form.license_image_url);
+    console.log("    Car:", form.car_image_url);
+    console.log("    Profile:", form.profile_image_url);
+
+    // Validate required fields with specific error messages
+    const missingFields: string[] = [];
+
+    if (!form.phone) {
+      missingFields.push(t("profile.phone"));
+    }
+    if (!form.license_number) {
+      missingFields.push(t("driver.licenseNumber"));
+    }
+
+    if (missingFields.length > 0) {
+      showAlert(
+        t("common.error"),
+        `${t("driver.missingFields")}:\n• ${missingFields.join("\n• ")}`,
+        "warning"
+      );
       return;
     }
 
-    if (!form.license_photo || !form.vehicle_photo || !form.profile_photo) {
-      Alert.alert(t("common.error"), t("driver.uploadAllPhotos"));
+    const missingPhotos: string[] = [];
+
+    if (!form.license_image_url) {
+      missingPhotos.push(t("driver.licensePhoto"));
+    }
+    if (!form.car_image_url) {
+      missingPhotos.push(t("driver.vehiclePhoto"));
+    }
+    if (!form.profile_image_url) {
+      missingPhotos.push(t("driver.profilePhoto"));
+    }
+
+    if (missingPhotos.length > 0) {
+      console.error("❌ [Validation] Missing photos:", missingPhotos);
+      showAlert(
+        t("common.error"),
+        `${t("driver.missingPhotos")}:\n• ${missingPhotos.join("\n• ")}`,
+        "warning"
+      );
       return;
     }
 
@@ -84,15 +249,18 @@ export default function DriverRegistrationScreen() {
       license_number: form.license_number,
       vehicle_type: form.vehicle_type,
       car_seats: parseInt(form.car_seats),
+      license_image_url: form.license_image_url,
+      car_image_url: form.car_image_url,
+      profile_image_url: form.profile_image_url,
     };
 
     console.log(
-      "🚀 [Registration] Submitting data:",
+      "🚀 [Registration] Submitting driver registration data:",
       JSON.stringify(submitData, null, 2)
     );
 
     try {
-      // Step 1: Register driver
+      // Register driver with all data including image URLs
       setUploadStatus("Đang đăng ký tài xế...");
       const registerResponse = await fetchAPI("/(api)/driver/register", {
         method: "POST",
@@ -108,93 +276,35 @@ export default function DriverRegistrationScreen() {
 
       const driverId = registerResponse.data.driver_id;
 
-      // Step 2: Upload documents with progress alerts
-      const documentTypes = [
-        {
-          type: "license",
-          uri: form.license_photo,
-          name: t("driver.licensePhoto"),
-          emoji: "📄",
-        },
-        {
-          type: "vehicle_photo",
-          uri: form.vehicle_photo,
-          name: t("driver.vehiclePhoto"),
-          emoji: "🚗",
-        },
-        {
-          type: "profile_photo",
-          uri: form.profile_photo,
-          name: t("driver.profilePhoto"),
-          emoji: "👤",
-        },
-      ];
-
-      for (let i = 0; i < documentTypes.length; i++) {
-        const doc = documentTypes[i];
-
-        // Update status and show alert
-        const statusMessage = `${doc.emoji} Đang tải lên ${doc.name} (${i + 1}/${documentTypes.length})...`;
-        setUploadStatus(statusMessage);
-
-        // Show upload progress alert
-        console.log(
-          `📤 [Upload ${i + 1}/${documentTypes.length}] Đang tải lên ${doc.name}...`
-        );
-
-        // Show Alert for current upload
-        Alert.alert(
-          "📤 Đang tải ảnh lên",
-          `${doc.emoji} ${doc.name}\n\nTiến trình: ${i + 1}/${documentTypes.length}`,
-          [],
-          { cancelable: false }
-        );
-
-        const formData = new FormData();
-        formData.append("driver_id", driverId.toString());
-        formData.append("document_type", doc.type);
-
-        // Create file object from URI
-        const filename = doc.uri!.split("/").pop() || "photo.jpg";
-        const match = /\.(\w+)$/.exec(filename);
-        const type = match ? `image/${match[1]}` : "image/jpeg";
-
-        formData.append("file", {
-          uri: doc.uri,
-          name: filename,
-          type,
-        } as any);
-
-        const uploadResponse = await fetchAPI("/(api)/driver/upload-document", {
-          method: "POST",
-          body: formData,
-        });
-
-        if (uploadResponse.success) {
-          console.log(
-            `✅ [Upload ${i + 1}/${documentTypes.length}] ${doc.name} đã tải lên thành công!`
-          );
-          console.log(`   URL: ${uploadResponse.data.document_url}`);
-        } else {
-          throw new Error(`Lỗi khi tải lên ${doc.name}`);
-        }
+      // Log if using existing driver
+      if (registerResponse.data.already_exists) {
+        console.log("ℹ️ [Registration] Using existing driver ID:", driverId);
       }
 
       console.log(
-        "🎉 [Registration] Tất cả giấy tờ đã được tải lên thành công!"
+        "🎉 [Registration] Driver registered successfully with ID:",
+        driverId
       );
+      console.log("📸 Images uploaded:");
+      console.log("  - License:", form.license_image_url ? "✅" : "❌");
+      console.log("  - Vehicle:", form.car_image_url ? "✅" : "❌");
+      console.log("  - Profile:", form.profile_image_url ? "✅" : "❌");
 
-      Alert.alert(t("common.success"), t("driver.registrationSuccess"), [
-        {
-          text: "OK",
-          onPress: () => router.replace("/(root)/tabs/profile"),
-        },
-      ]);
+      showAlert(
+        t("common.success"),
+        t("driver.registrationSuccess"),
+        "success",
+        () => {
+          setAlertConfig((prev) => ({ ...prev, isVisible: false }));
+          router.replace("/(root)/tabs/profile");
+        }
+      );
     } catch (error: any) {
       console.error("Driver registration error:", error);
-      Alert.alert(
+      showAlert(
         t("common.error"),
-        error.message || t("driver.registrationFailed")
+        error.message || t("driver.registrationFailed"),
+        "error"
       );
     } finally {
       setLoading(false);
@@ -226,7 +336,7 @@ export default function DriverRegistrationScreen() {
         </View>
 
         {/* Personal Info */}
-        <Text className="text-lg font-JakartaBold mb-4">
+        <Text className="text-lg font-JakartaBold">
           {t("driver.personalInfo")}
         </Text>
 
@@ -307,17 +417,24 @@ export default function DriverRegistrationScreen() {
         <TouchableOpacity
           onPress={() => pickImage("license")}
           className="mb-4 p-4 border-2 border-dashed border-gray-300 rounded-2xl bg-gray-50"
+          disabled={uploadingImage.license}
         >
-          {form.license_photo ? (
+          {form.license_photo_uri ? (
             <View>
               <Image
-                source={{ uri: form.license_photo }}
+                source={{ uri: form.license_photo_uri }}
                 className="w-full h-40 rounded-xl mb-2"
                 resizeMode="cover"
               />
-              <Text className="text-center text-green-600 font-JakartaBold">
-                ✓ {t("driver.licensePhoto")}
-              </Text>
+              {uploadingImage.license ? (
+                <Text className="text-center text-blue-600 font-JakartaBold">
+                  ⏳ Đang tải lên...
+                </Text>
+              ) : (
+                <Text className="text-center text-green-600 font-JakartaBold">
+                  ✓ {t("driver.licensePhoto")}
+                </Text>
+              )}
             </View>
           ) : (
             <View className="items-center py-4">
@@ -336,17 +453,24 @@ export default function DriverRegistrationScreen() {
         <TouchableOpacity
           onPress={() => pickImage("vehicle")}
           className="mb-4 p-4 border-2 border-dashed border-gray-300 rounded-2xl bg-gray-50"
+          disabled={uploadingImage.vehicle}
         >
-          {form.vehicle_photo ? (
+          {form.vehicle_photo_uri ? (
             <View>
               <Image
-                source={{ uri: form.vehicle_photo }}
+                source={{ uri: form.vehicle_photo_uri }}
                 className="w-full h-40 rounded-xl mb-2"
                 resizeMode="cover"
               />
-              <Text className="text-center text-green-600 font-JakartaBold">
-                ✓ {t("driver.vehiclePhoto")}
-              </Text>
+              {uploadingImage.vehicle ? (
+                <Text className="text-center text-blue-600 font-JakartaBold">
+                  ⏳ Đang tải lên...
+                </Text>
+              ) : (
+                <Text className="text-center text-green-600 font-JakartaBold">
+                  ✓ {t("driver.vehiclePhoto")}
+                </Text>
+              )}
             </View>
           ) : (
             <View className="items-center py-4">
@@ -365,17 +489,24 @@ export default function DriverRegistrationScreen() {
         <TouchableOpacity
           onPress={() => pickImage("profile")}
           className="mb-4 p-4 border-2 border-dashed border-gray-300 rounded-2xl bg-gray-50"
+          disabled={uploadingImage.profile}
         >
-          {form.profile_photo ? (
+          {form.profile_photo_uri ? (
             <View>
               <Image
-                source={{ uri: form.profile_photo }}
+                source={{ uri: form.profile_photo_uri }}
                 className="w-32 h-32 rounded-full self-center mb-2"
                 resizeMode="cover"
               />
-              <Text className="text-center text-green-600 font-JakartaBold">
-                ✓ {t("driver.profilePhoto")}
-              </Text>
+              {uploadingImage.profile ? (
+                <Text className="text-center text-blue-600 font-JakartaBold">
+                  ⏳ Đang tải lên...
+                </Text>
+              ) : (
+                <Text className="text-center text-green-600 font-JakartaBold">
+                  ✓ {t("driver.profilePhoto")}
+                </Text>
+              )}
             </View>
           ) : (
             <View className="items-center py-4">
@@ -406,6 +537,14 @@ export default function DriverRegistrationScreen() {
           className="mb-8"
         />
       </ScrollView>
+
+      <CustomAlert
+        isVisible={alertConfig.isVisible}
+        title={alertConfig.title}
+        description={alertConfig.description}
+        type={alertConfig.type}
+        onConfirm={alertConfig.onConfirm}
+      />
     </SafeAreaView>
   );
 }

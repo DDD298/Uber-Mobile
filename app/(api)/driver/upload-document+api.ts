@@ -184,12 +184,10 @@ export async function POST(request: Request) {
     }
 
     // Update corresponding field in drivers table based on document type
-    // Note: license, registration, insurance are stored in driver_documents table only
-    // Only profile_photo and vehicle_photo update the drivers table
     switch (document_type) {
       case "license":
         console.log(`📄 [Upload] Bằng lái xe (License): ${document_url}`);
-        // License is stored in driver_documents table only
+        await sql`UPDATE drivers SET license_image_url = ${document_url}, updated_at = NOW() WHERE id = ${driver_id}`;
         break;
       case "registration":
         console.log(`📄 [Upload] Giấy đăng ký xe (Registration): ${document_url}`);

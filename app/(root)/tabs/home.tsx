@@ -118,8 +118,9 @@ export default function HomeScreen() {
             <Text className="text-2xl capitalize font-JakartaExtraBold text-secondary-900">
               {t("home.greeting")}
               {", "}
-              {user?.firstName ||
-                user?.emailAddresses[0].emailAddress.split("@")[0]}
+              {user?.firstName || user?.lastName
+                ? `${user?.firstName || ""} ${user?.lastName || ""}`.trim()
+                : user?.emailAddresses[0].emailAddress.split("@")[0]}
               {""}👋
             </Text>
             <TouchableOpacity

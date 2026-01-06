@@ -48,16 +48,18 @@ export async function POST(request: Request) {
     `;
 
     if (existingDriver.length > 0) {
+      console.log("ℹ️ [API:Register] Driver already exists, returning existing driver_id");
       return Response.json(
         {
-          success: false,
-          error: "Tài xế đã tồn tại",
+          success: true,
           data: {
             driver_id: existingDriver[0].id,
             approval_status: existingDriver[0].approval_status,
+            already_exists: true,
           },
+          message: "Tài xế đã tồn tại. Bạn có thể cập nhật giấy tờ.",
         },
-        { status: 409 }
+        { status: 200 }
       );
     }
 
@@ -72,6 +74,9 @@ export async function POST(request: Request) {
         license_number,
         vehicle_type,
         car_seats,
+        license_image_url,
+        car_image_url,
+        profile_image_url,
         approval_status,
         status,
         rating,
@@ -87,6 +92,9 @@ export async function POST(request: Request) {
         ${license_number},
         ${vehicle_type},
         ${car_seats},
+        ${body.license_image_url || null},
+        ${body.car_image_url || null},
+        ${body.profile_image_url || null},
         'pending',
         'offline',
         5.0,

@@ -253,7 +253,7 @@ export default function DriverProfileScreen() {
           <View className="space-y-3">
             <View className="flex-row items-center py-3 border-b border-gray-100">
               <View className="w-10 h-10 items-center justify-center bg-green-50 rounded-full">
-                <Ionicons name="car-sport-outline" size={20} color="#10B981" />
+                <Ionicons name="car-sport-outline" size={20} color="#22c55e" />
               </View>
               <View className="flex-1 ml-3">
                 <Text className="text-sm text-gray-500 font-JakartaMedium">
@@ -267,7 +267,7 @@ export default function DriverProfileScreen() {
 
             <View className="flex-row items-center py-3 border-b border-gray-100">
               <View className="w-10 h-10 items-center justify-center bg-green-50 rounded-full">
-                <Ionicons name="people-outline" size={20} color="#dcfce7" />
+                <Ionicons name="people-outline" size={20} color="#22c55e" />
               </View>
               <View className="flex-1 ml-3">
                 <Text className="text-sm text-gray-500 font-JakartaMedium">
@@ -281,7 +281,7 @@ export default function DriverProfileScreen() {
 
             <View className="flex-row items-center py-3">
               <View className="w-10 h-10 items-center justify-center bg-green-50 rounded-full">
-                <Ionicons name="card-outline" size={20} color="#dcfce7" />
+                <Ionicons name="card-outline" size={20} color="#22c55e" />
               </View>
               <View className="flex-1 ml-3">
                 <Text className="text-sm text-gray-500 font-JakartaMedium">
