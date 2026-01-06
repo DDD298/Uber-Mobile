@@ -4,8 +4,6 @@ export async function POST(request: Request) {
   try {
     const sql = neon(`${process.env.DATABASE_URL}`);
     const body = await request.json();
-    console.log("📥 [API:Register] Received body:", JSON.stringify(body, null, 2));
-
     const {
       clerk_id,
       email,
@@ -29,7 +27,6 @@ export async function POST(request: Request) {
     if (!car_seats && car_seats !== 0) missingFields.push("car_seats");
 
     if (missingFields.length > 0) {
-      console.log("⚠️ [API:Register] Missing fields:", missingFields);
       return Response.json(
         {
           success: false,
@@ -48,7 +45,6 @@ export async function POST(request: Request) {
     `;
 
     if (existingDriver.length > 0) {
-      console.log("ℹ️ [API:Register] Driver already exists, returning existing driver_id");
       return Response.json(
         {
           success: true,
@@ -117,7 +113,6 @@ export async function POST(request: Request) {
       { status: 201 }
     );
   } catch (error: any) {
-    console.error("Error registering driver:", error);
     return Response.json(
       {
         success: false,

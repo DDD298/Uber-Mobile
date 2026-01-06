@@ -15,16 +15,12 @@ export async function POST(request: Request) {
       );
     }
 
-    console.log(`📤 [API:Upload-Image] Uploading to folder: ${folder}`);
-
     // Upload to Cloudinary
     const result = await uploadImageToCloudinary(
       base64,
       folder || "uber-clone/driver-temp",
       publicId || `temp_${Date.now()}`
     );
-
-    console.log(`✅ [API:Upload-Image] Success! URL: ${result.secure_url}`);
 
     return Response.json(
       {
@@ -37,7 +33,6 @@ export async function POST(request: Request) {
       { status: 200 }
     );
   } catch (error: any) {
-    console.error("❌ [API:Upload-Image] Error:", error);
     return Response.json(
       {
         success: false,

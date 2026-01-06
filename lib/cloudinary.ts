@@ -29,9 +29,9 @@ export async function uploadImageToCloudinary(
       folder,
       resource_type: "image",
       transformation: [
-        { width: 1200, height: 1200, crop: "limit" }, // Limit max size
-        { quality: "auto:good" }, // Auto quality optimization
-        { fetch_format: "auto" }, // Auto format selection (WebP if supported)
+        { width: 1200, height: 1200, crop: "limit" },
+        { quality: "auto:good" }, 
+        { fetch_format: "auto" }, 
       ],
     };
 
@@ -53,7 +53,6 @@ export async function uploadImageToCloudinary(
       bytes: result.bytes,
     };
   } catch (error: any) {
-    console.error("❌ Cloudinary upload error:", error);
     throw new Error(`Failed to upload image to Cloudinary: ${error.message}`);
   }
 }
@@ -64,14 +63,12 @@ export async function uploadFileToCloudinary(
   publicId?: string
 ): Promise<CloudinaryUploadResult> {
   try {
-    // Convert file to base64
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
     const base64 = buffer.toString("base64");
 
     return await uploadImageToCloudinary(base64, folder, publicId);
   } catch (error: any) {
-    console.error("❌ File to Cloudinary upload error:", error);
     throw new Error(`Failed to upload file to Cloudinary: ${error.message}`);
   }
 }
@@ -81,9 +78,7 @@ export async function deleteImageFromCloudinary(
 ): Promise<void> {
   try {
     await cloudinary.uploader.destroy(publicId);
-    console.log(`✅ Deleted image from Cloudinary: ${publicId}`);
   } catch (error: any) {
-    console.error("❌ Cloudinary delete error:", error);
     throw new Error(`Failed to delete image from Cloudinary: ${error.message}`);
   }
 }

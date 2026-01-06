@@ -123,7 +123,6 @@ export async function POST(request: Request) {
       { status: 200 }
     );
   } catch (error: any) {
-    console.error("Error accepting ride:", error);
     return Response.json(
       {
         success: false,

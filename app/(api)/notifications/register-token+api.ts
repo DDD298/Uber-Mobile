@@ -111,7 +111,6 @@ export async function POST(request: Request) {
       );
     }
   } catch (error: any) {
-    console.error("Error registering push token:", error);
     return Response.json(
       {
         success: false,

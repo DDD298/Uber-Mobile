@@ -129,7 +129,6 @@ const Payment = ({
         setIsProcessing(false);
       }
     } catch (error) {
-      console.error("Payment error:", error);
       setIsProcessing(false);
     }
   };
@@ -223,7 +222,6 @@ const Payment = ({
       setCurrentCustomer(customer);
       return true;
     } catch (error) {
-      console.error("Payment initialization error:", error);
       return false;
     }
   };

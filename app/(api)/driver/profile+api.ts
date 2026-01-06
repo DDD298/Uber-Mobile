@@ -145,7 +145,6 @@ export async function GET(request: Request) {
       { status: 200 }
     );
   } catch (error: any) {
-    console.error("Error fetching driver profile:", error);
     return Response.json(
       {
         success: false,

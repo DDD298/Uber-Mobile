@@ -58,7 +58,7 @@ class RideStatusUpdater {
         await this.updateRideStatus(ride.ride_id, 'completed');
       }
     } catch (error) {
-      console.error('❌ Error in status updater:', error);
+      console.error(error);
     }
   }
 
@@ -75,7 +75,7 @@ class RideStatusUpdater {
         }),
       });
     } catch (error) {
-      console.error(`❌ Failed to update ride ${ride_id}:`, error);
+      console.error(error);
     }
   }
 

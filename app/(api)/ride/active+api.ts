@@ -84,7 +84,6 @@ export async function GET(request: Request) {
       { status: 200 }
     );
   } catch (error: any) {
-    console.error("Error fetching active ride:", error);
     return Response.json(
       {
         success: false,

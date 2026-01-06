@@ -116,7 +116,6 @@ export async function GET(request: Request) {
       { status: 200 }
     );
   } catch (error: any) {
-    console.error("Error fetching available promos:", error);
     return Response.json(
       {
         success: false,

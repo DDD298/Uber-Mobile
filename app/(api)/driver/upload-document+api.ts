@@ -25,9 +25,6 @@ export async function POST(request: Request) {
         );
       }
 
-      console.log(`📤 [API:Upload] Uploading ${document_type} for driver ${driver_id}`);
-      console.log(`   File size: ${file.size} bytes, Type: ${file.type}`);
-      
       try {
         // Upload to Cloudinary
         const cloudinaryResult = await uploadFileToCloudinary(
@@ -37,10 +34,7 @@ export async function POST(request: Request) {
         );
         
         document_url = cloudinaryResult.secure_url;
-        console.log(`✅ [API:Upload] Success! URL: ${document_url}`);
-        console.log(`   Cloudinary ID: ${cloudinaryResult.public_id}`);
       } catch (uploadError: any) {
-        console.error(`❌ [API:Upload] Cloudinary upload failed:`, uploadError);
         return Response.json(
           {
             success: false,
@@ -68,13 +62,9 @@ export async function POST(request: Request) {
         );
       }
 
-      // If it's already a URL (starts with http), use it directly
       if (base64Data.startsWith("http")) {
         document_url = base64Data;
-        console.log(`🔗 [API:Upload] Using existing URL for ${document_type}`);
       } else {
-        // Upload base64 to Cloudinary
-        console.log(`📤 [API:Upload] Uploading ${document_type} (base64) for driver ${driver_id}`);
         
         try {
           const cloudinaryResult = await uploadImageToCloudinary(
@@ -84,10 +74,7 @@ export async function POST(request: Request) {
           );
           
           document_url = cloudinaryResult.secure_url;
-          console.log(`✅ [API:Upload] Success! URL: ${document_url}`);
-          console.log(`   Cloudinary ID: ${cloudinaryResult.public_id}`);
         } catch (uploadError: any) {
-          console.error(`❌ [API:Upload] Cloudinary upload failed:`, uploadError);
           return Response.json(
             {
               success: false,
@@ -186,32 +173,21 @@ export async function POST(request: Request) {
     // Update corresponding field in drivers table based on document type
     switch (document_type) {
       case "license":
-        console.log(`📄 [Upload] Bằng lái xe (License): ${document_url}`);
         await sql`UPDATE drivers SET license_image_url = ${document_url}, updated_at = NOW() WHERE id = ${driver_id}`;
         break;
       case "registration":
-        console.log(`📄 [Upload] Giấy đăng ký xe (Registration): ${document_url}`);
         // Registration is stored in driver_documents table only
         break;
       case "insurance":
-        console.log(`📄 [Upload] Bảo hiểm xe (Insurance): ${document_url}`);
         // Insurance is stored in driver_documents table only
         break;
       case "profile_photo":
-        console.log(`👤 [Upload] Ảnh đại diện (Profile Photo): ${document_url}`);
         await sql`UPDATE drivers SET profile_image_url = ${document_url}, updated_at = NOW() WHERE id = ${driver_id}`;
         break;
       case "vehicle_photo":
-        console.log(`🚗 [Upload] Ảnh xe (Vehicle Photo): ${document_url}`);
         await sql`UPDATE drivers SET car_image_url = ${document_url}, updated_at = NOW() WHERE id = ${driver_id}`;
         break;
     }
-
-    console.log(`\n✅ [Upload Summary] Document uploaded successfully!`);
-    console.log(`   Driver ID: ${driver_id}`);
-    console.log(`   Document Type: ${document_type}`);
-    console.log(`   Cloudinary URL: ${document_url}`);
-    console.log(`   Status: pending review\n`);
 
     return Response.json(
       {
@@ -226,7 +202,6 @@ export async function POST(request: Request) {
       { status: 200 }
     );
   } catch (error: any) {
-    console.error("Error uploading document:", error);
     return Response.json(
       {
         success: false,

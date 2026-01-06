@@ -99,7 +99,6 @@ export async function POST(request: Request) {
         { status: 200 }
       );
     } catch (dbError: any) {
-      console.error("Database error:", dbError);
       return Response.json(
         {
           success: false,
@@ -110,7 +109,6 @@ export async function POST(request: Request) {
       );
     }
   } catch (error: any) {
-    console.error("Error applying promo code:", error);
     return Response.json(
       {
         success: false,

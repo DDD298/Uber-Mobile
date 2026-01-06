@@ -1,4 +1,5 @@
 import { fetchAPI } from "@/lib/fetch";
+import type { RideStatusSyncData } from "@/types/type";
 
 interface RideStatusPollerConfig {
   rideId: number;

@@ -169,7 +169,6 @@ export async function POST(request: Request) {
     );
 
   } catch (error) {
-    console.error("Promo validation error:", error);
     return Response.json(
       {
         success: false,

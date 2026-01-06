@@ -17,7 +17,6 @@ import * as ImagePicker from "expo-image-picker";
 import PageHeader from "@/components/Common/PageHeader";
 import CustomButton from "@/components/Common/CustomButton";
 import InputField from "@/components/Common/InputField";
-import CustomAlert from "@/components/Common/CustomAlert";
 import { icons } from "@/constants";
 import { fetchAPI } from "@/lib/fetch";
 
@@ -26,30 +25,6 @@ export default function DriverRegistrationScreen() {
   const { user } = useUser();
   const [loading, setLoading] = useState(false);
   const [uploadStatus, setUploadStatus] = useState("");
-  const [alertConfig, setAlertConfig] = useState({
-    isVisible: false,
-    title: "",
-    description: "",
-    type: "info" as "success" | "error" | "info" | "warning",
-    onConfirm: () => {},
-  });
-
-  const showAlert = (
-    title: string,
-    description: string,
-    type: "success" | "error" | "info" | "warning" = "info",
-    onConfirm?: () => void
-  ) => {
-    setAlertConfig({
-      isVisible: true,
-      title,
-      description,
-      type,
-      onConfirm:
-        onConfirm ||
-        (() => setAlertConfig((prev) => ({ ...prev, isVisible: false }))),
-    });
-  };
 
   const [form, setForm] = useState({
     phone: "",
@@ -112,8 +87,6 @@ export default function DriverRegistrationScreen() {
     try {
       setUploadingImage((prev) => ({ ...prev, [type]: true }));
 
-      console.log(`📤 [Upload] Starting upload for ${type}...`);
-
       // Convert URI to base64
       const response = await fetch(uri);
       const blob = await response.blob();
@@ -149,22 +122,11 @@ export default function DriverRegistrationScreen() {
 
       // Store the Cloudinary URL
       const urlKey = urlFieldMap[type];
-      setForm((prev) => {
-        const updated = { ...prev, [urlKey]: cloudinaryUrl };
-        console.log(`📝 [Upload] Updated form.${urlKey}:`, cloudinaryUrl);
-        return updated;
-      });
-
-      console.log(
-        `✅ [Upload] ${type} uploaded successfully to:`,
-        cloudinaryUrl
-      );
+      setForm((prev) => ({ ...prev, [urlKey]: cloudinaryUrl }));
     } catch (error: any) {
-      console.error(`❌ [Upload] Failed to upload ${type} image:`, error);
-      showAlert(
+      Alert.alert(
         t("common.error"),
-        `Lỗi khi tải ảnh ${type} lên: ${error.message}`,
-        "error"
+        `Lỗi khi tải ảnh ${type} lên: ${error.message}`
       );
 
       // Clear the local URI on error
@@ -176,27 +138,6 @@ export default function DriverRegistrationScreen() {
   };
 
   const handleSubmit = async () => {
-    // Debug: Log current form state
-    console.log("🔍 [Submit] Current form state:");
-    console.log("  - phone:", form.phone);
-    console.log("  - license_number:", form.license_number);
-    console.log(
-      "  - license_image_url:",
-      form.license_image_url ? "✅ Present" : "❌ Missing"
-    );
-    console.log(
-      "  - car_image_url:",
-      form.car_image_url ? "✅ Present" : "❌ Missing"
-    );
-    console.log(
-      "  - profile_image_url:",
-      form.profile_image_url ? "✅ Present" : "❌ Missing"
-    );
-    console.log("  - Full URLs:");
-    console.log("    License:", form.license_image_url);
-    console.log("    Car:", form.car_image_url);
-    console.log("    Profile:", form.profile_image_url);
-
     // Validate required fields with specific error messages
     const missingFields: string[] = [];
 
@@ -208,10 +149,9 @@ export default function DriverRegistrationScreen() {
     }
 
     if (missingFields.length > 0) {
-      showAlert(
+      Alert.alert(
         t("common.error"),
-        `${t("driver.missingFields")}:\n• ${missingFields.join("\n• ")}`,
-        "warning"
+        `${t("driver.missingFields")}:\n• ${missingFields.join("\n• ")}`
       );
       return;
     }
@@ -229,11 +169,9 @@ export default function DriverRegistrationScreen() {
     }
 
     if (missingPhotos.length > 0) {
-      console.error("❌ [Validation] Missing photos:", missingPhotos);
-      showAlert(
+      Alert.alert(
         t("common.error"),
-        `${t("driver.missingPhotos")}:\n• ${missingPhotos.join("\n• ")}`,
-        "warning"
+        `${t("driver.missingPhotos")}:\n• ${missingPhotos.join("\n• ")}`
       );
       return;
     }
@@ -254,11 +192,6 @@ export default function DriverRegistrationScreen() {
       profile_image_url: form.profile_image_url,
     };
 
-    console.log(
-      "🚀 [Registration] Submitting driver registration data:",
-      JSON.stringify(submitData, null, 2)
-    );
-
     try {
       // Register driver with all data including image URLs
       setUploadStatus("Đang đăng ký tài xế...");
@@ -276,35 +209,16 @@ export default function DriverRegistrationScreen() {
 
       const driverId = registerResponse.data.driver_id;
 
-      // Log if using existing driver
-      if (registerResponse.data.already_exists) {
-        console.log("ℹ️ [Registration] Using existing driver ID:", driverId);
-      }
-
-      console.log(
-        "🎉 [Registration] Driver registered successfully with ID:",
-        driverId
-      );
-      console.log("📸 Images uploaded:");
-      console.log("  - License:", form.license_image_url ? "✅" : "❌");
-      console.log("  - Vehicle:", form.car_image_url ? "✅" : "❌");
-      console.log("  - Profile:", form.profile_image_url ? "✅" : "❌");
-
-      showAlert(
-        t("common.success"),
-        t("driver.registrationSuccess"),
-        "success",
-        () => {
-          setAlertConfig((prev) => ({ ...prev, isVisible: false }));
-          router.replace("/(root)/tabs/profile");
-        }
-      );
+      Alert.alert(t("common.success"), t("driver.registrationSuccess"), [
+        {
+          text: "OK",
+          onPress: () => router.replace("/(root)/tabs/profile"),
+        },
+      ]);
     } catch (error: any) {
-      console.error("Driver registration error:", error);
-      showAlert(
+      Alert.alert(
         t("common.error"),
-        error.message || t("driver.registrationFailed"),
-        "error"
+        error.message || t("driver.registrationFailed")
       );
     } finally {
       setLoading(false);
@@ -537,14 +451,6 @@ export default function DriverRegistrationScreen() {
           className="mb-8"
         />
       </ScrollView>
-
-      <CustomAlert
-        isVisible={alertConfig.isVisible}
-        title={alertConfig.title}
-        description={alertConfig.description}
-        type={alertConfig.type}
-        onConfirm={alertConfig.onConfirm}
-      />
     </SafeAreaView>
   );
 }

@@ -37,17 +37,9 @@ const SignIn = () => {
         Alert.alert(t("common.error"), t("errors.tryAgain"));
       }
     } catch (err: any) {
-      console.error("❌ [SignIn] Error occurred during sign-in:");
-      console.error(JSON.stringify(err, null, 2));
-
       const errorMessage =
         err.errors?.[0]?.longMessage || "An unknown error occurred";
       const errorCode = err.errors?.[0]?.code || "unknown_error";
-
-      console.error(
-        `🔴 [SignIn] Error Code: ${errorCode}, Message: ${errorMessage}`
-      );
-
       Alert.alert(t("common.error"), `${errorMessage}\n\n(Code: ${errorCode})`);
     } finally {
       setLoading(false);

@@ -33,7 +33,6 @@ const AvailablePromos = ({ userId, onSelectPromo }: AvailablePromosProps) => {
         setPromos(response.data);
       }
     } catch (error) {
-      console.error("Failed to fetch promos:", error);
     } finally {
       setLoading(false);
     }

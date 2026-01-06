@@ -9,6 +9,8 @@ Notifications.setNotificationHandler({
     shouldShowAlert: true,
     shouldPlaySound: true,
     shouldSetBadge: true,
+    shouldShowBanner: true,
+    shouldShowList: true,
   }),
 });
 
@@ -40,7 +42,6 @@ class PushNotificationService {
       // Get Expo Push Token
       const projectId = process.env.EXPO_PUBLIC_PROJECT_ID;
       if (!projectId) {
-        console.error("❌ EXPO_PUBLIC_PROJECT_ID not found");
         return null;
       }
 
@@ -61,7 +62,6 @@ class PushNotificationService {
 
       return this.expoPushToken;
     } catch (error) {
-      console.error("❌ Error registering for push notifications:", error);
       return null;
     }
   }

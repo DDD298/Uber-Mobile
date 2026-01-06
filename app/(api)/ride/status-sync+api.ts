@@ -118,7 +118,6 @@ export async function GET(request: Request) {
       { status: 200 }
     );
   } catch (error: any) {
-    console.error("Error in status sync:", error);
     return Response.json(
       {
         success: false,

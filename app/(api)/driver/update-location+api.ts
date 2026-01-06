@@ -74,7 +74,6 @@ export async function PATCH(request: Request) {
       { status: 200 }
     );
   } catch (error: any) {
-    console.error("Error updating driver location:", error);
     return Response.json(
       {
         success: false,

@@ -75,7 +75,6 @@ const BookRide = () => {
         Alert.alert(t("common.error"), response.error || t("promo.notFound"));
       }
     } catch (error) {
-      console.error("Promo validation error:", error);
       Alert.alert(t("common.error"), t("errors.somethingWentWrong"));
       setDiscountInfo(null);
     } finally {

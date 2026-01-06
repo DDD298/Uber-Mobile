@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import RideStatusPoller from "@/services/rideStatusPoller";
 import { pushNotificationService } from "@/services/pushNotificationService";
+import type { RideStatusSyncData } from "@/types/type";
 
 interface UseRideStatusSyncOptions {
   rideId: number;
@@ -39,7 +40,7 @@ export const useRideStatusSync = ({
         onStatusChange?.(data);
       },
       onError: (error) => {
-        console.error("❌ Polling error:", error);
+        console.error(error);
       },
     });
 

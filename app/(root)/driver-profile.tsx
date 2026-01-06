@@ -49,7 +49,6 @@ export default function DriverProfileScreen() {
         ]);
       }
     } catch (error) {
-      console.error("Error loading driver profile:", error);
       Alert.alert(t("common.error"), t("driver.loadError"));
     } finally {
       setLoading(false);
