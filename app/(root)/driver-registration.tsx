@@ -144,7 +144,22 @@ export default function DriverRegistrationScreen() {
   };
 
   const handleSubmit = async () => {
+    console.log("=== [SUBMIT CLICKED] ===");
     console.log("[Submit] Form data before validation:", form);
+    console.log("[Submit] Uploading status:", uploadingImage);
+
+    // Check if any image is still uploading
+    if (
+      uploadingImage.license ||
+      uploadingImage.vehicle ||
+      uploadingImage.profile
+    ) {
+      Alert.alert(
+        t("common.error"),
+        "Vui lòng đợi các ảnh tải lên hoàn tất trước khi gửi đơn."
+      );
+      return;
+    }
 
     // Validate required fields with specific error messages
     const missingFields: string[] = [];
@@ -166,10 +181,13 @@ export default function DriverRegistrationScreen() {
 
     const missingPhotos: string[] = [];
 
-    console.log("--- Image Check ---");
+    console.log("=== [IMAGE VALIDATION] ===");
     console.log("License URL:", form.license_image_url);
     console.log("Vehicle URL:", form.car_image_url);
     console.log("Profile URL:", form.profile_image_url);
+    console.log("License URI (local):", form.license_photo_uri);
+    console.log("Vehicle URI (local):", form.vehicle_photo_uri);
+    console.log("Profile URI (local):", form.profile_photo_uri);
 
     if (!form.license_image_url) {
       missingPhotos.push(t("driver.licensePhoto"));
@@ -182,6 +200,7 @@ export default function DriverRegistrationScreen() {
     }
 
     if (missingPhotos.length > 0) {
+      console.error("[VALIDATION FAILED] Missing photos:", missingPhotos);
       Alert.alert(
         t("common.error"),
         `${t("driver.missingPhotos")}:\n• ${missingPhotos.join("\n• ")}`
@@ -459,12 +478,21 @@ export default function DriverRegistrationScreen() {
         {/* Submit Button */}
         <CustomButton
           title={
-            loading && uploadStatus
-              ? uploadStatus
-              : t("driver.submitApplication")
+            uploadingImage.license ||
+            uploadingImage.vehicle ||
+            uploadingImage.profile
+              ? "Đang tải ảnh lên..."
+              : loading && uploadStatus
+                ? uploadStatus
+                : t("driver.submitApplication")
           }
           onPress={handleSubmit}
-          disabled={loading}
+          disabled={
+            loading ||
+            uploadingImage.license ||
+            uploadingImage.vehicle ||
+            uploadingImage.profile
+          }
           className="mb-8"
         />
       </ScrollView>
