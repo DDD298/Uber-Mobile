@@ -39,24 +39,15 @@ export default function RidesScreen() {
       const url = `/(api)/ride/list?user_id=${testUserId}&status=all&limit=50&offset=0&_t=${timestamp}`;
       const response = await fetchAPI(url);
 
-      console.log("=== RIDES DATA FETCHED ===");
-      console.log(`User ID: ${testUserId}`);
-      console.log(`Count: ${response.data?.length || 0}`);
-      if (response.data && response.data.length > 0) {
-        response.data.forEach((ride: Ride, index: number) => {
-          console.log(
-            `Ride #${index + 1}: ID=${ride.ride_id}, Status=${ride.ride_status}`
-          );
-          console.log(
-            `  - Customer ID (user_id): ${ride.user_id || (ride as any).passenger_id}`
-          );
-          console.log(`  - Driver ID: ${ride.driver_id}`);
-        });
-      }
-      console.log("==========================");
-
       setRides(response.data || []);
-      setIsDriver(!!response.isDriver);
+      const userIsDriver = !!response.isDriver;
+      setIsDriver(userIsDriver);
+
+      console.log("=== [DEBUG] RIDES FULL JSON DATA ===");
+      console.log(`User ID: ${testUserId}`);
+      console.log(`Role: ${userIsDriver ? "DRIVER" : "PASSENGER"}`);
+      console.log(JSON.stringify(response.data, null, 2));
+      console.log("=====================================");
     } catch (err) {
       setError(err instanceof Error ? err.message : t("errors.networkError"));
     } finally {

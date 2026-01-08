@@ -58,6 +58,7 @@ declare interface Ride {
   ride_status: RideStatus;
   driver_id: number;
   user_id: string;
+  passenger_id: string;
   created_at: string;
   cancelled_at?: string;
   cancel_reason?: string;
@@ -80,9 +81,9 @@ declare interface Ride {
     vehicle_type: string;
   };
   passenger?: {
-    clerk_id: string;
-    name: string;
-    email: string;
+    clerk_id: string | null;
+    name: string | null;
+    email: string | null;
   };
 }
 

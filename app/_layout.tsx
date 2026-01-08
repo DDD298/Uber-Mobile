@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import { LogBox } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-reanimated";
+import "../global.css";
 import "@/lib/i18n"; // Initialize i18n
 
 SplashScreen.preventAutoHideAsync();

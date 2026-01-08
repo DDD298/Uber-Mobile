@@ -106,7 +106,12 @@
     "cancelledAt": "Hủy lúc",
     "cancelReason": "Lý do",
     "arriving": "Đang đến trong 5 phút",
-    "rideCompleted": "Chuyến đã hoàn thành"
+    "rideCompleted": "Chuyến đã hoàn thành",
+    "passenger": "Khách hàng",
+    "driverArrived": "Tôi đã đến điểm đón",
+    "startRide": "Bắt đầu chuyến đi",
+    "completeRide": "Hoàn thành chuyến đi",
+    "arrivingAtDestination": "Đang di chuyển đến điểm đến"
   },
   "rating": {
     "rateYourRide": "Đánh giá chuyến đi",

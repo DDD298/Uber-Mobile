@@ -105,7 +105,12 @@
     "cancelledAt": "Cancelled At",
     "cancelReason": "Reason",
     "arriving": "Arriving in 5 min",
-    "rideCompleted": "Ride Completed"
+    "rideCompleted": "Ride Completed",
+    "passenger": "Passenger",
+    "driverArrived": "I've arrived at pickup",
+    "startRide": "Start Ride",
+    "completeRide": "Complete Ride",
+    "arrivingAtDestination": "Heading to destination"
   },
   "rating": {
     "rateYourRide": "Rate Your Ride",

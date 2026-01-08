@@ -14,7 +14,7 @@ import {
 } from "react-native";
 import { useTranslation } from "react-i18next";
 import { RatingModal } from "@/components/Ride/RatingModal";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@clerk/clerk-expo";
 import { fetchAPI } from "@/lib/fetch";
 import CustomButton from "@/components/Common/CustomButton";
@@ -55,7 +55,26 @@ const RideCard = ({
   } = ride;
 
   const isDriverView =
-    ride.driver?.driver_id !== undefined && ride.user_id !== userId;
+    ride.driver?.driver_id !== undefined && ride.passenger_id !== userId;
+
+  // Debug logging for rating - moved to useEffect
+  useEffect(() => {
+    console.log(`[RideCard #${ride_id}] Render Check:`, {
+      ride_status,
+      isDriverView,
+      hasRating: !!ride.rating,
+      ratingData: ride.rating,
+    });
+
+    if (ride_status === "completed" && !isDriverView) {
+      console.log(`[RideCard #${ride_id}] ✅ SHOULD SHOW RATING SECTION`);
+      if (ride.rating) {
+        console.log(`[RideCard #${ride_id}] ⭐ HAS RATING:`, ride.rating);
+      } else {
+        console.log(`[RideCard #${ride_id}] 📝 NO RATING - Show button`);
+      }
+    }
+  }, [ride.rating, ride_status, isDriverView, ride_id, userId]);
 
   const handleCancel = () => {
     Alert.alert(
@@ -266,31 +285,6 @@ const RideCard = ({
                 className="w-10 h-10 rounded-full mr-4"
               />
             )}
-            <View className="flex-1">
-              <Text className="text-sm font-JakartaBold text-gray-900">
-                {isDriverView
-                  ? passenger?.name || t("ride.passenger")
-                  : `${driver.first_name} ${driver.last_name}`}
-              </Text>
-              {!isDriverView ? (
-                <View className="flex-row items-center">
-                  <Text className="text-sm text-gray-500 font-JakartaMedium mr-2">
-                    {driver.car_seats} {t("booking.seats")} •{" "}
-                    {driver.vehicle_type || "Car"}
-                  </Text>
-                  <View className="flex-row items-center">
-                    <Ionicons name="star" size={12} color="#FBBF24" />
-                    <Text className="text-sm text-gray-600 font-JakartaMedium ml-1">
-                      {driver.rating || "5.0"}
-                    </Text>
-                  </View>
-                </View>
-              ) : (
-                <Text className="text-sm text-gray-500 font-JakartaMedium">
-                  {passenger?.email || ""}
-                </Text>
-              )}
-            </View>
           </View>
 
           <View className="items-end">
