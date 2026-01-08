@@ -272,7 +272,7 @@ const RideCard = ({
         <View className="flex-row justify-between items-center py-3 border-t border-gray-100">
           <View className="flex-row items-center flex-1">
             {isDriverView ? (
-              <View className="w-10 h-10 rounded-full mr-4 bg-gray-200 items-center justify-center">
+              <View className="w-10 h-10 rounded-full mr-3 bg-gray-200 items-center justify-center">
                 <Ionicons name="person" size={24} color="#6B7280" />
               </View>
             ) : (
@@ -282,13 +282,34 @@ const RideCard = ({
                     driver.profile_image_url ||
                     "https://via.placeholder.com/40",
                 }}
-                className="w-10 h-10 rounded-full mr-4"
+                className="w-10 h-10 rounded-full mr-3"
               />
             )}
+            <View className="flex-1">
+              <Text className="text-sm font-JakartaBold text-gray-900">
+                {isDriverView
+                  ? passenger?.name || t("ride.passenger")
+                  : "Tài xế: " + `${driver.first_name} ${driver.last_name}`}
+              </Text>
+              {!isDriverView ? (
+                <View className="flex-col items-start">
+                  <Text className="text-sm text-gray-500 font-JakartaMedium mr-2">
+                    {driver.car_seats} {t("booking.seats")}
+                  </Text>
+                  <Text className="text-sm text-gray-500 font-JakartaMedium mr-2">
+                    Loại xe: {driver.vehicle_type || "Car"}
+                  </Text>
+                </View>
+              ) : (
+                <Text className="text-sm text-gray-500 font-JakartaMedium">
+                  {passenger?.email || ""}
+                </Text>
+              )}
+            </View>
           </View>
 
           <View className="items-end">
-            <Text className="text-xl font-JakartaBold text-green-600">
+            <Text className="text-2xl font-JakartaBold text-green-600">
               {formatCurrencyByLanguage(fare_price, i18n.language)}
             </Text>
             {payment_status === "paid" && (

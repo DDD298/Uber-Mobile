@@ -3,7 +3,8 @@ import { images } from "@/constants";
 import { fetchAPI } from "@/lib/fetch";
 import { Ride } from "@/types/type";
 import { useAuth } from "@clerk/clerk-expo";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
+import { useFocusEffect } from "expo-router";
 import {
   ActivityIndicator,
   FlatList,
@@ -76,18 +77,24 @@ export default function RidesScreen() {
     } catch (err) {}
   };
 
-  useEffect(() => {
-    fetchRides();
+  useFocusEffect(
+    useCallback(() => {
+      // Initial fetch when screen comes into focus
+      fetchRides();
 
-    // Auto-refresh every 30 seconds to get latest status updates
-    // const refreshInterval = setInterval(() => {
-    //   fetchRides();
-    // }, 30000);
+      // Set up auto-refresh every 4 seconds
+      const refreshInterval = setInterval(() => {
+        console.log("🔄 Auto-refreshing rides...");
+        fetchRides();
+      }, 4000);
 
-    return () => {
-      // clearInterval(refreshInterval);
-    };
-  }, [userId]);
+      // Cleanup: clear interval when screen loses focus or unmounts
+      return () => {
+        console.log("⏸️  Stopping auto-refresh (screen unfocused)");
+        clearInterval(refreshInterval);
+      };
+    }, [userId])
+  );
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
