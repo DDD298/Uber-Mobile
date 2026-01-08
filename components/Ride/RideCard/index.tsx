@@ -368,8 +368,17 @@ const RideCard = ({
                   title="Xác nhận chuyến"
                   onPress={() => handleUpdateStatus("confirmed")}
                   bgVariant="success"
+                  IconLeft={() => (
+                    <Ionicons
+                      name="checkmark-circle"
+                      size={20}
+                      color="white"
+                      style={{ marginRight: 8 }}
+                    />
+                  )}
                 />
-                <TouchableOpacity
+                <CustomButton
+                  title="Không nhận chuyến này"
                   onPress={() => {
                     Alert.alert(
                       "Không nhận chuyến",
@@ -383,12 +392,17 @@ const RideCard = ({
                       ]
                     );
                   }}
-                  className="py-2 items-center"
-                >
-                  <Text className="text-red-500 font-JakartaBold">
-                    Không nhận chuyến này
-                  </Text>
-                </TouchableOpacity>
+                  bgVariant="red"
+                  textVariant="red"
+                  IconLeft={() => (
+                    <Ionicons
+                      name="close-circle"
+                      size={20}
+                      color="#DC2626"
+                      style={{ marginRight: 8 }}
+                    />
+                  )}
+                />
               </>
             )}
 
@@ -399,12 +413,28 @@ const RideCard = ({
                   title={t("ride.driverArrived") || "Đã đến điểm đón"}
                   onPress={() => handleUpdateStatus("driver_arrived")}
                   bgVariant="success"
+                  IconLeft={() => (
+                    <Ionicons
+                      name="location"
+                      size={20}
+                      color="white"
+                      style={{ marginRight: 8 }}
+                    />
+                  )}
                 />
                 <CustomButton
                   title="Khách không xuất hiện"
                   onPress={() => handleUpdateStatus("no_show")}
                   bgVariant="outline"
-                  textVariant="secondary"
+                  textVariant="primary"
+                  IconLeft={() => (
+                    <Ionicons
+                      name="person-remove"
+                      size={20}
+                      color="#22c55e"
+                      style={{ marginRight: 8 }}
+                    />
+                  )}
                 />
               </>
             )}
@@ -415,6 +445,14 @@ const RideCard = ({
                 title={t("ride.startRide") || "Bắt đầu chuyến đi"}
                 onPress={() => handleUpdateStatus("in_progress")}
                 bgVariant="primary"
+                IconLeft={() => (
+                  <Ionicons
+                    name="play-circle"
+                    size={20}
+                    color="white"
+                    style={{ marginRight: 8 }}
+                  />
+                )}
               />
             )}
 
@@ -424,6 +462,14 @@ const RideCard = ({
                 title={t("ride.completeRide") || "Hoàn thành chuyến đi"}
                 onPress={() => handleUpdateStatus("completed")}
                 bgVariant="success"
+                IconLeft={() => (
+                  <Ionicons
+                    name="checkmark-done-circle"
+                    size={20}
+                    color="white"
+                    style={{ marginRight: 8 }}
+                  />
+                )}
               />
             )}
           </View>
@@ -440,19 +486,21 @@ const RideCard = ({
           <>
             {/* Giai đoạn 0: pending - Chờ xác nhận - Passenger có thể hủy */}
             {ride_status === "pending" && onCancel && (
-              <TouchableOpacity
+              <CustomButton
+                title={t("ride.cancelRide")}
                 onPress={handleCancel}
-                className="flex-row justify-center items-center py-3 mt-4 bg-red-50 rounded-xl border border-red-200"
-              >
-                <Ionicons
-                  name="close-circle-outline"
-                  size={20}
-                  color="#EF4444"
-                />
-                <Text className="text-base text-red-600 font-JakartaBold ml-2">
-                  {t("ride.cancelRide")}
-                </Text>
-              </TouchableOpacity>
+                bgVariant="red"
+                textVariant="red"
+                IconLeft={() => (
+                  <Ionicons
+                    name="close-circle-outline"
+                    size={20}
+                    color="#DC2626"
+                    style={{ marginRight: 8 }}
+                  />
+                )}
+                className="mt-4"
+              />
             )}
 
             {/* Giai đoạn 3: in_progress - Hiển thị thông báo đang di chuyển */}
@@ -511,17 +559,21 @@ const RideCard = ({
               </View>
             ) : (
               // Show rating button
-              <TouchableOpacity
-                onPress={() => {
-                  setShowRatingModal(true);
-                }}
-                className="flex-row justify-center items-center py-3 mt-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl border border-yellow-300"
-              >
-                <Ionicons name="star" size={20} color="#F59E0B" />
-                <Text className="text-base text-amber-600 font-JakartaBold ml-2">
-                  {t("ride.rateDriver") || "Đánh giá tài xế"}
-                </Text>
-              </TouchableOpacity>
+              <CustomButton
+                title={t("ride.rateDriver") || "Đánh giá tài xế"}
+                onPress={() => setShowRatingModal(true)}
+                bgVariant="amber"
+                textVariant="amber"
+                IconLeft={() => (
+                  <Ionicons
+                    name="star"
+                    size={20}
+                    color="#D97706"
+                    style={{ marginRight: 8 }}
+                  />
+                )}
+                className="mt-4"
+              />
             )}
           </>
         )}
