@@ -89,12 +89,12 @@ export default function RidesScreen() {
     fetchRides();
 
     // Auto-refresh every 30 seconds to get latest status updates
-    const refreshInterval = setInterval(() => {
-      fetchRides();
-    }, 30000);
+    // const refreshInterval = setInterval(() => {
+    //   fetchRides();
+    // }, 30000);
 
     return () => {
-      clearInterval(refreshInterval);
+      // clearInterval(refreshInterval);
     };
   }, [userId]);
 

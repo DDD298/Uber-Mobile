@@ -26,7 +26,7 @@ const RideLayout = ({
   );
 
   return (
-    <View className="flex-1 bg-white">
+    <View className="flex-1 bg-general-500">
       <View className="flex-1 bg-green-500">
         {title && <PageHeader title={title} />}
         <Map />

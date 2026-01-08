@@ -22,7 +22,7 @@ const FindRide = () => {
   const snapPoints = useMemo(() => ["85%"], []);
 
   return (
-    <SafeAreaView className="flex-1 bg-white" edges={["top"]}>
+    <SafeAreaView className="flex-1 bg-general-500" edges={["top"]}>
       <PageHeader title={t("booking.findRide")} />
       <RideLayout snapPoints={snapPoints} scrollable={false}>
         {/* Origin Location */}

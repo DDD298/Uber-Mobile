@@ -107,7 +107,7 @@ const BookRide = () => {
         merchantIdentifier="merchant.com.uber"
         urlScheme="myapp"
       >
-        <SafeAreaView className="flex-1 bg-white" edges={["top"]}>
+        <SafeAreaView className="flex-1 bg-general-500" edges={["top"]}>
           <PageHeader title={t("ride.rideDetails")} />
           <RideLayout snapPoints={snapPoints} scrollable={false}>
             <>
@@ -264,7 +264,7 @@ const BookRide = () => {
   } catch (error) {
     console.error("[BookRide] Render error:", error);
     return (
-      <SafeAreaView className="flex-1 bg-white" edges={["top"]}>
+      <SafeAreaView className="flex-1 bg-general-500" edges={["top"]}>
         <PageHeader title={t("ride.rideDetails")} />
         <View className="flex-1 items-center justify-center p-4">
           <Text className="text-lg font-JakartaMedium text-red-600">

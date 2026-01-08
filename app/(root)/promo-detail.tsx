@@ -57,7 +57,7 @@ export default function PromoDetailScreen() {
 
   if (loading) {
     return (
-      <SafeAreaView className="flex-1 bg-white items-center justify-center">
+      <SafeAreaView className="flex-1 bg-general-500 items-center justify-center">
         <Text className="text-gray-500 font-JakartaMedium">
           {t("common.loading")}
         </Text>
@@ -67,7 +67,7 @@ export default function PromoDetailScreen() {
 
   if (!promo) {
     return (
-      <SafeAreaView className="flex-1 bg-white items-center justify-center">
+      <SafeAreaView className="flex-1 bg-general-500 items-center justify-center">
         <Text className="text-gray-500 font-JakartaMedium">
           {t("promo.notFound")}
         </Text>

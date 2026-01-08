@@ -8,7 +8,6 @@ import { LogBox } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-reanimated";
 import "@/lib/i18n"; // Initialize i18n
-import { rideStatusUpdater } from "@/services/rideStatusUpdater";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -40,9 +39,9 @@ export default function RootLayout() {
   }, [loaded]);
 
   useEffect(() => {
-    rideStatusUpdater.start();
+    // rideStatusUpdater.start();
     return () => {
-      rideStatusUpdater.stop();
+      // rideStatusUpdater.stop();
     };
   }, []);
 

@@ -259,7 +259,7 @@ export default function DriverRegistrationScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView className="flex-1 bg-general-500">
       <PageHeader title={t("driver.becomeDriver")} />
       <ScrollView
         className="flex-1 px-4 pt-4"

@@ -47,8 +47,8 @@ const SignIn = () => {
   }, [isLoaded, form.email, form.password]);
 
   return (
-    <ScrollView className="flex-1 bg-white">
-      <View className="flex-1 bg-white">
+    <ScrollView className="flex-1 bg-general-500">
+      <View className="flex-1 bg-general-500">
         <View className="relative w-full h-[300px]">
           <Image
             source={images.signUpCar}
