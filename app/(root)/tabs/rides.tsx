@@ -43,12 +43,6 @@ export default function RidesScreen() {
       setRides(response.data || []);
       const userIsDriver = !!response.isDriver;
       setIsDriver(userIsDriver);
-
-      console.log("=== [DEBUG] RIDES FULL JSON DATA ===");
-      console.log(`User ID: ${testUserId}`);
-      console.log(`Role: ${userIsDriver ? "DRIVER" : "PASSENGER"}`);
-      console.log(JSON.stringify(response.data, null, 2));
-      console.log("=====================================");
     } catch (err) {
       setError(err instanceof Error ? err.message : t("errors.networkError"));
     } finally {
@@ -83,15 +77,13 @@ export default function RidesScreen() {
       fetchRides();
 
       // Set up auto-refresh every 4 seconds
-      const refreshInterval = setInterval(() => {
-        console.log("🔄 Auto-refreshing rides...");
-        fetchRides();
-      }, 4000);
+      // const refreshInterval = setInterval(() => {
+      //   fetchRides();
+      // }, 4000);
 
       // Cleanup: clear interval when screen loses focus or unmounts
       return () => {
-        console.log("⏸️  Stopping auto-refresh (screen unfocused)");
-        clearInterval(refreshInterval);
+        // clearInterval(refreshInterval);
       };
     }, [userId])
   );

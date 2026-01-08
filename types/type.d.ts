@@ -1,6 +1,7 @@
 import { TextInputProps, TouchableOpacityProps } from "react-native";
 
 declare enum RideStatus {
+  PENDING = 'pending',           // Chờ xác nhận
   CONFIRMED = 'confirmed',       // Tài xế đã nhận chuyến
   DRIVER_ARRIVED = 'driver_arrived', // Tài xế đã đến
   IN_PROGRESS = 'in_progress',   // Đang trong chuyến

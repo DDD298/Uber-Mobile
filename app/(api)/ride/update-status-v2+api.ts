@@ -2,6 +2,7 @@ import { neon } from "@neondatabase/serverless";
 
 // Valid status transitions
 const VALID_TRANSITIONS: Record<string, string[]> = {
+  pending: ["confirmed", "cancelled"], // Driver can confirm or reject
   confirmed: ["driver_arrived", "cancelled"],
   driver_arrived: ["in_progress", "cancelled", "no_show"],
   in_progress: ["completed", "cancelled"],
@@ -103,10 +104,7 @@ export async function POST(request: Request) {
     // Update ride status
     await sql`
       UPDATE rides 
-      SET 
-        ride_status = ${new_status},
-        last_status_update = NOW(),
-        status_updated_by = ${changed_by}
+      SET ride_status = ${new_status}
       WHERE ride_id = ${ride_id}
     `;
 

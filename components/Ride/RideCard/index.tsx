@@ -133,6 +133,13 @@ const RideCard = ({
     }
 
     switch (status) {
+      case "pending":
+        return {
+          text: "CHỜ XÁC NHẬN",
+          color: "#F59E0B",
+          bgColor: "#FEF3C7",
+          icon: "time" as const,
+        };
       case "confirmed":
         return {
           text: t("ride.statusConfirmed").toUpperCase() || "ĐÃ XÁC NHẬN",
@@ -353,67 +360,81 @@ const RideCard = ({
         {/* Driver Action Buttons */}
         {isDriverView && !updatingStatus && (
           <View className="mt-4 gap-y-2">
-            {ride_status === "confirmed" && (
-              <CustomButton
-                title={t("ride.driverArrived") || "Tôi đã đến điểm đón"}
-                onPress={() => handleUpdateStatus("driver_arrived")}
-                bgVariant="success"
-              />
+            {/* Giai đoạn 0: pending - Chờ xác nhận */}
+            {ride_status === "pending" && (
+              <>
+                <CustomButton
+                  title="Xác nhận chuyến"
+                  onPress={() => handleUpdateStatus("confirmed")}
+                  bgVariant="success"
+                />
+                <TouchableOpacity
+                  onPress={() => {
+                    Alert.alert(
+                      "Không nhận chuyến",
+                      "Bạn có chắc chắn không nhận chuyến này?",
+                      [
+                        { text: t("common.cancel"), style: "cancel" },
+                        {
+                          text: t("common.confirm"),
+                          onPress: () => handleUpdateStatus("cancelled"),
+                        },
+                      ]
+                    );
+                  }}
+                  className="py-2 items-center"
+                >
+                  <Text className="text-red-500 font-JakartaBold">
+                    Không nhận chuyến này
+                  </Text>
+                </TouchableOpacity>
+              </>
             )}
-            {ride_status === "driver_arrived" && (
-              <View className="flex-row gap-x-2">
-                <View className="flex-1">
-                  <CustomButton
-                    title={t("ride.startRide") || "Bắt đầu chuyến đi"}
-                    onPress={() => handleUpdateStatus("in_progress")}
-                    bgVariant="primary"
-                  />
-                </View>
+
+            {/* Giai đoạn 1: confirmed - Đã xác nhận */}
+            {ride_status === "confirmed" && (
+              <>
+                <CustomButton
+                  title={t("ride.driverArrived") || "Đã đến điểm đón"}
+                  onPress={() => handleUpdateStatus("driver_arrived")}
+                  bgVariant="success"
+                />
                 <View className="px-1 justify-center">
                   <TouchableOpacity
                     onPress={() => handleUpdateStatus("no_show")}
-                    className="p-3 bg-gray-100 rounded-xl border border-gray-200"
+                    className="p-3 bg-gray-100 rounded-xl border border-gray-200 items-center"
                   >
-                    <Ionicons
-                      name="person-remove-outline"
-                      size={24}
-                      color="#6B7280"
-                    />
+                    <View className="flex-row items-center">
+                      <Ionicons
+                        name="person-remove-outline"
+                        size={20}
+                        color="#6B7280"
+                      />
+                      <Text className="ml-2 text-sm font-JakartaMedium text-gray-600">
+                        Khách không xuất hiện
+                      </Text>
+                    </View>
                   </TouchableOpacity>
                 </View>
-              </View>
+              </>
             )}
+
+            {/* Giai đoạn 2: driver_arrived - Tài xế đã đến */}
+            {ride_status === "driver_arrived" && (
+              <CustomButton
+                title={t("ride.startRide") || "Bắt đầu chuyến đi"}
+                onPress={() => handleUpdateStatus("in_progress")}
+                bgVariant="primary"
+              />
+            )}
+
+            {/* Giai đoạn 3: in_progress - Đang trong chuyến */}
             {ride_status === "in_progress" && (
               <CustomButton
                 title={t("ride.completeRide") || "Hoàn thành chuyến đi"}
                 onPress={() => handleUpdateStatus("completed")}
                 bgVariant="success"
               />
-            )}
-
-            {(ride_status === "confirmed" ||
-              ride_status === "driver_arrived") && (
-              <TouchableOpacity
-                onPress={() => {
-                  Alert.alert(
-                    t("ride.cancelRide"),
-                    t("ride.confirmCancel") ||
-                      "Bạn có chắc chắn muốn hủy chuyến này?",
-                    [
-                      { text: t("common.cancel"), style: "cancel" },
-                      {
-                        text: t("common.confirm"),
-                        onPress: () => handleUpdateStatus("cancelled"),
-                      },
-                    ]
-                  );
-                }}
-                className="py-2 items-center"
-              >
-                <Text className="text-red-500 font-JakartaBold">
-                  {t("ride.cancelRide")}
-                </Text>
-              </TouchableOpacity>
             )}
           </View>
         )}
@@ -427,20 +448,8 @@ const RideCard = ({
         {/* Passenger Action Buttons */}
         {!isDriverView && (
           <>
-            {ride_status === "in_progress" && (
-              <View className="mt-4 p-4 bg-purple-50 rounded-xl border border-purple-200">
-                <View className="flex-row items-center justify-center">
-                  <Ionicons name="time-outline" size={16} color="#8B5CF6" />
-                  <Text className="text-sm text-purple-700 font-JakartaMedium ml-2">
-                    {t("ride.inProgress")} -{" "}
-                    {t("ride.arrivingAtDestination") ||
-                      "Đang di chuyển đến điểm đến"}
-                  </Text>
-                </View>
-              </View>
-            )}
-
-            {checkCanCancelRide().canCancel && onCancel && (
+            {/* Giai đoạn 0: pending - Chờ xác nhận - Passenger có thể hủy */}
+            {ride_status === "pending" && onCancel && (
               <TouchableOpacity
                 onPress={handleCancel}
                 className="flex-row justify-center items-center py-3 mt-4 bg-red-50 rounded-xl border border-red-200"
@@ -454,6 +463,20 @@ const RideCard = ({
                   {t("ride.cancelRide")}
                 </Text>
               </TouchableOpacity>
+            )}
+
+            {/* Giai đoạn 3: in_progress - Hiển thị thông báo đang di chuyển */}
+            {ride_status === "in_progress" && (
+              <View className="mt-4 p-4 bg-purple-50 rounded-xl border border-purple-200">
+                <View className="flex-row items-center justify-center">
+                  <Ionicons name="time-outline" size={16} color="#8B5CF6" />
+                  <Text className="text-sm text-purple-700 font-JakartaMedium ml-2">
+                    {t("ride.inProgress")} -{" "}
+                    {t("ride.arrivingAtDestination") ||
+                      "Đang di chuyển đến điểm đến"}
+                  </Text>
+                </View>
+              </View>
             )}
           </>
         )}
