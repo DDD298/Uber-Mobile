@@ -252,16 +252,20 @@ const RideCard = ({
         {/* User Info (Driver or Passenger) and Price */}
         <View className="flex-row justify-between items-center py-3 border-t border-gray-100">
           <View className="flex-row items-center flex-1">
-            <Image
-              source={{
-                uri: isDriverView
-                  ? passenger?.profile_image_url ||
-                    "https://via.placeholder.com/40"
-                  : driver.profile_image_url ||
+            {isDriverView ? (
+              <View className="w-10 h-10 rounded-full mr-4 bg-gray-200 items-center justify-center">
+                <Ionicons name="person" size={24} color="#6B7280" />
+              </View>
+            ) : (
+              <Image
+                source={{
+                  uri:
+                    driver.profile_image_url ||
                     "https://via.placeholder.com/40",
-              }}
-              className="w-10 h-10 rounded-full mr-4"
-            />
+                }}
+                className="w-10 h-10 rounded-full mr-4"
+              />
+            )}
             <View className="flex-1">
               <Text className="text-sm font-JakartaBold text-gray-900">
                 {isDriverView

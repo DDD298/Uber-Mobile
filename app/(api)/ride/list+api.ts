@@ -33,6 +33,8 @@ export async function GET(request: Request) {
     `;
     const driver_id = driverResult.length > 0 ? driverResult[0].id : null;
 
+    console.log(`[GET /api/ride/list] Fetching for user_id: ${user_id}, driver_id: ${driver_id}, status: ${status}`);
+
     // Helper to build the query conditions
     const getConditions = (statusCondition: string) => {
       if (driver_id) {
@@ -71,8 +73,7 @@ export async function GET(request: Request) {
       json_build_object(
           'clerk_id', users.clerk_id,
           'name', users.name,
-          'email', users.email,
-          'profile_image_url', users.profile_image_url
+          'email', users.email
       ) AS passenger
     `;
 
@@ -113,7 +114,7 @@ export async function GET(request: Request) {
             ) AS driver,
             json_build_object(
                 'clerk_id', users.clerk_id, 'name', users.name,
-                'email', users.email, 'profile_image_url', users.profile_image_url
+                'email', users.email
             ) AS passenger,
             CASE 
                 WHEN ratings.id IS NOT NULL THEN json_build_object(
@@ -123,8 +124,8 @@ export async function GET(request: Request) {
                 ELSE NULL
             END AS rating
           FROM rides
-          INNER JOIN drivers ON rides.driver_id = drivers.id
-          INNER JOIN users ON rides.user_id = users.clerk_id
+          LEFT JOIN drivers ON rides.driver_id = drivers.id
+          LEFT JOIN users ON rides.user_id = users.clerk_id
           LEFT JOIN ratings ON rides.ride_id = ratings.ride_id
           WHERE (rides.user_id = ${user_id} OR rides.driver_id = ${driver_id})
             AND (
@@ -152,7 +153,7 @@ export async function GET(request: Request) {
             ) AS driver,
             json_build_object(
                 'clerk_id', users.clerk_id, 'name', users.name,
-                'email', users.email, 'profile_image_url', users.profile_image_url
+                'email', users.email
             ) AS passenger,
             CASE 
                 WHEN ratings.id IS NOT NULL THEN json_build_object(
@@ -162,8 +163,8 @@ export async function GET(request: Request) {
                 ELSE NULL
             END AS rating
           FROM rides
-          INNER JOIN drivers ON rides.driver_id = drivers.id
-          INNER JOIN users ON rides.user_id = users.clerk_id
+          LEFT JOIN drivers ON rides.driver_id = drivers.id
+          LEFT JOIN users ON rides.user_id = users.clerk_id
           LEFT JOIN ratings ON rides.ride_id = ratings.ride_id
           WHERE (rides.user_id = ${user_id} OR rides.driver_id = ${driver_id})
           ORDER BY rides.created_at DESC
@@ -188,7 +189,7 @@ export async function GET(request: Request) {
             ) AS driver,
             json_build_object(
                 'clerk_id', users.clerk_id, 'name', users.name,
-                'email', users.email, 'profile_image_url', users.profile_image_url
+                'email', users.email
             ) AS passenger,
             CASE 
                 WHEN ratings.id IS NOT NULL THEN json_build_object(
@@ -198,8 +199,8 @@ export async function GET(request: Request) {
                 ELSE NULL
             END AS rating
           FROM rides
-          INNER JOIN drivers ON rides.driver_id = drivers.id
-          INNER JOIN users ON rides.user_id = users.clerk_id
+          LEFT JOIN drivers ON rides.driver_id = drivers.id
+          LEFT JOIN users ON rides.user_id = users.clerk_id
           LEFT JOIN ratings ON rides.ride_id = ratings.ride_id
           WHERE rides.user_id = ${user_id}
             AND (
@@ -227,7 +228,7 @@ export async function GET(request: Request) {
             ) AS driver,
             json_build_object(
                 'clerk_id', users.clerk_id, 'name', users.name,
-                'email', users.email, 'profile_image_url', users.profile_image_url
+                'email', users.email
             ) AS passenger,
             CASE 
                 WHEN ratings.id IS NOT NULL THEN json_build_object(
@@ -237,8 +238,8 @@ export async function GET(request: Request) {
                 ELSE NULL
             END AS rating
           FROM rides
-          INNER JOIN drivers ON rides.driver_id = drivers.id
-          INNER JOIN users ON rides.user_id = users.clerk_id
+          LEFT JOIN drivers ON rides.driver_id = drivers.id
+          LEFT JOIN users ON rides.user_id = users.clerk_id
           LEFT JOIN ratings ON rides.ride_id = ratings.ride_id
           WHERE rides.user_id = ${user_id}
           ORDER BY rides.created_at DESC
@@ -279,6 +280,7 @@ export async function GET(request: Request) {
       JSON.stringify({ 
         success: true,
         data: response,
+        isDriver: !!driver_id,
         pagination: {
           total: totalCount,
           limit: parseInt(limit),

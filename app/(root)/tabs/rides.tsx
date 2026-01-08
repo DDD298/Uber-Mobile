@@ -25,6 +25,7 @@ export default function RidesScreen() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isDriver, setIsDriver] = useState(false);
 
   const fetchRides = async () => {
     const testUserId = userId || "user_33V7GizlzLeZyR9fHj10LxbFR9z";
@@ -37,7 +38,25 @@ export default function RidesScreen() {
       const timestamp = Date.now();
       const url = `/(api)/ride/list?user_id=${testUserId}&status=all&limit=50&offset=0&_t=${timestamp}`;
       const response = await fetchAPI(url);
+
+      console.log("=== RIDES DATA FETCHED ===");
+      console.log(`User ID: ${testUserId}`);
+      console.log(`Count: ${response.data?.length || 0}`);
+      if (response.data && response.data.length > 0) {
+        response.data.forEach((ride: Ride, index: number) => {
+          console.log(
+            `Ride #${index + 1}: ID=${ride.ride_id}, Status=${ride.ride_status}`
+          );
+          console.log(
+            `  - Customer ID (user_id): ${ride.user_id || (ride as any).passenger_id}`
+          );
+          console.log(`  - Driver ID: ${ride.driver_id}`);
+        });
+      }
+      console.log("==========================");
+
       setRides(response.data || []);
+      setIsDriver(!!response.isDriver);
     } catch (err) {
       setError(err instanceof Error ? err.message : t("errors.networkError"));
     } finally {
@@ -140,7 +159,7 @@ export default function RidesScreen() {
             ListHeaderComponent={
               <>
                 <Text className="mt-4 mb-2 text-xl font-JakartaBold">
-                  {t("ride.myRides")}
+                  {isDriver ? "Khách hàng đã đặt" : t("ride.myRides")}
                 </Text>
                 {rides.length > 0 && (
                   <View className="flex-row items-center mb-2">

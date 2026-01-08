@@ -22,7 +22,8 @@ export async function POST(request: Request) {
       user_id,
       payment_intent_id,
     } = body;
-
+    console.log("=== [POST /api/ride/book] Received data ===");
+    console.log(JSON.stringify(body, null, 2));
 
     if (
       !origin_address ||
