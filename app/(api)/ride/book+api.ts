@@ -21,6 +21,8 @@ export async function POST(request: Request) {
       driver_id,
       user_id,
       payment_intent_id,
+      user_name,
+      user_email,
     } = body;
     console.log("=== [POST /api/ride/book] Received data ===");
     console.log(JSON.stringify(body, null, 2));
@@ -50,6 +52,25 @@ export async function POST(request: Request) {
     }
 
     const sql = neon(`${process.env.DATABASE_URL}`);
+
+    // Đảm bảo user tồn tại trong bảng users
+    const existingUser = await sql`
+      SELECT clerk_id FROM users WHERE clerk_id = ${user_id} LIMIT 1
+    `;
+
+    if (existingUser.length === 0) {
+      // Tạo user mới nếu chưa tồn tại
+      console.log(`[POST /api/ride/book] Creating new user: ${user_id}`);
+      await sql`
+        INSERT INTO users (clerk_id, name, email)
+        VALUES (
+          ${user_id}, 
+          ${user_name || 'User'}, 
+          ${user_email || 'user@example.com'}
+        )
+        ON CONFLICT (clerk_id) DO NOTHING
+      `;
+    }
 
     // Sử dụng thời gian Việt Nam (GMT+7) cho created_at
     const vietnamTime = getVietnamTimeAsUTC();
@@ -81,7 +102,7 @@ export async function POST(request: Request) {
           ${ride_time},
           ${fare_price},
           'paid',
-          'confirmed',
+          'pending',
           ${driver_id},
           ${user_id},
           ${payment_intent_id},

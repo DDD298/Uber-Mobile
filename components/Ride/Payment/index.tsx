@@ -147,6 +147,8 @@ const Payment = ({
         driver_id: driverId,
         user_id: userId,
         payment_intent_id: currentPaymentIntent?.id || "cash_payment",
+        user_name: fullName,
+        user_email: email,
       };
 
       const response = await fetchAPI("/(api)/ride/book", {

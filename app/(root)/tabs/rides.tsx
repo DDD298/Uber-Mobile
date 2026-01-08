@@ -43,6 +43,14 @@ export default function RidesScreen() {
       setRides(response.data || []);
       const userIsDriver = !!response.isDriver;
       setIsDriver(userIsDriver);
+
+      // Log chuyến đi gần nhất (item cuối cùng)
+      if (response.data && response.data.length > 0) {
+        const latestRide = response.data[response.data.length - 1];
+        console.log("=== [LATEST RIDE] Chuyến đi gần nhất ===");
+        console.log(JSON.stringify(latestRide, null, 2));
+        console.log("========================================");
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : t("errors.networkError"));
     } finally {
