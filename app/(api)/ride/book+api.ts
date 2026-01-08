@@ -53,24 +53,23 @@ export async function POST(request: Request) {
 
     const sql = neon(`${process.env.DATABASE_URL}`);
 
-    // Đảm bảo user tồn tại trong bảng users
-    const existingUser = await sql`
-      SELECT clerk_id FROM users WHERE clerk_id = ${user_id} LIMIT 1
+    // Đảm bảo user tồn tại và cập nhật thông tin mới nhất
+    console.log(`[POST /api/ride/book] Upserting user: ${user_id}`);
+    console.log(`[POST /api/ride/book] User name: ${user_name}`);
+    console.log(`[POST /api/ride/book] User email: ${user_email}`);
+    
+    await sql`
+      INSERT INTO users (clerk_id, name, email)
+      VALUES (
+        ${user_id}, 
+        ${user_name || ''}, 
+        ${user_email || ''}
+      )
+      ON CONFLICT (clerk_id) 
+      DO UPDATE SET 
+        name = EXCLUDED.name,
+        email = EXCLUDED.email
     `;
-
-    if (existingUser.length === 0) {
-      // Tạo user mới nếu chưa tồn tại
-      console.log(`[POST /api/ride/book] Creating new user: ${user_id}`);
-      await sql`
-        INSERT INTO users (clerk_id, name, email)
-        VALUES (
-          ${user_id}, 
-          ${user_name || 'User'}, 
-          ${user_email || 'user@example.com'}
-        )
-        ON CONFLICT (clerk_id) DO NOTHING
-      `;
-    }
 
     // Sử dụng thời gian Việt Nam (GMT+7) cho created_at
     const vietnamTime = getVietnamTimeAsUTC();

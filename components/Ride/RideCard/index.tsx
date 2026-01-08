@@ -279,9 +279,12 @@ const RideCard = ({
         <View className="flex-row justify-between items-center py-3 border-t border-gray-100">
           <View className="flex-row items-center flex-1">
             {isDriverView ? (
-              <View className="w-10 h-10 rounded-full mr-3 bg-gray-200 items-center justify-center">
-                <Ionicons name="person" size={24} color="#6B7280" />
-              </View>
+              <Image
+                source={{
+                  uri: `https://api.dicebear.com/7.x/avataaars/svg?seed=${passenger?.name || "passenger"}`,
+                }}
+                className="w-10 h-10 rounded-full mr-3"
+              />
             ) : (
               <Image
                 source={{
@@ -295,7 +298,7 @@ const RideCard = ({
             <View className="flex-1">
               <Text className="text-sm font-JakartaBold text-gray-900">
                 {isDriverView
-                  ? passenger?.name || t("ride.passenger")
+                  ? "Khách: " + passenger?.name || t("ride.passenger")
                   : "Tài xế: " + `${driver.first_name} ${driver.last_name}`}
               </Text>
               {!isDriverView ? (
@@ -308,9 +311,7 @@ const RideCard = ({
                   </Text>
                 </View>
               ) : (
-                <Text className="text-sm text-gray-500 font-JakartaMedium">
-                  {passenger?.email || ""}
-                </Text>
+                ""
               )}
             </View>
           </View>
@@ -399,23 +400,12 @@ const RideCard = ({
                   onPress={() => handleUpdateStatus("driver_arrived")}
                   bgVariant="success"
                 />
-                <View className="px-1 justify-center">
-                  <TouchableOpacity
-                    onPress={() => handleUpdateStatus("no_show")}
-                    className="p-3 bg-gray-100 rounded-xl border border-gray-200 items-center"
-                  >
-                    <View className="flex-row items-center">
-                      <Ionicons
-                        name="person-remove-outline"
-                        size={20}
-                        color="#6B7280"
-                      />
-                      <Text className="ml-2 text-sm font-JakartaMedium text-gray-600">
-                        Khách không xuất hiện
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                </View>
+                <CustomButton
+                  title="Khách không xuất hiện"
+                  onPress={() => handleUpdateStatus("no_show")}
+                  bgVariant="outline"
+                  textVariant="secondary"
+                />
               </>
             )}
 

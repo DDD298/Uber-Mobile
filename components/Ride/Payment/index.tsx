@@ -1,4 +1,4 @@
-import { useAuth } from "@clerk/clerk-expo";
+import { useAuth, useUser } from "@clerk/clerk-expo";
 import { useStripe } from "@stripe/stripe-react-native";
 import { router } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
@@ -29,6 +29,18 @@ const Payment = ({
   const { t } = useTranslation();
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const { userId } = useAuth();
+  const { user } = useUser();
+
+  // Immediate log to check if user is loaded
+  console.log("=== [Payment] COMPONENT MOUNTED ===");
+  console.log("User object:", user);
+  console.log("User ID:", user?.id);
+  console.log("Full Name:", user?.fullName);
+  console.log("Email:", user?.emailAddresses?.[0]?.emailAddress);
+  console.log("Props fullName:", fullName);
+  console.log("Props email:", email);
+  console.log("===================================");
+
   const [success, setSuccess] = useState<boolean>(false);
   const [currentPaymentIntent, setCurrentPaymentIntent] = useState<any>(null);
   const [currentCustomer, setCurrentCustomer] = useState<string>("");
@@ -45,6 +57,19 @@ const Payment = ({
   const fadeAnim = new Animated.Value(1);
   const scaleAnim = new Animated.Value(1);
   const qrScanAnim = new Animated.Value(0);
+
+  // Log user info from Clerk
+  useEffect(() => {
+    console.log("=== [Payment] USER INFO FROM CLERK ===");
+    console.log("User ID:", user?.id);
+    console.log("Full Name:", user?.fullName);
+    console.log("First Name:", user?.firstName);
+    console.log("Last Name:", user?.lastName);
+    console.log("Email:", user?.emailAddresses?.[0]?.emailAddress);
+    console.log("Props - fullName:", fullName);
+    console.log("Props - email:", email);
+    console.log("======================================");
+  }, [user, fullName, email]);
 
   const handlePaymentMethodSelect = useCallback((methodId: string) => {
     setSelectedPaymentMethod(methodId);
@@ -147,9 +172,16 @@ const Payment = ({
         driver_id: driverId,
         user_id: userId,
         payment_intent_id: currentPaymentIntent?.id || "cash_payment",
-        user_name: fullName,
-        user_email: email,
+        user_name: user?.fullName || user?.firstName || fullName || "User",
+        user_email:
+          user?.emailAddresses?.[0]?.emailAddress ||
+          email ||
+          "user@example.com",
       };
+
+      console.log("=== [Payment] BOOKING DATA ===");
+      console.log(JSON.stringify(bookingData, null, 2));
+      console.log("===============================");
 
       const response = await fetchAPI("/(api)/ride/book", {
         method: "POST",
