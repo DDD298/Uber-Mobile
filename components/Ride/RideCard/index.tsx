@@ -63,7 +63,8 @@ const RideCard = ({
       ride_status,
       isDriverView,
       hasRating: !!ride.rating,
-      ratingData: ride.rating,
+      passengerName: passenger?.name,
+      avatarUri: `https://api.dicebear.com/7.x/avataaars/png?seed=${passenger?.name || "passenger"}`,
     });
 
     if (ride_status === "completed" && !isDriverView) {
@@ -281,7 +282,7 @@ const RideCard = ({
             {isDriverView ? (
               <Image
                 source={{
-                  uri: `https://api.dicebear.com/7.x/avataaars/svg?seed=${passenger?.name || "passenger"}`,
+                  uri: `https://api.dicebear.com/7.x/avataaars/png?seed=${passenger?.name || "passenger"}`,
                 }}
                 className="w-10 h-10 rounded-full mr-3"
               />
@@ -444,7 +445,7 @@ const RideCard = ({
               <CustomButton
                 title={t("ride.startRide") || "Bắt đầu chuyến đi"}
                 onPress={() => handleUpdateStatus("in_progress")}
-                bgVariant="primary"
+                bgVariant="success"
                 IconLeft={() => (
                   <Ionicons
                     name="play-circle"

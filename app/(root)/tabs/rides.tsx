@@ -3,7 +3,7 @@ import { images } from "@/constants";
 import { fetchAPI } from "@/lib/fetch";
 import { Ride } from "@/types/type";
 import { useAuth } from "@clerk/clerk-expo";
-import { useEffect, useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { useFocusEffect } from "expo-router";
 import {
   ActivityIndicator,
@@ -39,18 +39,9 @@ export default function RidesScreen() {
       const timestamp = Date.now();
       const url = `/(api)/ride/list?user_id=${testUserId}&status=all&limit=50&offset=0&_t=${timestamp}`;
       const response = await fetchAPI(url);
-
       setRides(response.data || []);
       const userIsDriver = !!response.isDriver;
       setIsDriver(userIsDriver);
-
-      // Log chuyến đi gần nhất (item cuối cùng)
-      if (response.data && response.data.length > 0) {
-        const latestRide = response.data[response.data.length - 1];
-        console.log("=== [LATEST RIDE] Chuyến đi gần nhất ===");
-        console.log(JSON.stringify(latestRide, null, 2));
-        console.log("========================================");
-      }
     } catch (err) {
       setError(err instanceof Error ? err.message : t("errors.networkError"));
     } finally {
@@ -81,17 +72,13 @@ export default function RidesScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      // Initial fetch when screen comes into focus
       fetchRides();
+      const refreshInterval = setInterval(() => {
+        fetchRides();
+      }, 4000);
 
-      // Set up auto-refresh every 4 seconds
-      // const refreshInterval = setInterval(() => {
-      //   fetchRides();
-      // }, 4000);
-
-      // Cleanup: clear interval when screen loses focus or unmounts
       return () => {
-        // clearInterval(refreshInterval);
+        clearInterval(refreshInterval);
       };
     }, [userId])
   );
