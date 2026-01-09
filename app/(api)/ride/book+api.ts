@@ -24,9 +24,6 @@ export async function POST(request: Request) {
       user_name,
       user_email,
     } = body;
-    console.log("=== [POST /api/ride/book] Received data ===");
-    console.log(JSON.stringify(body, null, 2));
-
     if (
       !origin_address ||
       !destination_address ||
@@ -53,11 +50,6 @@ export async function POST(request: Request) {
 
     const sql = neon(`${process.env.DATABASE_URL}`);
 
-    // Đảm bảo user tồn tại và cập nhật thông tin mới nhất
-    console.log(`[POST /api/ride/book] Upserting user: ${user_id}`);
-    console.log(`[POST /api/ride/book] User name: ${user_name}`);
-    console.log(`[POST /api/ride/book] User email: ${user_email}`);
-    
     await sql`
       INSERT INTO users (clerk_id, name, email)
       VALUES (

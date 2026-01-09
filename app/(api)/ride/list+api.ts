@@ -33,8 +33,6 @@ export async function GET(request: Request) {
     `;
     const driver_id = driverResult.length > 0 ? driverResult[0].id : null;
 
-    console.log(`[GET /api/ride/list] Fetching for user_id: ${user_id}, driver_id: ${driver_id}, status: ${status}`);
-
     // Helper to build the query conditions
     const getConditions = (statusCondition: string) => {
       if (driver_id) {

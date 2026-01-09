@@ -57,26 +57,6 @@ const RideCard = ({
   const isDriverView =
     ride.driver?.driver_id !== undefined && ride.passenger_id !== userId;
 
-  // Debug logging for rating - moved to useEffect
-  useEffect(() => {
-    console.log(`[RideCard #${ride_id}] Render Check:`, {
-      ride_status,
-      isDriverView,
-      hasRating: !!ride.rating,
-      passengerName: passenger?.name,
-      avatarUri: `https://api.dicebear.com/7.x/avataaars/png?seed=${passenger?.name || "passenger"}`,
-    });
-
-    if (ride_status === "completed" && !isDriverView) {
-      console.log(`[RideCard #${ride_id}] ✅ SHOULD SHOW RATING SECTION`);
-      if (ride.rating) {
-        console.log(`[RideCard #${ride_id}] ⭐ HAS RATING:`, ride.rating);
-      } else {
-        console.log(`[RideCard #${ride_id}] 📝 NO RATING - Show button`);
-      }
-    }
-  }, [ride.rating, ride_status, isDriverView, ride_id, userId]);
-
   const handleCancel = () => {
     Alert.alert(
       t("ride.cancelRide"),

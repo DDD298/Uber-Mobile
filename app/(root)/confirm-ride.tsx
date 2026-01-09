@@ -17,11 +17,17 @@ const ConfirmRide = () => {
   const { t } = useTranslation();
   const { drivers, selectedDriver, setSelectedDriver } = useDriverStore();
 
+  const approvedDrivers = useMemo(() => {
+    return (drivers || []).filter(
+      (driver) => driver.approval_status === "approved"
+    );
+  }, [drivers]);
+
   const [currentPage, setCurrentPage] = useState(1);
 
-  const totalPages = Math.ceil((drivers?.length || 0) / ITEMS_PER_PAGE);
+  const totalPages = Math.ceil((approvedDrivers?.length || 0) / ITEMS_PER_PAGE);
 
-  const currentDrivers = (drivers || []).slice(
+  const currentDrivers = approvedDrivers.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );

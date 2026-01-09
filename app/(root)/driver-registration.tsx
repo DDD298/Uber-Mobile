@@ -110,7 +110,6 @@ export default function DriverRegistrationScreen() {
       }
 
       const cloudinaryUrl = uploadResponse.data.url;
-      console.log(`[Upload Success] ${type}:`, cloudinaryUrl);
 
       // Map type to URL field name
       const urlFieldMap = {
@@ -121,15 +120,12 @@ export default function DriverRegistrationScreen() {
 
       // Store the Cloudinary URL
       const urlKey = urlFieldMap[type];
-      console.log(`[Updating Form] Setting ${urlKey} to:`, cloudinaryUrl);
 
       setForm((prev) => {
         const updatedForm = { ...prev, [urlKey]: cloudinaryUrl };
-        console.log("[Current Form State]:", updatedForm);
         return updatedForm;
       });
     } catch (error: any) {
-      console.error(`[Upload Error] ${type}:`, error);
       Alert.alert(
         t("common.error"),
         `Lỗi khi tải ảnh ${type} lên: ${error.message}`
@@ -144,11 +140,6 @@ export default function DriverRegistrationScreen() {
   };
 
   const handleSubmit = async () => {
-    console.log("=== [SUBMIT CLICKED] ===");
-    console.log("[Submit] Form data before validation:", form);
-    console.log("[Submit] Uploading status:", uploadingImage);
-
-    // Check if any image is still uploading
     if (
       uploadingImage.license ||
       uploadingImage.vehicle ||
@@ -180,14 +171,6 @@ export default function DriverRegistrationScreen() {
     }
 
     const missingPhotos: string[] = [];
-
-    console.log("=== [IMAGE VALIDATION] ===");
-    console.log("License URL:", form.license_image_url);
-    console.log("Vehicle URL:", form.car_image_url);
-    console.log("Profile URL:", form.profile_image_url);
-    console.log("License URI (local):", form.license_photo_uri);
-    console.log("Vehicle URI (local):", form.vehicle_photo_uri);
-    console.log("Profile URI (local):", form.profile_photo_uri);
 
     if (!form.license_image_url) {
       missingPhotos.push(t("driver.licensePhoto"));
