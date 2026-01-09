@@ -27,7 +27,7 @@ const GoogleTextInput = ({
         placeholder={t("home.whereTo")}
         enablePoweredByContainer={false}
         debounce={400}
-        minLength={2}
+        minLength={1}
         styles={{
           textInputContainer: {
             alignItems: "center",
@@ -38,6 +38,7 @@ const GoogleTextInput = ({
             borderBottomWidth: 0,
             borderLeftWidth: 0,
             borderRightWidth: 0,
+            height: 40,
           },
           textInput: {
             backgroundColor: textInputBackgroundColor
@@ -45,13 +46,15 @@ const GoogleTextInput = ({
               : "transparent",
             fontSize: 16,
             fontWeight: "600",
-            marginTop: 5,
-            paddingTop: 8,
+            height: 40,
             width: "100%",
             borderTopWidth: 0,
             borderBottomWidth: 0,
             borderLeftWidth: 0,
             borderRightWidth: 0,
+            paddingTop: 0,
+            paddingBottom: 0,
+            marginTop: -1,
           },
           listView: {
             backgroundColor: textInputBackgroundColor
@@ -104,6 +107,7 @@ const GoogleTextInput = ({
           placeholder: initialLocation ?? t("home.whereTo"),
           numberOfLines: 1,
           editable: !isLoading,
+          scrollEnabled: false,
         }}
       />
     </View>

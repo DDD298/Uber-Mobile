@@ -50,22 +50,6 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
         minHeight: 120,
       }}
     >
-      <TouchableOpacity
-        onPress={onBackPress}
-        style={{
-          width: 40,
-          height: 40,
-          borderRadius: 20,
-          borderWidth: 1,
-          borderColor: "rgba(255, 255, 255, 0.2)",
-          backgroundColor: "rgba(255, 255, 255, 0.1)",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Ionicons name="chevron-back" size={20} color="white" />
-      </TouchableOpacity>
-
       <View
         style={{
           flex: 1,
@@ -89,22 +73,6 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
           {t("chat.title")}
         </Text>
       </View>
-
-      <TouchableOpacity
-        onPress={handleClearHistory}
-        style={{
-          width: 40,
-          height: 40,
-          borderRadius: 20,
-          borderWidth: 1,
-          borderColor: "rgba(255, 255, 255, 0.2)",
-          backgroundColor: "rgba(255, 255, 255, 0.1)",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Ionicons name="trash-outline" size={20} color="white" />
-      </TouchableOpacity>
     </LinearGradient>
   );
 };

@@ -19,6 +19,7 @@ declare interface Driver {
   car_seats: number;
   rating: number;
   vehicle_type: string;
+  approval_status: string;
 }
 
 declare interface MarkerData {
@@ -33,6 +34,7 @@ declare interface MarkerData {
   first_name: string;
   last_name: string;
   vehicle_type: string;
+  approval_status: string;
   time?: number;
   price?: string;
 }

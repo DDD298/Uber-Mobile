@@ -93,7 +93,8 @@ export default function RidesScreen() {
               <RideCard
                 ride={item}
                 onCancel={
-                  (item.ride_status === "confirmed" ||
+                  (item.ride_status === "pending" ||
+                    item.ride_status === "confirmed" ||
                     item.ride_status === "driver_arrived") &&
                   item.ride_id
                     ? () => handleCancelRide(Number(item.ride_id))

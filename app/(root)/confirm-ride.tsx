@@ -16,6 +16,7 @@ const ITEMS_PER_PAGE = 5;
 const ConfirmRide = () => {
   const { t } = useTranslation();
   const { drivers, selectedDriver, setSelectedDriver } = useDriverStore();
+
   const [currentPage, setCurrentPage] = useState(1);
 
   const totalPages = Math.ceil((drivers?.length || 0) / ITEMS_PER_PAGE);

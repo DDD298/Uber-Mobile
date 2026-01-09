@@ -284,7 +284,7 @@ const RideCard = ({
                 source={{
                   uri: `https://api.dicebear.com/7.x/avataaars/png?seed=${passenger?.name || "passenger"}`,
                 }}
-                className="w-10 h-10 rounded-full mr-3"
+                className="w-10 h-10 rounded-full mr-3 border border-gray-200"
               />
             ) : (
               <Image
@@ -293,7 +293,7 @@ const RideCard = ({
                     driver.profile_image_url ||
                     "https://via.placeholder.com/40",
                 }}
-                className="w-10 h-10 rounded-full mr-3"
+                className="w-10 h-10 rounded-full mr-3 border border-gray-200"
               />
             )}
             <View className="flex-1">
@@ -482,27 +482,27 @@ const RideCard = ({
           </View>
         )}
 
-        {/* Passenger Action Buttons */}
         {!isDriverView && (
           <>
-            {/* Giai đoạn 0: pending - Chờ xác nhận - Passenger có thể hủy */}
-            {ride_status === "pending" && onCancel && (
-              <CustomButton
-                title={t("ride.cancelRide")}
-                onPress={handleCancel}
-                bgVariant="red"
-                textVariant="red"
-                IconLeft={() => (
-                  <Ionicons
-                    name="close-circle-outline"
-                    size={20}
-                    color="#DC2626"
-                    style={{ marginRight: 8 }}
-                  />
-                )}
-                className="mt-4"
-              />
-            )}
+            {/* Passenger can cancel if status is pending OR within time limit for other states */}
+            {onCancel &&
+              (ride_status === "pending" || checkCanCancelRide().canCancel) && (
+                <CustomButton
+                  title={t("ride.cancelRide")}
+                  onPress={handleCancel}
+                  bgVariant="red"
+                  textVariant="red"
+                  IconLeft={() => (
+                    <Ionicons
+                      name="close-circle-outline"
+                      size={20}
+                      color="#DC2626"
+                      style={{ marginRight: 8 }}
+                    />
+                  )}
+                  className="mt-4"
+                />
+              )}
 
             {/* Giai đoạn 3: in_progress - Hiển thị thông báo đang di chuyển */}
             {ride_status === "in_progress" && (

@@ -12,8 +12,10 @@ export async function GET(request: Request) {
         car_image_url,
         car_seats,
         rating,
-        vehicle_type
+        vehicle_type,
+        approval_status
       FROM drivers
+      WHERE approval_status = 'approved'
     `;
 
     return Response.json({ data: response });

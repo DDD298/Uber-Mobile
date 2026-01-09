@@ -20,7 +20,7 @@ if (!publishableKey) {
   );
 }
 
-LogBox.ignoreLogs(["Clerk:", "new NativeEventEmitter"]);
+LogBox.ignoreLogs(["Clerk:", "new NativeEventEmitter", "[clerk/telemetry]"]);
 
 export default function RootLayout() {
   const [loaded] = useFonts({
