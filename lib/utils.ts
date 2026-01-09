@@ -1,4 +1,9 @@
 import { Ride } from "@/types/type";
+import { format, toZonedTime } from 'date-fns-tz';
+import { formatInTimeZone } from 'date-fns-tz';
+
+// Múi giờ Việt Nam
+const VIETNAM_TIMEZONE = 'Asia/Ho_Chi_Minh';
 
 export const sortRides = (rides: Ride[]): Ride[] => {
   const result = rides.sort((a, b) => {
@@ -45,16 +50,35 @@ export function formatDate(dateString: string): string {
   return `${day < 10 ? "0" + day : day} ${month} ${year}`;
 }
 
+/**
+ * Format date to Vietnamese format (dd/MM/yyyy) in Vietnam timezone
+ */
 export function formatDateVN(dateString: string): string {
-  const date = new Date(dateString);
-  const day = date.getDate().toString().padStart(2, '0');
-  const month = (date.getMonth() + 1).toString().padStart(2, '0');
-  const year = date.getFullYear();
-
-  return `${day}/${month}/${year}`;
+  try {
+    const date = new Date(dateString);
+    // Convert to Vietnam timezone and format
+    return formatInTimeZone(date, VIETNAM_TIMEZONE, 'dd/MM/yyyy');
+  } catch (error) {
+    console.error('Error formatting date:', error);
+    return dateString;
+  }
 }
 
+/**
+ * Format time (minutes or timestamp) to HH:mm in Vietnam timezone
+ */
 export function formatTimeVN(minutes: number): string {
+  // If it's a timestamp (milliseconds), convert to Date
+  if (minutes > 1000000) {
+    try {
+      const date = new Date(minutes);
+      return formatInTimeZone(date, VIETNAM_TIMEZONE, 'HH:mm');
+    } catch (error) {
+      console.error('Error formatting time:', error);
+    }
+  }
+  
+  // Otherwise treat as minutes
   const hours = Math.floor(minutes / 60);
   const remainingMinutes = minutes % 60;
   
@@ -74,30 +98,50 @@ export function convertVNDToUSD(vndAmount: string | number): number {
   return numericAmount / exchangeRate;
 }
 
+/**
+ * Get current time in Vietnam timezone as ISO string
+ */
 export function getVietnamTime(): string {
   const now = new Date();
-  const vietnamTime = new Date(now.getTime() + (7 * 60 * 60 * 1000));
+  const vietnamTime = toZonedTime(now, VIETNAM_TIMEZONE);
   return vietnamTime.toISOString();
 }
 
+/**
+ * Get current time formatted for display in Vietnam timezone
+ */
 export function getVietnamTimeFormatted(): string {
   const now = new Date();
-  // Chuyển đổi sang múi giờ Việt Nam (UTC+7)
-  const vietnamTime = new Date(now.getTime() + (7 * 60 * 60 * 1000));
-  
-  const year = vietnamTime.getUTCFullYear();
-  const month = (vietnamTime.getUTCMonth() + 1).toString().padStart(2, '0');
-  const day = vietnamTime.getUTCDate().toString().padStart(2, '0');
-  const hours = vietnamTime.getUTCHours().toString().padStart(2, '0');
-  const minutes = vietnamTime.getUTCMinutes().toString().padStart(2, '0');
-  const seconds = vietnamTime.getUTCSeconds().toString().padStart(2, '0');
-  
-  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds} (GMT+7)`;
+  return formatInTimeZone(now, VIETNAM_TIMEZONE, 'yyyy-MM-dd HH:mm:ss (O)');
 }
 
+/**
+ * Get current time in Vietnam timezone as UTC ISO string
+ * This is used for database timestamps
+ */
 export function getVietnamTimeAsUTC(): string {
   const now = new Date();
-  // Chuyển đổi sang múi giờ Việt Nam (UTC+7)
-  const vietnamTime = new Date(now.getTime() + (7 * 60 * 60 * 1000));
+  const vietnamTime = toZonedTime(now, VIETNAM_TIMEZONE);
   return vietnamTime.toISOString();
+}
+
+/**
+ * Format a date/time string to Vietnam timezone
+ */
+export function toVietnamTime(dateString: string): Date {
+  const date = new Date(dateString);
+  return toZonedTime(date, VIETNAM_TIMEZONE);
+}
+
+/**
+ * Format datetime to Vietnamese format with time
+ */
+export function formatDateTimeVN(dateString: string): string {
+  try {
+    const date = new Date(dateString);
+    return formatInTimeZone(date, VIETNAM_TIMEZONE, 'dd/MM/yyyy HH:mm');
+  } catch (error) {
+    console.error('Error formatting datetime:', error);
+    return dateString;
+  }
 }
