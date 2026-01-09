@@ -4,17 +4,10 @@ import { formatDateVN, formatTimeVN } from "@/lib/utils";
 import { formatCurrencyByLanguage } from "@/lib/currency";
 import { Ride } from "@/types/type";
 import { Ionicons } from "@expo/vector-icons";
-import {
-  Alert,
-  Image,
-  Text,
-  TouchableOpacity,
-  View,
-  ActivityIndicator,
-} from "react-native";
+import { Alert, Image, Text, View, ActivityIndicator } from "react-native";
 import { useTranslation } from "react-i18next";
 import { RatingModal } from "@/components/Ride/RatingModal";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useAuth } from "@clerk/clerk-expo";
 import { fetchAPI } from "@/lib/fetch";
 import CustomButton from "@/components/Common/CustomButton";
@@ -464,25 +457,26 @@ const RideCard = ({
 
         {!isDriverView && (
           <>
-            {/* Passenger can cancel if status is pending OR within time limit for other states */}
             {onCancel &&
-              (ride_status === "pending" || checkCanCancelRide().canCancel) && (
-                <CustomButton
-                  title={t("ride.cancelRide")}
-                  onPress={handleCancel}
-                  bgVariant="red"
-                  textVariant="red"
-                  IconLeft={() => (
-                    <Ionicons
-                      name="close-circle-outline"
-                      size={20}
-                      color="#DC2626"
-                      style={{ marginRight: 8 }}
-                    />
-                  )}
-                  className="mt-4"
-                />
-              )}
+            (ride_status === "pending" || checkCanCancelRide().canCancel) ? (
+              <CustomButton
+                title={t("ride.cancelRide")}
+                onPress={handleCancel}
+                bgVariant="red"
+                textVariant="red"
+                IconLeft={() => (
+                  <Ionicons
+                    name="close-circle-outline"
+                    size={20}
+                    color="#DC2626"
+                    style={{ marginRight: 8 }}
+                  />
+                )}
+                className="mt-4"
+              />
+            ) : (
+              ""
+            )}
 
             {/* Giai đoạn 3: in_progress - Hiển thị thông báo đang di chuyển */}
             {ride_status === "in_progress" && (

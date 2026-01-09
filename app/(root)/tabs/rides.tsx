@@ -6,6 +6,7 @@ import { useAuth } from "@clerk/clerk-expo";
 import { useState, useCallback } from "react";
 import { useFocusEffect } from "expo-router";
 import {
+  Alert,
   ActivityIndicator,
   FlatList,
   Image,
@@ -29,15 +30,14 @@ export default function RidesScreen() {
   const [isDriver, setIsDriver] = useState(false);
 
   const fetchRides = async () => {
-    const testUserId = userId || "user_33V7GizlzLeZyR9fHj10LxbFR9z";
-    if (!testUserId) {
+    if (!userId) {
       return;
     }
 
     try {
       setError(null);
       const timestamp = Date.now();
-      const url = `/(api)/ride/list?user_id=${testUserId}&status=all&limit=50&offset=0&_t=${timestamp}`;
+      const url = `/(api)/ride/list?user_id=${userId}&status=all&limit=50&offset=0&_t=${timestamp}`;
       const response = await fetchAPI(url);
       setRides(response.data || []);
       const userIsDriver = !!response.isDriver;
@@ -56,8 +56,15 @@ export default function RidesScreen() {
   };
 
   const handleCancelRide = async (rideId: number) => {
+    if (!userId) {
+      Alert.alert(
+        t("common.error"),
+        t("errors.authRequired") || "Vui lòng đăng nhập lại"
+      );
+      return;
+    }
     try {
-      await fetchAPI(`/(api)/ride/cancel`, {
+      const response = await fetchAPI(`/(api)/ride/cancel`, {
         method: "PUT",
         body: JSON.stringify({
           ride_id: rideId,
@@ -66,8 +73,20 @@ export default function RidesScreen() {
         }),
       });
 
-      await fetchRides();
-    } catch (err) {}
+      if (response.success) {
+        await fetchRides();
+      } else {
+        Alert.alert(
+          t("common.error"),
+          response.error || t("errors.somethingWentWrong")
+        );
+      }
+    } catch (err) {
+      Alert.alert(
+        t("common.error"),
+        err instanceof Error ? err.message : t("errors.somethingWentWrong")
+      );
+    }
   };
 
   useFocusEffect(

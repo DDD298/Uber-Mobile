@@ -94,22 +94,7 @@ export async function PUT(request: Request) {
       );
     }
 
-    const rideCreatedAt = new Date(ride.created_at);
-    const now = new Date();
-    const timeDiffInMinutes = (now.getTime() - rideCreatedAt.getTime()) / (1000 * 60);
 
-
-    if (timeDiffInMinutes > 10) {
-      return new Response(
-        JSON.stringify({ error: "Không thể hủy chuyến sau 10 phút từ khi đặt" }),
-        {
-          status: 400,
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        },
-      );
-    }
 
     const response = await sql`
       UPDATE rides 

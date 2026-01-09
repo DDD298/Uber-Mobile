@@ -82,32 +82,6 @@ export const canCancelRide = (ride: any): { canCancel: boolean; reason?: string 
     return { canCancel: false, reason: "Không thể hủy chuyến đang diễn ra" };
   }
 
-  // Kiểm tra thời gian - không thể hủy sau 10 phút
-  if (ride.created_at) {
-    try {
-      const rideCreatedAt = new Date(ride.created_at);
-      const now = new Date();
-      
-      // Kiểm tra tính hợp lệ của ngày tháng
-      if (isNaN(rideCreatedAt.getTime())) {
-        console.warn('Invalid created_at date:', ride.created_at);
-        return { canCancel: true }; // Cho phép hủy nếu không parse được ngày
-      }
-      
-      // Tính toán khoảng cách thời gian
-      // Cả hai timestamp đều là UTC, so sánh trực tiếp
-      const timeDiffInMinutes = (now.getTime() - rideCreatedAt.getTime()) / (1000 * 60);
-      
-      
-      if (timeDiffInMinutes > 10) {
-        return { canCancel: false, reason: "Không thể hủy chuyến sau 10 phút từ khi đặt" };
-      }
-    } catch (error) {
-      console.error('Error checking cancel time:', error);
-      return { canCancel: true }; // Cho phép hủy nếu có lỗi parse
-    }
-  }
-
   return { canCancel: true };
 };
 
