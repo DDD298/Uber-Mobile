@@ -49,20 +49,6 @@ export async function GET(request: Request) {
 
     const stats = rideStats[0];
 
-    // Get total warnings count
-    const totalWarningsResult = await sql`
-      SELECT COUNT(*) as total_warnings
-      FROM driver_warnings
-      WHERE driver_id = ${driverData.id}
-    `;
-
-    // Get active warnings count (not resolved)
-    const activeWarningsResult = await sql`
-      SELECT COUNT(*) as active_warnings
-      FROM driver_warnings
-      WHERE driver_id = ${driverData.id} AND resolved_at IS NULL
-    `;
-
     // Get recent rides (last 5)
     const recentRides = await sql`
       SELECT 
@@ -123,8 +109,6 @@ export async function GET(request: Request) {
           last_location_update: driverData.last_location_update,
           created_at: driverData.created_at,
           updated_at: driverData.updated_at,
-          total_warnings: totalWarningsResult[0]?.total_warnings.toString() || "0",
-          active_warnings: activeWarningsResult[0]?.active_warnings.toString() || "0",
           recentRides: recentRides.map((ride: any) => ({
             ride_id: ride.ride_id,
             origin_address: ride.origin_address,

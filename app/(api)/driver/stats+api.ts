@@ -85,14 +85,6 @@ export async function GET(request: Request) {
       WHERE stars <= 2
     `;
 
-    // Lấy warnings chưa resolve
-    const unresolvedWarnings = await sql`
-      SELECT *
-      FROM driver_warnings
-      WHERE driver_id = ${driver_id} AND resolved_at IS NULL
-      ORDER BY created_at DESC
-    `;
-
     // Tính performance metrics
     const performanceMetrics = await sql`
       SELECT 
@@ -119,12 +111,10 @@ export async function GET(request: Request) {
           }, {}),
           recentRatings: recentRatings,
           recentBadRatingsCount: parseInt(recentBadRatings[0].count),
-          unresolvedWarnings: unresolvedWarnings,
           performanceMetrics: performanceMetrics[0],
           riskLevel: calculateRiskLevel(
             driver[0],
-            parseInt(recentBadRatings[0].count),
-            unresolvedWarnings.length
+            parseInt(recentBadRatings[0].count)
           ),
         },
       },
@@ -144,8 +134,7 @@ export async function GET(request: Request) {
 // Helper function để tính risk level
 function calculateRiskLevel(
   driver: any,
-  recentBadCount: number,
-  unresolvedWarningsCount: number
+  recentBadCount: number
 ): string {
   const avgRating = parseFloat(driver.average_rating || 5);
   const badRatingsCount = parseInt(driver.bad_ratings_count || 0);
@@ -170,9 +159,6 @@ function calculateRiskLevel(
     else if (badRatio > 0.3) riskScore += 15;
     else if (badRatio > 0.2) riskScore += 10;
   }
-
-  // Unresolved warnings
-  riskScore += unresolvedWarningsCount * 10;
 
   // Determine risk level
   if (riskScore >= 70) return "critical";
