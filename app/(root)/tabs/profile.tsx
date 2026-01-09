@@ -139,7 +139,7 @@ export default function ProfileScreen() {
           {isDriver && !checkingDriver ? (
             <>
               <Text className="mb-4 text-xl font-JakartaBold">
-                Chi tiết tài xế
+                {t("driver.driverDetails")}
               </Text>
               <View className="flex flex-col p-4 mb-4 shadow-sm bg-white rounded-[24px] border border-gray-200 shadow-neutral-300 overflow-hidden">
                 <View className="flex-row items-center mb-4">

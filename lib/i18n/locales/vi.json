@@ -100,6 +100,7 @@
     "rateDriver": "Đánh giá tài xế",
     "viewReceipt": "Xem hóa đơn",
     "statusUnknown": "Chưa xác định",
+    "statusPending": "Chờ xác nhận",
     "statusConfirmed": "Đã xác nhận",
     "statusDriverArrived": "Tài xế đã đến",
     "statusNoShow": "Khách không xuất hiện",
@@ -108,10 +109,19 @@
     "arriving": "Đang đến trong 5 phút",
     "rideCompleted": "Chuyến đã hoàn thành",
     "passenger": "Khách hàng",
+    "passengerPrefix": "Khách: ",
+    "driverPrefix": "Tài xế: ",
+    "confirmTrip": "Xác nhận chuyến",
+    "rejectTrip": "Không nhận chuyến này",
+    "rejectTripTitle": "Không nhận chuyến",
+    "rejectTripDescription": "Bạn có chắc chắn không nhận chuyến này?",
+    "noShow": "Khách không xuất hiện",
     "driverArrived": "Xác nhận đã đến điểm đón",
     "startRide": "Bắt đầu chuyến đi",
     "completeRide": "Hoàn thành chuyến đi",
-    "arrivingAtDestination": "Đang di chuyển đến điểm đến"
+    "arrivingAtDestination": "Đang di chuyển đến điểm đến",
+    "updateStatusError": "Không thể cập nhật trạng thái",
+    "systemError": "Lỗi hệ thống"
   },
   "rating": {
     "rateYourRide": "Đánh giá chuyến đi",
@@ -200,6 +210,7 @@
     "viewProfile": "Xem hồ sơ tài xế",
     "manageDriverAccount": "Quản lý tài khoản tài xế",
     "driverProfile": "Hồ sơ tài xế",
+    "driverDetails": "Chi tiết tài xế",
     "personalInfo": "Thông tin cá nhân",
     "vehicleInfo": "Thông tin xe",
     "contactInfo": "Thông tin liên hệ",
@@ -266,6 +277,7 @@
     "networkError": "Lỗi mạng. Vui lòng kiểm tra kết nối",
     "invalidInput": "Dữ liệu không hợp lệ",
     "required": "Trường này là bắt buộc",
-    "tryAgain": "Vui lòng thử lại"
+    "tryAgain": "Vui lòng thử lại",
+    "authRequired": "Vui lòng đăng nhập lại để thực hiện"
   }
 }

@@ -91,11 +91,11 @@ const RideCard = ({
       } else {
         Alert.alert(
           t("common.error"),
-          response.error || "Không thể cập nhật trạng thái"
+          response.error || t("ride.updateStatusError")
         );
       }
     } catch (error: any) {
-      Alert.alert(t("common.error"), error.message || "Lỗi hệ thống");
+      Alert.alert(t("common.error"), error.message || t("ride.systemError"));
     } finally {
       setUpdatingStatus(false);
     }
@@ -114,7 +114,7 @@ const RideCard = ({
     switch (status) {
       case "pending":
         return {
-          text: "CHỜ XÁC NHẬN",
+          text: t("ride.statusPending").toUpperCase(),
           color: "#F59E0B",
           bgColor: "#FEF3C7",
           icon: "time" as const,
@@ -277,8 +277,10 @@ const RideCard = ({
             <View className="flex-1">
               <Text className="text-sm font-JakartaBold text-gray-900">
                 {isDriverView
-                  ? "Khách: " + passenger?.name || t("ride.passenger")
-                  : "Tài xế: " + `${driver.first_name} ${driver.last_name}`}
+                  ? t("ride.passengerPrefix") +
+                    (passenger?.name || t("ride.passenger"))
+                  : t("ride.driverPrefix") +
+                    `${driver.first_name} ${driver.last_name}`}
               </Text>
               {!isDriverView ? (
                 <View className="flex-col items-start">
@@ -286,7 +288,7 @@ const RideCard = ({
                     {driver.car_seats} {t("booking.seats")}
                   </Text>
                   <Text className="text-sm text-gray-500 font-JakartaMedium mr-2">
-                    Loại xe: {driver.vehicle_type || "Car"}
+                    {t("driver.vehicleType")}: {driver.vehicle_type || "Car"}
                   </Text>
                 </View>
               ) : (
@@ -344,7 +346,7 @@ const RideCard = ({
             {ride_status === "pending" && (
               <>
                 <CustomButton
-                  title="Xác nhận chuyến"
+                  title={t("ride.confirmTrip")}
                   onPress={() => handleUpdateStatus("confirmed")}
                   bgVariant="success"
                   IconLeft={() => (
@@ -357,11 +359,11 @@ const RideCard = ({
                   )}
                 />
                 <CustomButton
-                  title="Không nhận chuyến này"
+                  title={t("ride.rejectTrip")}
                   onPress={() => {
                     Alert.alert(
-                      "Không nhận chuyến",
-                      "Bạn có chắc chắn không nhận chuyến này?",
+                      t("ride.rejectTripTitle"),
+                      t("ride.rejectTripDescription"),
                       [
                         { text: t("common.cancel"), style: "cancel" },
                         {
@@ -402,7 +404,7 @@ const RideCard = ({
                   )}
                 />
                 <CustomButton
-                  title="Khách không xuất hiện"
+                  title={t("ride.noShow")}
                   onPress={() => handleUpdateStatus("no_show")}
                   bgVariant="outline"
                   textVariant="primary"

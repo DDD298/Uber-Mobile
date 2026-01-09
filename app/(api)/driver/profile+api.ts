@@ -17,7 +17,6 @@ export async function GET(request: Request) {
       );
     }
 
-    // Get driver profile
     const driverQuery = driverId
       ? sql`SELECT * FROM drivers WHERE id = ${driverId} LIMIT 1`
       : sql`SELECT * FROM drivers WHERE clerk_id = ${clerkId} LIMIT 1`;

@@ -127,6 +127,7 @@ export default function DriverProfileScreen() {
             colors={["#10B981", "#059669"]}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
+            style={{ padding: 16 }}
             className="p-4"
           >
             <View className="flex-row items-center">
