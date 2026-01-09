@@ -98,7 +98,7 @@ const RideCard = ({
   const handleUpdateStatus = async (newStatus: string) => {
     try {
       setUpdatingStatus(true);
-      const response = await fetchAPI("/(api)/ride/update-status-v2", {
+      const response = await fetchAPI("/(api)/ride/update-status", {
         method: "POST",
         body: JSON.stringify({
           ride_id,

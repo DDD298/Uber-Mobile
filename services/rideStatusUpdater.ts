@@ -65,13 +65,15 @@ class RideStatusUpdater {
   private async updateRideStatus(ride_id: number, new_status: string) {
     try {
       await fetchAPI('/(api)/ride/update-status', {
-        method: 'PATCH',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           ride_id,
           new_status,
+          changed_by: 'system',
+          changed_by_id: 'auto-updater',
         }),
       });
     } catch (error) {

@@ -1,4 +1,4 @@
-/// <reference path="../../types/type.d.ts" />
+/// <reference path="../../../types/type.d.ts" />
 import React, { useState } from "react";
 import {
   View,

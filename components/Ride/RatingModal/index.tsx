@@ -9,7 +9,7 @@ import {
   TouchableWithoutFeedback,
   Alert,
 } from "react-native";
-import { StarRating } from "../Common/StarRating";
+import { StarRating } from "../../Common/StarRating";
 import { useUser } from "@clerk/clerk-expo";
 import {
   BottomSheetModal,
@@ -17,7 +17,7 @@ import {
   BottomSheetBackdrop,
   BottomSheetBackdropProps,
 } from "@gorhom/bottom-sheet";
-import CustomButton from "../Common/CustomButton";
+import CustomButton from "../../Common/CustomButton";
 import { useTranslation } from "react-i18next";
 import { fetchAPI } from "@/lib/fetch";
 import { formatCurrencyByLanguage } from "@/lib/currency";
