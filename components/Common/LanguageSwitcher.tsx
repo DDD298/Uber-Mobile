@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { useTranslation } from "react-i18next";
 
 interface LanguageOption {
-  code: "vi" | "en" | "zh" | "ko" | "th";
+  code: "vi" | "en";
   name: string;
   nativeName: string;
   flag: string;
@@ -12,9 +12,6 @@ interface LanguageOption {
 const languages: LanguageOption[] = [
   { code: "vi", name: "Vietnamese", nativeName: "Tiếng Việt", flag: "🇻🇳" },
   { code: "en", name: "English", nativeName: "English", flag: "🇬🇧" },
-  { code: "zh", name: "Chinese", nativeName: "中文", flag: "🇨🇳" },
-  { code: "ko", name: "Korean", nativeName: "한국어", flag: "🇰🇷" },
-  { code: "th", name: "Thai", nativeName: "ภาษาไทย", flag: "🇹🇭" },
 ];
 
 export const LanguageSwitcher: React.FC = () => {

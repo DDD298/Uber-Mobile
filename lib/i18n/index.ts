@@ -6,9 +6,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // Import translations
 import en from './locales/en.json';
 import vi from './locales/vi.json';
-import zh from './locales/zh.json';
-import ko from './locales/ko.json';
-import th from './locales/th.json';
 
 const LANGUAGE_KEY = '@app_language';
 
@@ -33,9 +30,6 @@ const languageDetector = {
       const languageMap: { [key: string]: string } = {
         'vi': 'vi',
         'en': 'en',
-        'zh': 'zh',
-        'ko': 'ko',
-        'th': 'th',
       };
       
       const supportedLanguage = languageMap[deviceLanguage] || 'en';
@@ -61,9 +55,6 @@ i18n
     resources: {
       en: { translation: en },
       vi: { translation: vi },
-      zh: { translation: zh },
-      ko: { translation: ko },
-      th: { translation: th },
     },
     fallbackLng: 'en',
     interpolation: {
