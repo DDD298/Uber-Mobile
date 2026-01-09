@@ -1,4 +1,4 @@
-import { getVietnamTimeAsUTC, formatDateVN } from "@/lib/utils";
+import { getVietnamTimeAsUTC, formatDateVN, formatDateTimeVN } from "@/lib/utils";
 import { neon } from "@neondatabase/serverless";
 import { sendRideConfirmationEmail } from "@/lib/email";
 
@@ -126,7 +126,7 @@ export async function POST(request: Request) {
           originAddress: origin_address,
           destinationAddress: destination_address,
           farePrice: parseFloat(fare_price),
-          rideTime: formatDateVN(vietnamTime),
+          rideTime: formatDateTimeVN(vietnamTime),
           driverName: `${driver.first_name} ${driver.last_name}`,
           vehicleType: driver.vehicle_type,
           paymentIntentId: payment_intent_id,

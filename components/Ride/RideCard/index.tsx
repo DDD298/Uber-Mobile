@@ -1,6 +1,11 @@
 import { icons } from "@/constants";
 import { canCancelRide } from "@/lib/ride-booking";
-import { formatDateVN, formatTimeVN } from "@/lib/utils";
+import {
+  formatDateVN,
+  formatTimeVN,
+  formatDateTimeVN,
+  formatTime,
+} from "@/lib/utils";
 import { formatCurrencyByLanguage } from "@/lib/currency";
 import { Ride } from "@/types/type";
 import { Ionicons } from "@expo/vector-icons";
@@ -193,7 +198,7 @@ const RideCard = ({
           </Text>
         </View>
         <Text className="text-sm text-gray-500 font-JakartaMedium">
-          {formatDateVN(created_at)}, {formatTimeVN(ride_time)}
+          {formatDateTimeVN(created_at)} • {formatTime(ride_time)}
         </Text>
       </View>
 
@@ -528,8 +533,7 @@ const RideCard = ({
                   </Text>
                 )}
                 <Text className="text-sm font-Jakarta text-gray-400 mt-2">
-                  {formatDateVN(ride.rating.created_at)} •{" "}
-                  {formatTimeVN(new Date(ride.rating.created_at).getTime())}
+                  {formatDateTimeVN(ride.rating.created_at)}
                 </Text>
               </View>
             ) : (

@@ -12,7 +12,7 @@ export interface RideConfirmationData {
 }
 
 export const getRideConfirmationHTML = (data: RideConfirmationData): string => {
-  const farePriceVND = Math.round(data.farePrice * 24000).toLocaleString('vi-VN');
+  const farePriceVND = data.farePrice.toLocaleString('vi-VN');
   
   return `
 <!DOCTYPE html>
@@ -239,7 +239,7 @@ export const getRideConfirmationHTML = (data: RideConfirmationData): string => {
 };
 
 export const getRideConfirmationText = (data: RideConfirmationData): string => {
-  const farePriceVND = Math.round(data.farePrice * 24000).toLocaleString('vi-VN');
+  const farePriceVND = data.farePrice.toLocaleString('vi-VN');
   
   return `
 THANH TOÁN THÀNH CÔNG

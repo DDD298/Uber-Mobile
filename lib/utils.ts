@@ -98,44 +98,24 @@ export function convertVNDToUSD(vndAmount: string | number): number {
   return numericAmount / exchangeRate;
 }
 
-/**
- * Get current time in Vietnam timezone as ISO string
- */
 export function getVietnamTime(): string {
-  const now = new Date();
-  const vietnamTime = toZonedTime(now, VIETNAM_TIMEZONE);
-  return vietnamTime.toISOString();
+  return new Date().toISOString();
 }
 
-/**
- * Get current time formatted for display in Vietnam timezone
- */
 export function getVietnamTimeFormatted(): string {
   const now = new Date();
   return formatInTimeZone(now, VIETNAM_TIMEZONE, 'yyyy-MM-dd HH:mm:ss (O)');
 }
 
-/**
- * Get current time in Vietnam timezone as UTC ISO string
- * This is used for database timestamps
- */
 export function getVietnamTimeAsUTC(): string {
-  const now = new Date();
-  const vietnamTime = toZonedTime(now, VIETNAM_TIMEZONE);
-  return vietnamTime.toISOString();
+  return new Date().toISOString();
 }
 
-/**
- * Format a date/time string to Vietnam timezone
- */
 export function toVietnamTime(dateString: string): Date {
   const date = new Date(dateString);
   return toZonedTime(date, VIETNAM_TIMEZONE);
 }
 
-/**
- * Format datetime to Vietnamese format with time
- */
 export function formatDateTimeVN(dateString: string): string {
   try {
     const date = new Date(dateString);
