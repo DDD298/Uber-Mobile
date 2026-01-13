@@ -21,7 +21,7 @@ export default function QuickActions() {
             resizeMode="contain"
           />
           <Text className="absolute top-3 right-3 text-lg font-bold text-center text-neutral-200 font-JakartaMedium">
-            Mã giảm giá
+            {t("promo.availablePromoCodes")}
           </Text>
         </TouchableOpacity>
 

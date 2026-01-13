@@ -34,7 +34,7 @@ export default function PromoList() {
 
   return (
     <SafeAreaView className="flex-1">
-      <PageHeader title="Mã giảm giá" />
+      <PageHeader title={t("promo.availablePromoCodes")} />
 
       {loading ? (
         <View className="flex-1 items-center justify-center">
@@ -53,7 +53,7 @@ export default function PromoList() {
           ListEmptyComponent={
             <View className="flex-1 items-center justify-center mt-10">
               <Text className="text-neutral-200 text-lg font-JakartaMedium">
-                Không có mã giảm giá nào
+                {t("promo.notFound")}
               </Text>
             </View>
           }

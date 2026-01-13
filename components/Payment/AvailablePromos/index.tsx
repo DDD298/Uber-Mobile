@@ -9,6 +9,7 @@ import {
 import { fetchAPI } from "@/lib/fetch";
 import { Ionicons } from "@expo/vector-icons";
 import { PromoCode } from "@/types/type";
+import { useTranslation } from "react-i18next";
 
 interface AvailablePromosProps {
   userId: string;
@@ -16,6 +17,7 @@ interface AvailablePromosProps {
 }
 
 const AvailablePromos = ({ userId, onSelectPromo }: AvailablePromosProps) => {
+  const { t } = useTranslation();
   const [promos, setPromos] = useState<PromoCode[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -63,7 +65,7 @@ const AvailablePromos = ({ userId, onSelectPromo }: AvailablePromosProps) => {
   return (
     <View className="mb-4">
       <Text className="mb-2 text-base font-JakartaSemiBold text-gray-800">
-        Mã giảm giá khả dụng
+        {t("promo.available")}
       </Text>
       <ScrollView
         horizontal
@@ -92,7 +94,7 @@ const AvailablePromos = ({ userId, onSelectPromo }: AvailablePromosProps) => {
                     ? `${promo.discount_value}% OFF`
                     : promo.discount_type === "fixed_amount"
                       ? `${promo.discount_value.toLocaleString("vi-VN")} VNĐ`
-                      : "MIỄN PHÍ"}
+                      : t("promo.free").toUpperCase()}
                 </Text>
               </View>
               <Ionicons name="pricetag" size={20} color="white" />
@@ -116,14 +118,14 @@ const AvailablePromos = ({ userId, onSelectPromo }: AvailablePromosProps) => {
               <View>
                 {promo.min_ride_amount > 0 && (
                   <Text className="text-neutral-200/80 text-xs font-JakartaMedium">
-                    Tối thiểu: {promo.min_ride_amount.toLocaleString("vi-VN")}{" "}
-                    VNĐ
+                    {t("promo.minOrderAmount")}:{" "}
+                    {promo.min_ride_amount.toLocaleString("vi-VN")} VNĐ
                   </Text>
                 )}
               </View>
               {promo.valid_until && (
                 <Text className="text-neutral-200/80 text-xs font-JakartaMedium">
-                  HSD: {formatDate(promo.valid_until)}
+                  {t("promo.until")}: {formatDate(promo.valid_until)}
                 </Text>
               )}
             </View>
@@ -132,8 +134,8 @@ const AvailablePromos = ({ userId, onSelectPromo }: AvailablePromosProps) => {
             {promo.max_uses_per_user > 1 && (
               <View className="mt-2 bg-white/10 rounded px-2 py-1">
                 <Text className="text-neutral-200 text-xs font-JakartaMedium">
-                  Còn {(promo as any).remaining_uses || 0}/
-                  {promo.max_uses_per_user} lượt
+                  {t("promo.usage")}: {(promo as any).remaining_uses || 0}/
+                  {promo.max_uses_per_user}
                 </Text>
               </View>
             )}

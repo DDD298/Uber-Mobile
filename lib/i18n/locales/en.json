@@ -264,7 +264,22 @@
     "applyPromo": "Apply Code",
     "enterPromoCode": "Enter promo code",
     "promoApplied": "Promo code applied",
-    "discount": "Discount"
+    "discount": "Discount",
+    "apply": "Apply",
+    "remove": "Remove",
+    "code": "Code",
+    "save": "Save",
+    "free": "Free",
+    "pleaseEnter": "Please enter promo code",
+    "cannotValidate": "Cannot validate promo code",
+    "expired": "Promo code has expired",
+    "maxUsesReached": "Promo code has reached maximum uses",
+    "userLimitReached": "You have reached the limit for this code",
+    "minAmountNotMet": "Ride amount does not meet minimum requirement",
+    "inactive": "Promo code is no longer active",
+    "notNewUser": "This code is for new users only",
+    "invalid": "Invalid promo code",
+    "available": "Available Promo Codes"
   },
   "errors": {
     "somethingWentWrong": "Something went wrong",

@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { fetchAPI } from "@/lib/fetch";
 import { usePromoStore } from "@/store/promoStore";
+import { useTranslation } from "react-i18next";
 
 interface PromoCodeInputProps {
   rideAmount: number;
@@ -23,6 +24,7 @@ const PromoCodeInput = ({
   onPromoApplied,
   onPromoRemoved,
 }: PromoCodeInputProps) => {
+  const { t } = useTranslation();
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
   const {
@@ -35,7 +37,7 @@ const PromoCodeInput = ({
 
   const validatePromo = async () => {
     if (!code.trim()) {
-      setError("Vui lòng nhập mã giảm giá");
+      setError(t("promo.pleaseEnter"));
       return;
     }
 
@@ -61,7 +63,7 @@ const PromoCodeInput = ({
         setError(getErrorMessage(response.reason));
       }
     } catch (error) {
-      setError("Không thể xác thực mã giảm giá");
+      setError(t("promo.cannotValidate"));
       console.error("Promo validation error:", error);
     } finally {
       setIsValidating(false);
@@ -77,15 +79,15 @@ const PromoCodeInput = ({
 
   const getErrorMessage = (reason: string) => {
     const messages: Record<string, string> = {
-      expired: "Mã giảm giá đã hết hạn",
-      max_uses_reached: "Mã giảm giá đã hết lượt sử dụng",
-      user_limit_reached: "Bạn đã sử dụng hết lượt cho mã này",
-      min_amount_not_met: "Giá trị chuyến đi chưa đủ điều kiện",
-      not_found: "Mã giảm giá không tồn tại",
-      inactive: "Mã giảm giá không còn hiệu lực",
-      not_new_user: "Mã này chỉ dành cho người dùng mới",
+      expired: t("promo.expired"),
+      max_uses_reached: t("promo.maxUsesReached"),
+      user_limit_reached: t("promo.userLimitReached"),
+      min_amount_not_met: t("promo.minAmountNotMet"),
+      not_found: t("promo.notFound"),
+      inactive: t("promo.inactive"),
+      not_new_user: t("promo.notNewUser"),
     };
-    return messages[reason] || "Mã giảm giá không hợp lệ";
+    return messages[reason] || t("promo.invalid");
   };
 
   const formatDiscount = (promo: any) => {
@@ -94,7 +96,7 @@ const PromoCodeInput = ({
     } else if (promo.discount_type === "fixed_amount") {
       return `${promo.discount_amount.toLocaleString("vi-VN")} VNĐ`;
     } else {
-      return "Miễn phí";
+      return t("promo.free");
     }
   };
 
@@ -103,12 +105,12 @@ const PromoCodeInput = ({
       {!appliedPromo ? (
         <>
           <Text className="mb-2 text-base font-JakartaSemiBold text-gray-800">
-            Mã giảm giá
+            {t("promo.availablePromoCodes")}
           </Text>
           <View className="flex-row items-center">
             <TextInput
               className="flex-1 bg-neutral-100 rounded-lg px-4 py-3 mr-2 font-JakartaMedium"
-              placeholder="Nhập mã giảm giá"
+              placeholder={t("promo.enterPromoCode")}
               value={code}
               onChangeText={(text) => {
                 setCode(text.toUpperCase());
@@ -128,7 +130,7 @@ const PromoCodeInput = ({
                 <ActivityIndicator color="white" size="small" />
               ) : (
                 <Text className="text-neutral-200 font-JakartaSemiBold">
-                  Áp dụng
+                  {t("promo.apply")}
                 </Text>
               )}
             </TouchableOpacity>
@@ -144,15 +146,18 @@ const PromoCodeInput = ({
           <View className="flex-row justify-between items-center">
             <View>
               <Text className="text-green-700 font-JakartaSemiBold text-base">
-                Mã: {appliedPromo.code}
+                {t("promo.code")}: {appliedPromo.code}
               </Text>
               <Text className="text-green-600 text-sm mt-1 font-JakartaMedium">
-                Giảm {formatDiscount(appliedPromo)} • Tiết kiệm{" "}
+                {t("promo.discount")} {formatDiscount(appliedPromo)} •{" "}
+                {t("promo.save")}{" "}
                 {appliedPromo.discount_amount.toLocaleString("vi-VN")} VNĐ
               </Text>
             </View>
             <TouchableOpacity onPress={removePromo}>
-              <Text className="text-red-500 font-JakartaSemiBold">Xóa</Text>
+              <Text className="text-red-500 font-JakartaSemiBold">
+                {t("promo.remove")}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>

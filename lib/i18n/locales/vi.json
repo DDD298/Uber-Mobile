@@ -276,7 +276,22 @@
     "applyPromo": "Áp dụng mã",
     "enterPromoCode": "Nhập mã giảm giá",
     "promoApplied": "Đã áp dụng mã giảm giá",
-    "discount": "Giảm giá"
+    "discount": "Giảm giá",
+    "apply": "Áp dụng",
+    "remove": "Xóa",
+    "code": "Mã",
+    "save": "Tiết kiệm",
+    "free": "Miễn phí",
+    "pleaseEnter": "Vui lòng nhập mã giảm giá",
+    "cannotValidate": "Không thể xác thực mã giảm giá",
+    "expired": "Mã giảm giá đã hết hạn",
+    "maxUsesReached": "Mã giảm giá đã hết lượt sử dụng",
+    "userLimitReached": "Bạn đã sử dụng hết lượt cho mã này",
+    "minAmountNotMet": "Giá trị chuyến đi chưa đủ điều kiện",
+    "inactive": "Mã giảm giá không còn hiệu lực",
+    "notNewUser": "Mã này chỉ dành cho người dùng mới",
+    "invalid": "Mã giảm giá không hợp lệ",
+    "available": "Mã giảm giá khả dụng"
   },
   "errors": {
     "somethingWentWrong": "Đã xảy ra lỗi",
