@@ -86,24 +86,27 @@ export async function PATCH(request: Request) {
       WHERE id = ${driver_id}
     `;
 
-    // Log status change in history
-    await sql`
-      INSERT INTO driver_status_history (
-        driver_id,
-        old_status,
-        new_status,
-        latitude,
-        longitude,
-        changed_at
-      ) VALUES (
-        ${driver_id},
-        ${oldStatus},
-        ${new_status},
-        ${latitude || null},
-        ${longitude || null},
-        NOW()
-      )
-    `;
+    try {
+      await sql`
+        INSERT INTO driver_status_history (
+          driver_id,
+          old_status,
+          new_status,
+          latitude,
+          longitude,
+          changed_at
+        ) VALUES (
+          ${driver_id},
+          ${oldStatus},
+          ${new_status},
+          ${latitude || null},
+          ${longitude || null},
+          NOW()
+        )
+      `;
+    } catch (historyError) {
+      console.warn("Failed to log driver status history:", historyError);
+    }
 
     return Response.json(
       {

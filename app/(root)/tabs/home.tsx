@@ -6,6 +6,7 @@ import PolygonLuminary from "@/components/Home/PolygonLuminary";
 import QuickActions from "@/components/Home/QuickActions";
 import PromoSection from "@/components/Home/PromoSection";
 import { icons } from "@/constants";
+import { fetchAPI } from "@/lib/fetch";
 import { useLocationStore } from "@/store";
 import { useAuth, useUser } from "@clerk/clerk-expo";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
@@ -22,7 +23,11 @@ import { useTranslation } from "react-i18next";
 
 export default function HomeScreen() {
   const { t } = useTranslation();
-  const { setUserLocation, setDestinationLocation } = useLocationStore();
+  const {
+    setUserLocation,
+    setDestinationLocation,
+    destinationLatitude: storeDestinationLatitude,
+  } = useLocationStore();
   const { user } = useUser();
   const { signOut } = useAuth();
   const [loading, setLoading] = useState(true);
@@ -35,6 +40,9 @@ export default function HomeScreen() {
     router.replace("/(auth)/sign-in");
   };
 
+  const [lastRide, setLastRide] = useState<any>(null);
+  const [isDriver, setIsDriver] = useState(false);
+
   const handleDestinationPress = (location: {
     latitude: number;
     longitude: number;
@@ -44,6 +52,46 @@ export default function HomeScreen() {
 
     router.push("/(root)/find-ride");
   };
+
+  useEffect(() => {
+    const checkDriverAndFetchLastRide = async () => {
+      if (!user?.id) return;
+
+      try {
+        // Check if user is a driver
+        const driverRes = await fetchAPI(
+          `/(api)/driver/profile?clerk_id=${user.id}`,
+          {
+            method: "GET",
+          }
+        );
+
+        if (driverRes.success && driverRes.data?.id) {
+          setIsDriver(true);
+
+          // Fetch last ride for this user (as driver or passenger)
+          const ridesRes = await fetchAPI(
+            `/(api)/ride/list?user_id=${user.id}&limit=1`,
+            {
+              method: "GET",
+            }
+          );
+
+          if (ridesRes.success && ridesRes.data && ridesRes.data.length > 0) {
+            setLastRide(ridesRes.data[0]);
+          }
+        }
+      } catch (error: any) {
+        if (error.message && error.message.includes("404")) {
+          setIsDriver(false);
+        } else {
+          console.error("Error fetching driver data or last ride:", error);
+        }
+      }
+    };
+
+    checkDriverAndFetchLastRide();
+  }, [user]);
 
   useEffect(() => {
     const requestLocation = async () => {
@@ -144,7 +192,28 @@ export default function HomeScreen() {
               {t("home.whereTo")}
             </Text>
             <View className="flex flex-row items-center bg-transparent h-[300px] rounded-xl rounded-b-none overflow-hidden shadow-sm">
-              <Map />
+              <Map
+                originLatitude={
+                  isDriver && lastRide && !storeDestinationLatitude
+                    ? Number(lastRide.origin_latitude)
+                    : undefined
+                }
+                originLongitude={
+                  isDriver && lastRide && !storeDestinationLatitude
+                    ? Number(lastRide.origin_longitude)
+                    : undefined
+                }
+                destinationLatitude={
+                  isDriver && lastRide && !storeDestinationLatitude
+                    ? Number(lastRide.destination_latitude)
+                    : undefined
+                }
+                destinationLongitude={
+                  isDriver && lastRide && !storeDestinationLatitude
+                    ? Number(lastRide.destination_longitude)
+                    : undefined
+                }
+              />
             </View>
           </View>
         </View>

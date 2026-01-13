@@ -164,7 +164,7 @@ export default function RidesScreen() {
             ListHeaderComponent={
               <>
                 <Text className="mt-4 mb-2 text-xl font-JakartaBold">
-                  {isDriver ? "Khách hàng đã đặt" : t("ride.myRides")}
+                  {isDriver ? t("ride.customerBookings") : t("ride.myRides")}
                 </Text>
                 {rides.length > 0 && (
                   <View className="flex-row items-center mb-2">

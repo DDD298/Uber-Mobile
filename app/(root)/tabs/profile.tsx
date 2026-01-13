@@ -7,6 +7,7 @@ import {
   ImageBackground,
   RefreshControl,
 } from "react-native";
+import { Switch } from "react-native-switch";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
 import { Ionicons } from "@expo/vector-icons";
@@ -22,9 +23,14 @@ export default function ProfileScreen() {
   const { user } = useUser();
   const { t } = useTranslation();
   const [isDriver, setIsDriver] = useState(false);
-  const [driverStatus, setDriverStatus] = useState<string | null>(null);
+  const [driverId, setDriverId] = useState<number | null>(null);
+  const [driverApprovalStatus, setDriverApprovalStatus] = useState<
+    string | null
+  >(null);
+  const [isOnline, setIsOnline] = useState(false);
   const [checkingDriver, setCheckingDriver] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [updatingStatus, setUpdatingStatus] = useState(false);
   const { signOut } = useAuth();
 
   const onRefresh = async () => {
@@ -36,6 +42,36 @@ export default function ProfileScreen() {
   useEffect(() => {
     checkDriverStatus();
   }, [user]);
+
+  const toggleOnlineStatus = async () => {
+    if (!driverId || updatingStatus) return;
+
+    const oldStatus = isOnline;
+    const newStatus = !isOnline;
+    setIsOnline(newStatus);
+    setUpdatingStatus(true);
+
+    try {
+      const res = await fetchAPI("/(api)/driver/update-status", {
+        method: "PATCH",
+        body: JSON.stringify({
+          driver_id: driverId,
+          new_status: newStatus ? "online" : "offline",
+        }),
+      });
+
+      if (!res.success) {
+        // Rollback on failure
+        setIsOnline(oldStatus);
+      }
+    } catch (error) {
+      console.error("Error updating driver status:", error);
+      // Rollback on error
+      setIsOnline(oldStatus);
+    } finally {
+      setUpdatingStatus(false);
+    }
+  };
 
   const checkDriverStatus = async () => {
     if (!user?.id) {
@@ -52,16 +88,20 @@ export default function ProfileScreen() {
 
       if (response.success && response.data?.id) {
         setIsDriver(true);
-        setDriverStatus(response.data.approval_status);
+        setDriverId(response.data.id);
+        setDriverApprovalStatus(response.data.approval_status);
+        setIsOnline(response.data.status === "online");
         return true;
       } else {
         setIsDriver(false);
-        setDriverStatus(null);
+        setDriverId(null);
+        setDriverApprovalStatus(null);
         return false;
       }
     } catch (error) {
       setIsDriver(false);
-      setDriverStatus(null);
+      setDriverId(null);
+      setDriverApprovalStatus(null);
       return false;
     } finally {
       setCheckingDriver(false);
@@ -156,22 +196,22 @@ export default function ProfileScreen() {
                   </View>
                 </View>
 
-                {driverStatus && (
+                {driverApprovalStatus && (
                   <View className="mb-4 px-4 py-2 bg-gray-100 rounded-xl">
                     <View className="flex-row items-center">
                       <Ionicons
                         name={
-                          driverStatus === "approved"
+                          driverApprovalStatus === "approved"
                             ? "checkmark-circle"
-                            : driverStatus === "pending"
+                            : driverApprovalStatus === "pending"
                               ? "time"
                               : "close-circle"
                         }
                         size={20}
                         color={
-                          driverStatus === "approved"
+                          driverApprovalStatus === "approved"
                             ? "#10B981"
-                            : driverStatus === "pending"
+                            : driverApprovalStatus === "pending"
                               ? "#F59E0B"
                               : "#EF4444"
                         }
@@ -180,16 +220,16 @@ export default function ProfileScreen() {
                         {t("common.status")}:{" "}
                         <Text
                           className={
-                            driverStatus === "approved"
+                            driverApprovalStatus === "approved"
                               ? "text-green-600"
-                              : driverStatus === "pending"
+                              : driverApprovalStatus === "pending"
                                 ? "text-yellow-600"
                                 : "text-red-600"
                           }
                         >
-                          {driverStatus === "approved"
+                          {driverApprovalStatus === "approved"
                             ? t("driver.approved")
-                            : driverStatus === "pending"
+                            : driverApprovalStatus === "pending"
                               ? t("driver.pending")
                               : t("driver.rejected")}
                         </Text>
@@ -197,6 +237,37 @@ export default function ProfileScreen() {
                     </View>
                   </View>
                 )}
+
+                <View className="flex-row items-center justify-between mb-4 p-4 bg-gray-50 rounded-2xl border border-gray-100">
+                  <View className="flex-row items-center">
+                    <View
+                      className={`w-3 h-3 rounded-full mr-2 ${isOnline ? "bg-green-500" : "bg-gray-400"}`}
+                    />
+                    <Text className="text-base font-JakartaBold text-gray-800">
+                      {isOnline ? t("driver.online") : t("driver.offline")}
+                    </Text>
+                  </View>
+                  <Switch
+                    value={isOnline}
+                    onValueChange={toggleOnlineStatus}
+                    disabled={updatingStatus}
+                    activeText={t("driver.online")}
+                    inActiveText={t("driver.offline")}
+                    circleSize={24}
+                    barHeight={28}
+                    circleBorderWidth={0}
+                    backgroundActive={"#10B981"}
+                    backgroundInactive={"#D1D5DB"}
+                    circleActiveColor={"#FFFFFF"}
+                    circleInActiveColor={"#FFFFFF"}
+                    changeValueImmediately={true}
+                    renderActiveText={false}
+                    renderInActiveText={false}
+                    switchLeftPx={2}
+                    switchRightPx={2}
+                    switchWidthMultiplier={2}
+                  />
+                </View>
 
                 <CustomButton
                   title={t("driver.viewProfile")}

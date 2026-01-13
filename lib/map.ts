@@ -97,15 +97,27 @@ export const calculateDriverTimes = async ({
     try {
       const timesPromises = markers.map(async (marker) => {
         const responseToUser = await fetch(
-          `https://maps.googleapis.com/maps/api/directions/json?origin=${marker.latitude},${marker.longitude}&destination=${userLatitude},${userLongitude}&key=${directionsAPI}`,
+          `https://maps.googleapis.com/maps/api/directions/json?origin=${Number(marker.latitude)},${Number(marker.longitude)}&destination=${Number(userLatitude)},${Number(userLongitude)}&key=${directionsAPI}`,
         );
         const dataToUser = await responseToUser.json();
+        
+        if (!dataToUser.routes || dataToUser.routes.length === 0) {
+          console.warn(`No route found to user for marker ${marker.id}`);
+          return { ...marker, time: 0, price: "0" };
+        }
+        
         const timeToUser = dataToUser.routes[0].legs[0].duration.value; // Time in seconds
   
         const responseToDestination = await fetch(
-          `https://maps.googleapis.com/maps/api/directions/json?origin=${userLatitude},${userLongitude}&destination=${destinationLatitude},${destinationLongitude}&key=${directionsAPI}`,
+          `https://maps.googleapis.com/maps/api/directions/json?origin=${Number(userLatitude)},${Number(userLongitude)}&destination=${Number(destinationLatitude)},${Number(destinationLongitude)}&key=${directionsAPI}`,
         );
         const dataToDestination = await responseToDestination.json();
+
+        if (!dataToDestination.routes || dataToDestination.routes.length === 0) {
+           console.warn(`No route found to destination`);
+           return { ...marker, time: 0, price: "0" };
+        }
+
         const timeToDestination =
           dataToDestination.routes[0].legs[0].duration.value; // Time in seconds
   

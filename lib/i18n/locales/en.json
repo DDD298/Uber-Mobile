@@ -17,7 +17,10 @@
     "filter": "Filter",
     "sort": "Sort",
     "notProvided": "Not provided by user",
+    "currentLocation": "Current location",
     "status": "Status",
+    "loadingLocation": "Loading location...",
+    "loadingDrivers": "Loading drivers...",
     "page": "Page"
   },
   "auth": {
@@ -120,7 +123,8 @@
     "completeRide": "Complete Ride",
     "arrivingAtDestination": "Heading to destination",
     "updateStatusError": "Failed to update status",
-    "systemError": "System error"
+    "systemError": "System error",
+    "customerBookings": "Customer Bookings"
   },
   "rating": {
     "rateYourRide": "Rate Your Ride",
@@ -236,7 +240,10 @@
     "uploadProfile": "Upload profile photo",
     "tapToUpload": "Tap to upload",
     "submitApplication": "Submit Application",
-    "ratings": "ratings"
+    "ratings": "ratings",
+    "online": "Online",
+    "offline": "Offline",
+    "statusOnlineOffline": "Operating Status"
   },
   "promo": {
     "availablePromoCodes": "Promo Codes",

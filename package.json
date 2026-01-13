@@ -75,6 +75,7 @@
     "react-native-screens": "~4.16.0",
     "react-native-svg": "^15.13.0",
     "react-native-swiper-flatlist": "^3.2.5",
+    "react-native-switch": "^1.5.1",
     "react-native-toast-message": "^2.3.3",
     "react-native-web": "^0.21.0",
     "react-native-webview": "13.15.0",

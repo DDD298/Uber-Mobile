@@ -2,24 +2,29 @@ import { neon } from "@neondatabase/serverless";
 
 export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url);
+    const clerkId = searchParams.get("clerk_id");
+    
     const sql = neon(`${process.env.DATABASE_URL}`);
-    const response = await sql`
-      SELECT 
-        id,
-        first_name,
-        last_name,
-        profile_image_url,
-        car_image_url,
-        car_seats,
-        rating,
-        vehicle_type,
-        approval_status
-      FROM drivers
-      WHERE approval_status = 'approved'
-    `;
+    
+    const query = clerkId
+      ? sql`
+          SELECT * FROM drivers 
+          WHERE approval_status = 'approved' 
+          AND status = 'online'
+          AND clerk_id != ${clerkId}
+        `
+      : sql`
+          SELECT * FROM drivers 
+          WHERE approval_status = 'approved' 
+          AND status = 'online'
+        `;
+
+    const response = await query;
 
     return Response.json({ data: response });
   } catch (error) {
+    console.error("Error fetching drivers:", error);
     return Response.json({ error: "Lỗi máy chủ nội bộ" }, { status: 500 });
   }
 }

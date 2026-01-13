@@ -19,6 +19,8 @@
     "notProvided": "Người dùng chưa cung cấp",
     "currentLocation": "Vị trí hiện tại",
     "status": "Trạng thái",
+    "loadingLocation": "Đang tải vị trí...",
+    "loadingDrivers": "Đang tải tài xế...",
     "page": "Trang"
   },
   "auth": {
@@ -121,7 +123,8 @@
     "completeRide": "Hoàn thành chuyến đi",
     "arrivingAtDestination": "Đang di chuyển đến điểm đến",
     "updateStatusError": "Không thể cập nhật trạng thái",
-    "systemError": "Lỗi hệ thống"
+    "systemError": "Lỗi hệ thống",
+    "customerBookings": "Khách hàng đã đặt"
   },
   "rating": {
     "rateYourRide": "Đánh giá chuyến đi",
@@ -249,7 +252,10 @@
     "uploadProfile": "Upload ảnh đại diện",
     "tapToUpload": "Nhấn để upload",
     "submitApplication": "Gửi đơn đăng ký",
-    "ratings": "đánh giá"
+    "ratings": "đánh giá",
+    "online": "Trực tuyến",
+    "offline": "Ngoại tuyến",
+    "statusOnlineOffline": "Trạng thái hoạt động"
   },
   "promo": {
     "availablePromoCodes": "Mã giảm giá",
