@@ -506,37 +506,35 @@ const RideCard = ({
           <>
             {ride.rating ? (
               // Show submitted rating
-              <View className="mt-4 p-4 bg-green-50 rounded-xl border border-green-200">
+              <View className="mt-4 p-4 py-3 bg-green-50 rounded-xl border border-green-200">
                 <View className="flex-row items-center justify-between mb-2">
                   <Text className="text-base font-JakartaBold text-gray-800">
                     {t("rating.yourRating")}
                   </Text>
-                  <View className="flex-row items-center">
-                    {[...Array(5)].map((_, index) => (
-                      <Ionicons
-                        key={index}
-                        name={
-                          index < ride.rating!.stars ? "star" : "star-outline"
-                        }
-                        size={20}
-                        color={
-                          index < ride.rating!.stars ? "#F59E0B" : "#D1D5DB"
-                        }
-                      />
-                    ))}
-                    <Text className="ml-2 text-sm font-JakartaBold text-gray-700">
-                      ({ride.rating.stars}/5)
-                    </Text>
-                  </View>
+                  <Text className="text-sm font-Jakarta text-gray-400">
+                    {formatDateTimeVN(ride.rating.created_at)}
+                  </Text>
+                </View>
+                <View className="flex-row items-center">
+                  {[...Array(5)].map((_, index) => (
+                    <Ionicons
+                      key={index}
+                      name={
+                        index < ride.rating!.stars ? "star" : "star-outline"
+                      }
+                      size={16}
+                      color={index < ride.rating!.stars ? "#F59E0B" : "#D1D5DB"}
+                    />
+                  ))}
+                  <Text className="ml-2 text-sm font-JakartaBold text-gray-700">
+                    ({ride.rating.stars}/5)
+                  </Text>
                 </View>
                 {ride.rating.comment && (
                   <Text className="text-sm font-JakartaMedium text-gray-600 italic mt-2">
                     "{ride.rating.comment}"
                   </Text>
                 )}
-                <Text className="text-sm font-Jakarta text-gray-400 mt-2">
-                  {formatDateTimeVN(ride.rating.created_at)}
-                </Text>
               </View>
             ) : (
               // Show rating button

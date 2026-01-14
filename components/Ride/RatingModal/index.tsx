@@ -19,6 +19,7 @@ import {
 } from "@gorhom/bottom-sheet";
 import CustomButton from "../../Common/CustomButton";
 import { useTranslation } from "react-i18next";
+import { Ionicons } from "@expo/vector-icons";
 import { fetchAPI } from "@/lib/fetch";
 import { formatCurrencyByLanguage } from "@/lib/currency";
 
@@ -173,6 +174,7 @@ export const RatingModal: React.FC<RatingModalProps> = ({
             className="w-20 h-20 rounded-full mb-3 bg-gray-200"
           />
           <Text className="text-xl font-JakartaBold text-gray-800 mb-1">
+            {t("ride.driverPrefix")}
             {ride.driver.first_name} {ride.driver.last_name}
           </Text>
           <Text className="text-base font-JakartaMedium text-gray-500">
@@ -180,8 +182,14 @@ export const RatingModal: React.FC<RatingModalProps> = ({
           </Text>
           {/* Display fare with proper currency conversion */}
           {ride.fare_price && (
-            <View className="mt-2 px-4 py-2 bg-green-50 rounded-full">
-              <Text className="text-lg font-JakartaBold text-green-700">
+            <View className="mt-2 px-4 py-1 bg-green-50 rounded-full flex-row items-center border border-green-200">
+              <Ionicons
+                name="wallet-outline"
+                size={20}
+                color="#15803D"
+                style={{ marginRight: 8 }}
+              />
+              <Text className="text-base font-JakartaBold text-green-700">
                 {formatCurrencyByLanguage(ride.fare_price, i18n.language)}
               </Text>
             </View>
