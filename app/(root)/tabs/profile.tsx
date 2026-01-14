@@ -31,17 +31,43 @@ export default function ProfileScreen() {
   const [checkingDriver, setCheckingDriver] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [updatingStatus, setUpdatingStatus] = useState(false);
+  const [userData, setUserData] = useState<any>(null);
   const { signOut } = useAuth();
 
   const onRefresh = async () => {
     setRefreshing(true);
     await checkDriverStatus();
+    if (!isDriver && user?.id) {
+      await fetchUserData();
+    }
     setRefreshing(false);
   };
 
   useEffect(() => {
-    checkDriverStatus();
+    const initProfile = async () => {
+      const isDriverUser = await checkDriverStatus();
+      if (!isDriverUser && user?.id) {
+        await fetchUserData();
+      }
+    };
+    initProfile();
   }, [user]);
+
+  const fetchUserData = async () => {
+    if (!user?.id) return;
+
+    try {
+      const response = await fetchAPI(`/(api)/user?clerkId=${user.id}`, {
+        method: "GET",
+      });
+
+      if (response.success && response.data) {
+        setUserData(response.data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const toggleOnlineStatus = async () => {
     if (!driverId || updatingStatus) return;
@@ -65,8 +91,6 @@ export default function ProfileScreen() {
         setIsOnline(oldStatus);
       }
     } catch (error) {
-      console.error("Error updating driver status:", error);
-      // Rollback on error
       setIsOnline(oldStatus);
     } finally {
       setUpdatingStatus(false);
@@ -114,6 +138,15 @@ export default function ProfileScreen() {
     } else {
       router.push("/(root)/driver-registration");
     }
+  };
+
+  const formatPhoneNumber = (phone: string | null | undefined) => {
+    if (!phone) return t("common.notProvided");
+    // Chuyển +84 thành 0
+    if (phone.startsWith("+84")) {
+      return "0" + phone.substring(3);
+    }
+    return phone;
   };
 
   const userId = user?.id || "default";
@@ -335,8 +368,7 @@ export default function ProfileScreen() {
                       {t("profile.phone")}
                     </Text>
                     <Text className="text-base font-JakartaBold text-neutral-800">
-                      {user?.primaryPhoneNumber?.phoneNumber ||
-                        t("common.notProvided")}
+                      {formatPhoneNumber(userData?.phone)}
                     </Text>
                   </View>
                 </View>

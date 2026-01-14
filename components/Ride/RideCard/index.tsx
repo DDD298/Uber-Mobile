@@ -292,7 +292,16 @@ const RideCard = ({
                   </Text>
                 </View>
               ) : (
-                ""
+                passenger?.phone && (
+                  <View className="flex-row items-center mt-1">
+                    <Ionicons name="call-outline" size={14} color="#10B981" />
+                    <Text className="ml-1 text-sm text-gray-600 font-JakartaMedium">
+                      {passenger.phone.startsWith("+84")
+                        ? "0" + passenger.phone.substring(3)
+                        : passenger.phone}
+                    </Text>
+                  </View>
+                )
               )}
             </View>
           </View>

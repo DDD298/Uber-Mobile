@@ -112,7 +112,7 @@ export async function GET(request: Request) {
             ) AS driver,
             json_build_object(
                 'clerk_id', users.clerk_id, 'name', users.name,
-                'email', users.email
+                'email', users.email, 'phone', users.phone
             ) AS passenger,
             CASE 
                 WHEN ratings.id IS NOT NULL THEN json_build_object(
@@ -151,7 +151,7 @@ export async function GET(request: Request) {
             ) AS driver,
             json_build_object(
                 'clerk_id', users.clerk_id, 'name', users.name,
-                'email', users.email
+                'email', users.email, 'phone', users.phone
             ) AS passenger,
             CASE 
                 WHEN ratings.id IS NOT NULL THEN json_build_object(
@@ -187,7 +187,7 @@ export async function GET(request: Request) {
             ) AS driver,
             json_build_object(
                 'clerk_id', users.clerk_id, 'name', users.name,
-                'email', users.email
+                'email', users.email, 'phone', users.phone
             ) AS passenger,
             CASE 
                 WHEN ratings.id IS NOT NULL THEN json_build_object(
@@ -226,7 +226,7 @@ export async function GET(request: Request) {
             ) AS driver,
             json_build_object(
                 'clerk_id', users.clerk_id, 'name', users.name,
-                'email', users.email
+                'email', users.email, 'phone', users.phone
             ) AS passenger,
             CASE 
                 WHEN ratings.id IS NOT NULL THEN json_build_object(

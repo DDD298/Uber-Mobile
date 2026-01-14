@@ -1,5 +1,43 @@
 import { neon } from '@neondatabase/serverless';
 
+export async function GET(request: Request) {
+    try {
+        const sql = neon(`${process.env.DATABASE_URL}`);
+        const { searchParams } = new URL(request.url);
+        const clerkId = searchParams.get('clerkId');
+
+        if (!clerkId) {
+            return Response.json(
+                { success: false, error: 'Missing clerkId parameter' },
+                { status: 400 }
+            );
+        }
+
+        const users = await sql`
+            SELECT * FROM users 
+            WHERE clerk_id = ${clerkId}
+            LIMIT 1
+        `;
+
+        if (users.length === 0) {
+            return Response.json(
+                { success: false, error: 'User not found' },
+                { status: 404 }
+            );
+        }
+
+        return Response.json(
+            { success: true, data: users[0] },
+            { status: 200 }
+        );
+    } catch (error: any) {
+        console.error('Error fetching user:', error);
+        return Response.json(
+            { success: false, error: 'Internal server error', details: error.message },
+            { status: 500 }
+        );
+    }
+}
 
 export async function POST(request: Request) {
     try {

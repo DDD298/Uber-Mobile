@@ -87,6 +87,7 @@ declare interface Ride {
     clerk_id: string | null;
     name: string | null;
     email: string | null;
+    phone: string | null;
   };
 }
 
