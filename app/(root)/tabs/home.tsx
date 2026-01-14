@@ -79,6 +79,9 @@ export default function HomeScreen() {
 
           if (ridesRes.success && ridesRes.data && ridesRes.data.length > 0) {
             setLastRide(ridesRes.data[0]);
+          } else {
+            // Clear last ride if no rides found
+            setLastRide(null);
           }
         }
       } catch (error: any) {
@@ -90,7 +93,41 @@ export default function HomeScreen() {
       }
     };
 
+    // Initial fetch
     checkDriverAndFetchLastRide();
+
+    // Set up interval to fetch every 4 seconds only if user is a driver
+    let intervalId: NodeJS.Timeout | null = null;
+
+    // Check if driver after initial fetch, then start interval
+    const startInterval = async () => {
+      if (!user?.id) return;
+
+      try {
+        const driverRes = await fetchAPI(
+          `/(api)/driver/profile?clerk_id=${user.id}`,
+          { method: "GET" }
+        );
+
+        if (driverRes.success && driverRes.data?.id) {
+          // Only start interval if user is a driver
+          intervalId = setInterval(() => {
+            checkDriverAndFetchLastRide();
+          }, 4000);
+        }
+      } catch (error) {
+        // Not a driver, no interval needed
+      }
+    };
+
+    startInterval();
+
+    // Cleanup interval when component unmounts or user changes
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    };
   }, [user]);
 
   useEffect(() => {
