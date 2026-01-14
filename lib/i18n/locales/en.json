@@ -21,6 +21,7 @@
     "status": "Status",
     "loadingLocation": "Loading location...",
     "loadingDrivers": "Loading drivers...",
+    "continue": "Continue",
     "page": "Page"
   },
   "auth": {
@@ -76,6 +77,8 @@
     "searching": "Searching for drivers...",
     "noDriversAvailable": "No drivers available",
     "rideBooked": "Ride Booked Successfully",
+    "rideBookedDescription": "Thank you for your booking. Your reservation has been successfully confirmed. Please proceed with your ride.",
+    "viewMyRides": "View Booked Rides",
     "minutes": "minutes",
     "seats": "seats"
   },
@@ -179,7 +182,38 @@
     "selectPaymentMethod": "Select Payment Method",
     "creditCard": "Credit Card",
     "cash": "Cash",
-    "qrCode": "QR Code"
+    "qrCode": "QR Code",
+    "payCash": "Pay Cash",
+    "payQR": "Pay QR",
+    "confirmRide": "Confirm Ride",
+    "processing": "Processing...",
+    "amountRequired": "Amount is required and must be greater than 0",
+    "emailRequired": "Email is required",
+    "cannotCreatePaymentIntent": "Cannot create payment intent",
+    "cannotCreateCustomer": "Cannot create customer",
+    "cannotCreateEphemeralKey": "Cannot create ephemeral key",
+    "paymentSetupFailed": "Payment setup failed",
+    "prepareCash": "Please prepare cash for payment",
+    "amountToPay": "Amount to pay",
+    "enterReceivedAmount": "Enter received amount",
+    "receivedAmountDesc": "Enter the amount received from the customer to calculate change",
+    "quickAmount": "Quick Amount",
+    "change": "Change",
+    "missing": "Missing",
+    "processingPayment": "Processing payment...",
+    "pleaseWait": "Please wait a moment",
+    "scanQRDesc": "Scan QR code for quick and secure payment",
+    "amount": "Amount",
+    "generateQR": "Generate QR Code",
+    "scanQRToPay": "Scan QR code to pay",
+    "useBankApp": "Use your bank app to scan the QR code",
+    "qrTip": "Tip: Open your bank app and select 'Scan QR'",
+    "transactionId": "Transaction ID",
+    "time": "Time",
+    "confirmingPayment": "Confirming payment...",
+    "checkingTransaction": "Checking transaction with bank",
+    "doNotCloseApp": "Please do not close the app...",
+    "doneScanning": "Done Scanning"
   },
   "chat": {
     "title": "Chat with MyApp Assistant",
@@ -279,7 +313,9 @@
     "inactive": "Promo code is no longer active",
     "notNewUser": "This code is for new users only",
     "invalid": "Invalid promo code",
-    "available": "Available Promo Codes"
+    "available": "Available Promo Codes",
+    "selectPromoCode": "Select Promo Code",
+    "viewAvailableCodes": "View Available Codes"
   },
   "errors": {
     "somethingWentWrong": "Something went wrong",

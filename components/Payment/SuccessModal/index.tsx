@@ -1,6 +1,7 @@
 import CustomButton from "@/components/Common/CustomButton";
 import { images } from "@/constants";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Animated, Image, Modal, Text } from "react-native";
 interface SuccessModalProps {
   visible: boolean;
@@ -17,6 +18,8 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
   fadeAnim,
   scaleAnim,
 }) => {
+  const { t } = useTranslation();
+
   return (
     <Modal
       visible={visible}
@@ -41,16 +44,15 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
           <Image source={images.check} className="mt-4 w-28 h-28" />
 
           <Text className="mt-4 text-2xl text-center font-JakartaBold">
-            Đặt chuyến thành công
+            {t("booking.rideBooked")}
           </Text>
 
           <Text className="mt-4 text-center text-md text-general-200 font-JakartaRegular">
-            Cảm ơn bạn đã đặt chuyến. Đặt chỗ của bạn đã được xác nhận thành
-            công. Vui lòng tiến hành chuyến của bạn.
+            {t("booking.rideBookedDescription")}
           </Text>
 
           <CustomButton
-            title="Xem chuyến đã đặt"
+            title={t("booking.viewMyRides")}
             onPress={onGoHome}
             className="mt-4"
           />

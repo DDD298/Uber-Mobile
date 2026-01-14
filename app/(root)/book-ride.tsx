@@ -215,7 +215,7 @@ const BookRide = () => {
                       className="bg-red-500 py-2 px-3 rounded-lg flex flex-row items-center"
                     >
                       <Text className="text-white font-JakartaBold text-sm mr-1">
-                        Hủy
+                        {t("common.cancel")}
                       </Text>
                       <Ionicons name="trash-outline" size={16} color="#fff" />
                     </TouchableOpacity>
@@ -224,14 +224,14 @@ const BookRide = () => {
               ) : (
                 <View className="mt-2 flex flex-row justify-between items-center">
                   <Text className="text-lg font-JakartaSemiBold">
-                    Chọn mã giảm giá
+                    {t("promo.selectPromoCode")}
                   </Text>
                   <TouchableOpacity
                     onPress={() => router.push("/(root)/promos")}
                     className="flex flex-row items-center"
                   >
                     <Text className="text-primary-600 text-lg font-JakartaBold">
-                      Xem mã khả dụng
+                      {t("promo.viewAvailableCodes")}
                     </Text>
                     <Ionicons
                       name="chevron-forward"

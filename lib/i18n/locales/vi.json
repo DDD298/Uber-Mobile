@@ -21,6 +21,7 @@
     "status": "Trạng thái",
     "loadingLocation": "Đang tải vị trí...",
     "loadingDrivers": "Đang tải tài xế...",
+    "continue": "Tiếp tục",
     "page": "Trang"
   },
   "auth": {
@@ -76,6 +77,8 @@
     "searching": "Đang tìm tài xế...",
     "noDriversAvailable": "Không có tài xế khả dụng",
     "rideBooked": "Đặt xe thành công",
+    "rideBookedDescription": "Cảm ơn bạn đã đặt chuyến. Đặt chỗ của bạn đã được xác nhận thành công. Vui lòng tiến hành chuyến của bạn.",
+    "viewMyRides": "Xem chuyến đã đặt",
     "minutes": "phút",
     "seats": "chỗ ngồi"
   },
@@ -189,7 +192,28 @@
     "cannotCreatePaymentIntent": "Không thể tạo payment intent",
     "cannotCreateCustomer": "Không thể tạo khách hàng",
     "cannotCreateEphemeralKey": "Không thể tạo ephemeral key",
-    "paymentSetupFailed": "Thiết lập thanh toán thất bại"
+    "paymentSetupFailed": "Thiết lập thanh toán thất bại",
+    "prepareCash": "Vui lòng chuẩn bị tiền mặt để thanh toán",
+    "amountToPay": "Số tiền cần thanh toán",
+    "enterReceivedAmount": "Nhập số tiền khách đưa",
+    "receivedAmountDesc": "Nhập số tiền khách hàng đưa để tính tiền thừa",
+    "quickAmount": "Số tiền nhanh",
+    "change": "Tiền thừa",
+    "missing": "Thiếu",
+    "processingPayment": "Đang xử lý thanh toán...",
+    "pleaseWait": "Vui lòng chờ trong giây lát",
+    "scanQRDesc": "Quét mã QR để thanh toán nhanh chóng và an toàn",
+    "amount": "Số tiền",
+    "generateQR": "Tạo mã QR",
+    "scanQRToPay": "Quét mã QR để thanh toán",
+    "useBankApp": "Sử dụng ứng dụng ngân hàng để quét mã QR",
+    "qrTip": "💡 Mẹo: Mở ứng dụng ngân hàng và chọn \"Quét QR\"",
+    "transactionId": "Mã giao dịch",
+    "time": "Thời gian",
+    "confirmingPayment": "Đang xác nhận thanh toán...",
+    "checkingTransaction": "Đang kiểm tra giao dịch từ ngân hàng",
+    "doNotCloseApp": "Vui lòng không tắt ứng dụng...",
+    "doneScanning": "Đã quét xong"
   },
   "chat": {
     "title": "Chat với Trợ lý MyApp",
@@ -291,7 +315,9 @@
     "inactive": "Mã giảm giá không còn hiệu lực",
     "notNewUser": "Mã này chỉ dành cho người dùng mới",
     "invalid": "Mã giảm giá không hợp lệ",
-    "available": "Mã giảm giá khả dụng"
+    "available": "Mã giảm giá khả dụng",
+    "selectPromoCode": "Chọn mã giảm giá",
+    "viewAvailableCodes": "Xem mã khả dụng"
   },
   "errors": {
     "somethingWentWrong": "Đã xảy ra lỗi",

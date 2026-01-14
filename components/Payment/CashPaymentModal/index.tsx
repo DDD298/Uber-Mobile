@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Animated, Modal, Text, TouchableOpacity, View } from "react-native";
 
 import CustomButton from "@/components/Common/CustomButton";
@@ -32,6 +33,8 @@ const CashPaymentModal: React.FC<CashPaymentModalProps> = ({
   onCashAmountChange,
   onBackToStep1,
 }) => {
+  const { t } = useTranslation();
+
   return (
     <Modal
       visible={visible}
@@ -59,25 +62,25 @@ const CashPaymentModal: React.FC<CashPaymentModalProps> = ({
                 <Text className="text-3xl">💵</Text>
               </View>
               <Text className="mb-2 text-xl text-center font-JakartaBold">
-                Thanh toán tiền mặt
+                {t("payment.payCash")}
               </Text>
               <Text className="mb-4 text-center text-gray-600 font-JakartaRegular">
-                Vui lòng chuẩn bị tiền mặt để thanh toán
+                {t("payment.prepareCash")}
               </Text>
               <View className="p-4 mb-4 w-full bg-gray-50 rounded-lg">
                 <Text className="text-lg text-center font-JakartaSemiBold">
-                  Số tiền cần thanh toán:{" "}
+                  {t("payment.amountToPay")}:{" "}
                   {Number(amount).toLocaleString("vi-VN")} VNĐ
                 </Text>
               </View>
               <View className="flex flex-row gap-x-4 w-full">
                 <CustomButton
-                  title="Hủy"
+                  title={t("common.cancel")}
                   className="flex-1 bg-gray-200"
                   onPress={onClose}
                 />
                 <CustomButton
-                  title="Tiếp tục"
+                  title={t("common.continue")}
                   className="flex-1"
                   onPress={onCashPayment}
                 />
@@ -91,15 +94,15 @@ const CashPaymentModal: React.FC<CashPaymentModalProps> = ({
                 <Text className="text-3xl">💰</Text>
               </View>
               <Text className="mb-2 text-xl text-center font-JakartaBold">
-                Nhập số tiền khách đưa
+                {t("payment.enterReceivedAmount")}
               </Text>
               <Text className="mb-4 text-center text-gray-600 font-JakartaRegular">
-                Nhập số tiền khách hàng đưa để tính tiền thừa
+                {t("payment.receivedAmountDesc")}
               </Text>
 
               <View className="mb-4 w-full">
                 <Text className="mb-2 text-sm text-gray-700 font-JakartaSemiBold">
-                  Số tiền cần thanh toán:{" "}
+                  {t("payment.amountToPay")}:{" "}
                   {Number(amount).toLocaleString("vi-VN")} VNĐ
                 </Text>
                 <View className="flex flex-row items-center p-4 rounded-lg border border-gray-300">
@@ -124,7 +127,7 @@ const CashPaymentModal: React.FC<CashPaymentModalProps> = ({
                 {/* Quick amount buttons */}
                 <View className="mt-4">
                   <Text className="mb-2 text-sm text-gray-700 font-JakartaSemiBold">
-                    Số tiền nhanh:
+                    {t("payment.quickAmount")}:
                   </Text>
                   <View className="flex flex-row flex-wrap gap-2">
                     {[
@@ -148,8 +151,8 @@ const CashPaymentModal: React.FC<CashPaymentModalProps> = ({
                 {parseFloat(changeAmount) > 0 && (
                   <View className="p-4 mt-4 bg-green-50 rounded-lg border border-green-200">
                     <Text className="text-center text-green-700 font-JakartaSemiBold">
-                      Tiền thừa: {Number(changeAmount).toLocaleString("vi-VN")}{" "}
-                      VNĐ
+                      {t("payment.change")}:{" "}
+                      {Number(changeAmount).toLocaleString("vi-VN")} VNĐ
                     </Text>
                   </View>
                 )}
@@ -157,7 +160,7 @@ const CashPaymentModal: React.FC<CashPaymentModalProps> = ({
                 {parseFloat(paymentAmount) < parseFloat(amount) && (
                   <View className="p-4 mt-4 bg-red-50 rounded-lg border border-red-200">
                     <Text className="text-center text-red-700 font-JakartaSemiBold">
-                      Thiếu:{" "}
+                      {t("payment.missing")}:{" "}
                       {Number(
                         (
                           parseFloat(amount) - parseFloat(paymentAmount)
@@ -171,12 +174,12 @@ const CashPaymentModal: React.FC<CashPaymentModalProps> = ({
 
               <View className="flex flex-row gap-x-4 w-full">
                 <CustomButton
-                  title="Quay lại"
+                  title={t("common.back")}
                   className="flex-1 bg-gray-200"
                   onPress={onBackToStep1}
                 />
                 <CustomButton
-                  title="Xác nhận"
+                  title={t("common.confirm")}
                   className="flex-1"
                   onPress={onCashPayment}
                   disabled={parseFloat(paymentAmount) < parseFloat(amount)}
@@ -191,10 +194,10 @@ const CashPaymentModal: React.FC<CashPaymentModalProps> = ({
                 <Text className="text-3xl">⏳</Text>
               </View>
               <Text className="mb-2 text-xl text-center font-JakartaBold">
-                Đang xử lý thanh toán...
+                {t("payment.processingPayment")}
               </Text>
               <Text className="mb-4 text-center text-gray-600 font-JakartaRegular">
-                Vui lòng chờ trong giây lát
+                {t("payment.pleaseWait")}
               </Text>
               <View className="overflow-hidden w-full h-2 bg-gray-200 rounded-full">
                 <Animated.View

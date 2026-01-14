@@ -324,18 +324,34 @@ const RideCard = ({
 
         {/* Additional Info for Cancelled Rides */}
         {(ride_status === "cancelled" || ride_status === "no_show") && (
-          <View className="mt-4 p-4 bg-red-50 rounded-xl">
-            {cancelled_at && (
-              <Text className="text-sm text-gray-600 font-JakartaMedium mb-1">
-                {t("ride.cancelledAt") || "Hủy lúc"}:{" "}
-                {formatDateVN(cancelled_at)}
+          <View className="mt-4 p-4 bg-red-50 rounded-xl border border-red-100">
+            <View className="flex-row items-center mb-2">
+              <Ionicons name="alert-circle" size={18} color="#EF4444" />
+              <Text className="ml-2 text-base font-JakartaBold text-red-600">
+                {ride_status === "no_show"
+                  ? "KHÁCH KHÔNG XUẤT HIỆN"
+                  : "CHUYẾN ĐI ĐÃ HỦY"}
               </Text>
-            )}
-            {cancel_reason && (
+            </View>
+
+            <View className="gap-y-1">
+              <Text className="text-sm text-gray-600 font-JakartaMedium">
+                <Text className="font-JakartaBold">
+                  {t("ride.cancelledAt") || "Hủy lúc"}:
+                </Text>{" "}
+                {cancelled_at ? formatDateTimeVN(cancelled_at) : "Vừa xong"}
+              </Text>
+
               <Text className="text-sm text-red-600 font-JakartaMedium">
-                {t("ride.cancelReason") || "Lý do"}: {cancel_reason}
+                <Text className="font-JakartaBold text-gray-700">
+                  {t("ride.cancelReason") || "Lý do"}:
+                </Text>{" "}
+                {cancel_reason ||
+                  (ride_status === "no_show"
+                    ? "Khách hàng không đến điểm đón"
+                    : "N/A")}
               </Text>
-            )}
+            </View>
           </View>
         )}
 
@@ -422,19 +438,35 @@ const RideCard = ({
 
             {/* Giai đoạn 2: driver_arrived - Tài xế đã đến */}
             {ride_status === "driver_arrived" && (
-              <CustomButton
-                title={t("ride.startRide") || "Bắt đầu chuyến đi"}
-                onPress={() => handleUpdateStatus("in_progress")}
-                bgVariant="success"
-                IconLeft={() => (
-                  <Ionicons
-                    name="play-circle"
-                    size={20}
-                    color="white"
-                    style={{ marginRight: 8 }}
-                  />
-                )}
-              />
+              <>
+                <CustomButton
+                  title={t("ride.startRide") || "Bắt đầu chuyến đi"}
+                  onPress={() => handleUpdateStatus("in_progress")}
+                  bgVariant="success"
+                  IconLeft={() => (
+                    <Ionicons
+                      name="play-circle"
+                      size={20}
+                      color="white"
+                      style={{ marginRight: 8 }}
+                    />
+                  )}
+                />
+                <CustomButton
+                  title={t("ride.noShow")}
+                  onPress={() => handleUpdateStatus("no_show")}
+                  bgVariant="outline"
+                  textVariant="primary"
+                  IconLeft={() => (
+                    <Ionicons
+                      name="person-remove"
+                      size={20}
+                      color="#22c55e"
+                      style={{ marginRight: 8 }}
+                    />
+                  )}
+                />
+              </>
             )}
 
             {/* Giai đoạn 3: in_progress - Đang trong chuyến */}

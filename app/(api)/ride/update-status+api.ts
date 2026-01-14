@@ -7,7 +7,7 @@ if (!process.env.DATABASE_URL) {
 // Valid status transitions
 const VALID_TRANSITIONS: Record<string, string[]> = {
   pending: ["confirmed", "cancelled"], // Driver can confirm or reject
-  confirmed: ["driver_arrived", "cancelled"],
+  confirmed: ["driver_arrived", "cancelled", "no_show"],
   driver_arrived: ["in_progress", "cancelled", "no_show"],
   in_progress: ["completed", "cancelled"],
   completed: [], // Terminal state
@@ -107,11 +107,23 @@ export async function POST(request: Request) {
     }
 
     // Update ride status
-    await sql`
-      UPDATE rides 
-      SET ride_status = ${new_status}
-      WHERE ride_id = ${ride_id}
-    `;
+    if (new_status === "cancelled" || new_status === "no_show") {
+      await sql`
+        UPDATE rides 
+        SET ride_status = ${new_status},
+            cancelled_at = NOW(),
+            cancel_reason = COALESCE(${metadata?.reason}, ${
+        new_status === "no_show" ? "Khách không xuất hiện" : "Bị hủy"
+      })
+        WHERE ride_id = ${ride_id}
+      `;
+    } else {
+      await sql`
+        UPDATE rides 
+        SET ride_status = ${new_status}
+        WHERE ride_id = ${ride_id}
+      `;
+    }
 
     // Insert into ride_status_events
     await sql`

@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Animated, Modal, Text, View } from "react-native";
 import QRCode from "react-native-qrcode-svg";
 
@@ -29,6 +30,8 @@ const QRPaymentModal: React.FC<QRPaymentModalProps> = ({
   onQRPayment,
   onBackToStep1,
 }) => {
+  const { t } = useTranslation();
+
   return (
     <Modal
       visible={visible}
@@ -56,24 +59,25 @@ const QRPaymentModal: React.FC<QRPaymentModalProps> = ({
                 <Text className="text-3xl">📱</Text>
               </View>
               <Text className="mb-2 text-xl text-center font-JakartaBold">
-                Thanh toán QR Code
+                {t("payment.payQR")}
               </Text>
               <Text className="mb-4 text-center text-gray-600 font-JakartaRegular">
-                Quét mã QR để thanh toán nhanh chóng và an toàn
+                {t("payment.scanQRDesc")}
               </Text>
               <View className="p-4 mb-4 w-full bg-gray-50 rounded-lg">
                 <Text className="text-lg text-center font-JakartaSemiBold">
-                  Số tiền: {Number(amount).toLocaleString("vi-VN")} VNĐ
+                  {t("payment.amount")}:{" "}
+                  {Number(amount).toLocaleString("vi-VN")} VNĐ
                 </Text>
               </View>
               <View className="flex flex-row gap-x-4 w-full">
                 <CustomButton
-                  title="Hủy"
+                  title={t("common.cancel")}
                   className="flex-1 bg-gray-200"
                   onPress={onClose}
                 />
                 <CustomButton
-                  title="Tạo mã QR"
+                  title={t("payment.generateQR")}
                   className="flex-1"
                   onPress={onQRPayment}
                 />
@@ -87,10 +91,10 @@ const QRPaymentModal: React.FC<QRPaymentModalProps> = ({
                 <Text className="text-3xl">📱</Text>
               </View>
               <Text className="mb-2 text-xl text-center font-JakartaBold">
-                Quét mã QR để thanh toán
+                {t("payment.scanQRToPay")}
               </Text>
               <Text className="mb-4 text-center text-gray-600 font-JakartaRegular">
-                Sử dụng ứng dụng ngân hàng để quét mã QR
+                {t("payment.useBankApp")}
               </Text>
 
               <View className="relative justify-center items-center mb-4 w-64 h-64 bg-white rounded-lg border-2 border-gray-300">
@@ -131,14 +135,14 @@ const QRPaymentModal: React.FC<QRPaymentModalProps> = ({
 
               <View className="p-4 mb-4 w-full bg-green-50 rounded-lg border border-green-200">
                 <Text className="text-center text-green-700 font-JakartaSemiBold">
-                  💡 Mẹo: Mở ứng dụng ngân hàng và chọn &quot;Quét QR&quot;
+                  {t("payment.qrTip")}
                 </Text>
               </View>
 
               <View className="p-4 mb-4 w-full bg-gray-50 rounded-lg border border-gray-200">
                 <View className="flex flex-row justify-between items-center mb-2">
                   <Text className="text-sm text-gray-700 font-JakartaSemiBold">
-                    Mã giao dịch:
+                    {t("payment.transactionId")}:
                   </Text>
                   <Text className="text-sm text-gray-600 font-JakartaRegular">
                     QR{Date.now().toString().slice(-6)}
@@ -146,7 +150,7 @@ const QRPaymentModal: React.FC<QRPaymentModalProps> = ({
                 </View>
                 <View className="flex flex-row justify-between items-center mb-2">
                   <Text className="text-sm text-gray-700 font-JakartaSemiBold">
-                    Số tiền:
+                    {t("payment.amount")}:
                   </Text>
                   <Text className="text-sm text-green-600 font-JakartaSemiBold">
                     {Number(amount).toLocaleString("vi-VN")} VNĐ
@@ -154,7 +158,7 @@ const QRPaymentModal: React.FC<QRPaymentModalProps> = ({
                 </View>
                 <View className="flex flex-row justify-between items-center">
                   <Text className="text-sm text-gray-700 font-JakartaSemiBold">
-                    Thời gian:
+                    {t("payment.time")}:
                   </Text>
                   <Text className="text-sm text-gray-600 font-JakartaRegular">
                     {new Date().toLocaleTimeString("vi-VN")}
@@ -164,12 +168,12 @@ const QRPaymentModal: React.FC<QRPaymentModalProps> = ({
 
               <View className="flex flex-row gap-x-4 w-full">
                 <CustomButton
-                  title="Quay lại"
+                  title={t("common.back")}
                   className="flex-1 bg-gray-200"
                   onPress={onBackToStep1}
                 />
                 <CustomButton
-                  title="Đã quét xong"
+                  title={t("payment.doneScanning")}
                   className="flex-1"
                   onPress={onQRPayment}
                 />
@@ -183,10 +187,10 @@ const QRPaymentModal: React.FC<QRPaymentModalProps> = ({
                 <Text className="text-3xl">✅</Text>
               </View>
               <Text className="mb-2 text-xl text-center font-JakartaBold">
-                Đang xác nhận thanh toán...
+                {t("payment.confirmingPayment")}
               </Text>
               <Text className="mb-4 text-center text-gray-600 font-JakartaRegular">
-                Đang kiểm tra giao dịch từ ngân hàng
+                {t("payment.checkingTransaction")}
               </Text>
               <View className="overflow-hidden w-full h-2 bg-gray-200 rounded-full">
                 <Animated.View
@@ -200,7 +204,7 @@ const QRPaymentModal: React.FC<QRPaymentModalProps> = ({
                 />
               </View>
               <Text className="mt-2 text-sm text-gray-500 font-JakartaRegular">
-                Vui lòng không tắt ứng dụng...
+                {t("payment.doNotCloseApp")}
               </Text>
             </>
           )}
