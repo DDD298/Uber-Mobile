@@ -178,11 +178,11 @@ export default function DriverProfileScreen() {
           </LinearGradient>
 
           {/* Stats Grid */}
-          <View className="flex-row flex-wrap p-4">
+          <View className="flex-row flex-wrap p-3 items-stretch">
             <View className="w-1/2 p-2">
-              <View className="bg-blue-50 p-4 rounded-2xl">
+              <View className="bg-blue-50 p-4 rounded-2xl border border-blue-300">
                 <Ionicons name="car-outline" size={20} color="#3B82F6" />
-                <Text className="mt-2 text-2xl font-JakartaBold text-blue-900">
+                <Text className="mt-2 text-xl font-JakartaBold text-blue-900">
                   {driverProfile.completed_rides}
                 </Text>
                 <Text className="text-sm font-JakartaMedium text-blue-700">
@@ -192,9 +192,9 @@ export default function DriverProfileScreen() {
             </View>
 
             <View className="w-1/2 p-2">
-              <View className="bg-green-50 p-4 rounded-2xl">
+              <View className="bg-green-50 p-4 rounded-2xl border border-green-300">
                 <Ionicons name="cash-outline" size={20} color="#10B981" />
-                <Text className="mt-2 text-2xl font-JakartaBold text-green-900">
+                <Text className="mt-2 text-xl font-JakartaBold text-green-900">
                   {formatCurrencyByLanguage(
                     driverProfile.total_earnings,
                     i18n.language
@@ -207,9 +207,9 @@ export default function DriverProfileScreen() {
             </View>
 
             <View className="w-1/2 p-2">
-              <View className="bg-purple-50 p-4 rounded-2xl">
+              <View className="bg-purple-50 p-4 rounded-2xl border border-purple-300">
                 <Ionicons name="calendar-outline" size={20} color="#8B5CF6" />
-                <Text className="mt-2 text-2xl font-JakartaBold text-purple-900">
+                <Text className="mt-2 text-xl font-JakartaBold text-purple-900">
                   {driverProfile.recentRides?.length || 0}
                 </Text>
                 <Text className="text-sm font-JakartaMedium text-purple-700">
@@ -219,13 +219,13 @@ export default function DriverProfileScreen() {
             </View>
 
             <View className="w-1/2 p-2">
-              <View className="bg-orange-50 p-4 rounded-2xl">
+              <View className="bg-orange-50 p-4 rounded-2xl border border-orange-300">
                 <Ionicons
                   name="trending-up-outline"
                   size={20}
                   color="#F97316"
                 />
-                <Text className="mt-2 text-2xl font-JakartaBold text-orange-900">
+                <Text className="mt-2 text-xl font-JakartaBold text-orange-900">
                   {driverProfile.recentRatings?.length || 0}
                 </Text>
                 <Text className="text-sm font-JakartaMedium text-orange-700">

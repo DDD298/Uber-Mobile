@@ -142,7 +142,8 @@
     "cannotSubmit": "Không thể gửi đánh giá",
     "submitError": "Đã xảy ra lỗi khi gửi đánh giá",
     "characterLimit": "ký tự",
-    "yourRating": "Đánh giá của bạn"
+    "yourRating": "Đánh giá của bạn",
+    "ratings": "đánh giá"
   },
   "profile": {
     "profile": "Thông tin cá nhân",
@@ -276,7 +277,8 @@
     "uploadProfile": "Upload ảnh đại diện",
     "tapToUpload": "Nhấn để upload",
     "submitApplication": "Gửi đơn đăng ký",
-    "ratings": "đánh giá",
+    "recentRides": "Chuyến gần đây",
+    "recentRatings": "Đánh giá gần đây",
     "online": "Trực tuyến",
     "offline": "Ngoại tuyến",
     "statusOnlineOffline": "Trạng thái hoạt động"

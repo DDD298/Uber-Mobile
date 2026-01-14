@@ -142,7 +142,8 @@
     "cannotSubmit": "Cannot submit rating",
     "submitError": "An error occurred while submitting rating",
     "characterLimit": "characters",
-    "yourRating": "Your Rating"
+    "yourRating": "Your Rating",
+    "ratings": "ratings"
   },
   "profile": {
     "profile": "Profile",
@@ -274,7 +275,8 @@
     "uploadProfile": "Upload profile photo",
     "tapToUpload": "Tap to upload",
     "submitApplication": "Submit Application",
-    "ratings": "ratings",
+    "recentRides": "Recent Rides",
+    "recentRatings": "Recent Ratings",
     "online": "Online",
     "offline": "Offline",
     "statusOnlineOffline": "Operating Status"
