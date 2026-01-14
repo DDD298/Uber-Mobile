@@ -64,7 +64,6 @@ const PromoCodeInput = ({
       }
     } catch (error) {
       setError(t("promo.cannotValidate"));
-      console.error("Promo validation error:", error);
     } finally {
       setIsValidating(false);
     }

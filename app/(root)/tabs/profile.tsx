@@ -12,8 +12,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { router } from "expo-router";
-import { useState, useEffect } from "react";
+import { router, useFocusEffect } from "expo-router";
+import { useState, useEffect, useCallback } from "react";
 import { LanguageSwitcher } from "@/components/Common/LanguageSwitcher";
 import CustomButton from "@/components/Common/CustomButton";
 import { fetchAPI } from "@/lib/fetch";
@@ -21,7 +21,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export default function ProfileScreen() {
   const { user } = useUser();
-  console.log(user);
+
   const { t } = useTranslation();
   const [isDriver, setIsDriver] = useState(false);
   const [driverId, setDriverId] = useState<number | null>(null);
@@ -44,15 +44,29 @@ export default function ProfileScreen() {
     setRefreshing(false);
   };
 
-  useEffect(() => {
-    const initProfile = async () => {
-      const isDriverUser = await checkDriverStatus();
-      if (!isDriverUser && user?.id) {
-        await fetchUserData();
-      }
-    };
-    initProfile();
-  }, [user]);
+  useFocusEffect(
+    useCallback(() => {
+      const initProfile = async () => {
+        const isDriverUser = await checkDriverStatus();
+        if (!isDriverUser && user?.id) {
+          await fetchUserData();
+        }
+      };
+
+      // Chạy ngay lập tức khi vào trang
+      initProfile();
+
+      // Thiết lập interval để fetch liên tục sau mỗi 4s
+      const intervalId = setInterval(() => {
+        initProfile();
+      }, 4000);
+
+      // Cleanup: Dừng fetch khi rời khỏi trang
+      return () => {
+        clearInterval(intervalId);
+      };
+    }, [user?.id])
+  );
 
   const fetchUserData = async () => {
     if (!user?.id) return;
@@ -65,9 +79,7 @@ export default function ProfileScreen() {
       if (response.success && response.data) {
         setUserData(response.data);
       }
-    } catch (error) {
-      console.error(error);
-    }
+    } catch (error) {}
   };
 
   const toggleOnlineStatus = async () => {
@@ -197,11 +209,12 @@ export default function ProfileScreen() {
                   className="border-4 border-white shadow-xl shadow-black/50"
                 />
                 <Text className="mt-3 text-xl font-JakartaBold text-neutral-200">
-                  {user?.firstName && user?.lastName
-                    ? `${user.firstName} ${user.lastName}`
-                    : user?.firstName ||
-                      user?.lastName ||
-                      t("common.notProvided")}
+                  {userData?.name ||
+                    (user?.firstName && user?.lastName
+                      ? `${user.firstName} ${user.lastName}`
+                      : user?.firstName ||
+                        user?.lastName ||
+                        t("common.notProvided"))}
                 </Text>
                 <Text className="mt-1 text-sm font-JakartaMedium text-neutral-200/80">
                   {user?.primaryEmailAddress?.emailAddress || ""}
@@ -334,11 +347,12 @@ export default function ProfileScreen() {
                       {t("profile.name")}
                     </Text>
                     <Text className="text-base font-JakartaBold text-neutral-800">
-                      {user?.firstName && user?.lastName
-                        ? `${user.firstName} ${user.lastName}`
-                        : user?.firstName ||
-                          user?.lastName ||
-                          t("common.notProvided")}
+                      {userData?.name ||
+                        (user?.firstName && user?.lastName
+                          ? `${user.firstName} ${user.lastName}`
+                          : user?.firstName ||
+                            user?.lastName ||
+                            t("common.notProvided"))}
                     </Text>
                   </View>
                 </View>

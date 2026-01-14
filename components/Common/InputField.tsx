@@ -27,59 +27,51 @@ const InputField = ({
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-    >
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View className="my-2 w-full">
-          <Text
-            className={`text-lg font-JakartaSemiBold mb-4 text-green-600 ${labelStyle}`}
-          >
-            {label}
-          </Text>
-          <View
-            className={`flex flex-row justify-start items-center relative 
-            bg-neutral-100 rounded-full border border-gray-100 focus:border-green-500  ${containerStyle}`}
-          >
-            {icon &&
-              (typeof icon === "string" && !icon.startsWith("http") ? (
-                <Ionicons
-                  name={icon as any}
-                  size={20}
-                  color="#10B981"
-                  style={{ marginLeft: 16 }}
-                />
-              ) : (
-                <Image
-                  source={icon}
-                  className={`w-6 h-6 ml-4 ${iconStyle}`}
-                  style={
-                    iconStyle?.startsWith("#") ? { tintColor: iconStyle } : {}
-                  }
-                />
-              ))}
-            <TextInput
-              className={`rounded-full p-4 font-JakartaSemiBold text-[15px] flex-1 ${inputStyle} text-left`}
-              secureTextEntry={secureTextEntry && !showPassword}
-              {...props}
-              placeholderTextColor={"#AAAAAA"}
+    <View className="my-2 w-full">
+      <Text
+        className={`text-lg font-JakartaSemiBold mb-2 text-green-600 ${labelStyle}`}
+      >
+        {label}
+      </Text>
+      <View
+        className={`flex flex-row justify-start items-center relative 
+        bg-neutral-100 rounded-full border border-gray-100 focus:border-green-500  ${containerStyle}`}
+      >
+        {icon &&
+          (typeof icon === "string" && !icon.startsWith("http") ? (
+            <Ionicons
+              name={icon as any}
+              size={20}
+              color="#10B981"
+              style={{ marginLeft: 16 }}
             />
-            {secureTextEntry && (
-              <TouchableOpacity
-                onPress={() => setShowPassword(!showPassword)}
-                className="pr-4"
-              >
-                <Ionicons
-                  name={showPassword ? "eye" : "eye-off"}
-                  size={24}
-                  color="#6B7280"
-                />
-              </TouchableOpacity>
-            )}
-          </View>
-        </View>
-      </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
+          ) : (
+            <Image
+              source={icon}
+              className={`w-6 h-6 ml-4 ${iconStyle}`}
+              style={iconStyle?.startsWith("#") ? { tintColor: iconStyle } : {}}
+            />
+          ))}
+        <TextInput
+          className={`rounded-full p-4 font-JakartaSemiBold text-[15px] flex-1 ${inputStyle} text-left`}
+          secureTextEntry={secureTextEntry && !showPassword}
+          {...props}
+          placeholderTextColor={"#AAAAAA"}
+        />
+        {secureTextEntry && (
+          <TouchableOpacity
+            onPress={() => setShowPassword(!showPassword)}
+            className="pr-4"
+          >
+            <Ionicons
+              name={showPassword ? "eye" : "eye-off"}
+              size={24}
+              color="#6B7280"
+            />
+          </TouchableOpacity>
+        )}
+      </View>
+    </View>
   );
 };
 

@@ -56,10 +56,8 @@ export function formatDate(dateString: string): string {
 export function formatDateVN(dateString: string): string {
   try {
     const date = new Date(dateString);
-    // Convert to Vietnam timezone and format
     return formatInTimeZone(date, VIETNAM_TIMEZONE, 'dd/MM/yyyy');
   } catch (error) {
-    console.error('Error formatting date:', error);
     return dateString;
   }
 }
@@ -121,7 +119,6 @@ export function formatDateTimeVN(dateString: string): string {
     const date = new Date(dateString);
     return formatInTimeZone(date, VIETNAM_TIMEZONE, 'dd/MM/yyyy HH:mm');
   } catch (error) {
-    console.error('Error formatting datetime:', error);
     return dateString;
   }
 }

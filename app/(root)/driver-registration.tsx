@@ -183,7 +183,6 @@ export default function DriverRegistrationScreen() {
     }
 
     if (missingPhotos.length > 0) {
-      console.error("[VALIDATION FAILED] Missing photos:", missingPhotos);
       Alert.alert(
         t("common.error"),
         `${t("driver.missingPhotos")}:\n• ${missingPhotos.join("\n• ")}`

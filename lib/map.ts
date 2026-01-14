@@ -146,7 +146,6 @@ export const calculateDriverTimes = async ({
   
       return await Promise.all(timesPromises);
     } catch (error) {
-      console.error("Error calculating driver times:", error);
       return [];
     }
   };

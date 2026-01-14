@@ -6,8 +6,18 @@ import { fetchAPI } from "@/lib/fetch";
 import { useSignUp } from "@clerk/clerk-expo";
 import { Link, router } from "expo-router";
 import { useEffect, useState } from "react";
-import { Alert, Image, Modal, ScrollView, Text, View } from "react-native";
-import ReactNativeModal from "react-native-modal";
+import {
+  Alert,
+  Image,
+  Modal,
+  ScrollView,
+  Text,
+  View,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
+  Platform,
+} from "react-native";
 import { useTranslation } from "react-i18next";
 
 const SignUp = () => {
@@ -30,51 +40,41 @@ const SignUp = () => {
   });
 
   const onSignUpPress = async () => {
-    console.log("🚀 [SignUp] Bắt đầu quá trình đăng ký...");
     if (!isLoaded) {
-      console.log("⚠️ [SignUp] Clerk chưa tải xong");
       return;
     }
     setLoading(true);
     try {
-      console.log("📧 [SignUp] Đang tạo tài khoản cho:", form.email);
       await signUp.create({
         emailAddress: form.email,
         password: form.password,
       });
-      console.log("🔑 [SignUp] Đang chuẩn bị xác thực email...");
+
       await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
-      console.log("✅ [SignUp] Chuyển trạng thái sang pending verification");
+
       setVerification({
         ...verification,
         state: "pending",
       });
     } catch (err: any) {
-      console.error("❌ [SignUp] Lỗi đăng ký:", JSON.stringify(err, null, 2));
       Alert.alert(
         t("common.error"),
         err.errors?.[0]?.longMessage || t("errors.somethingWentWrong")
       );
     } finally {
       setLoading(false);
-      console.log("🏁 [SignUp] Kết thúc xử lý onSignUpPress");
     }
   };
 
   const onPressVerify = async () => {
-    console.log("🚀 [Verify] Bắt đầu xác thực mã...");
     if (!isLoaded) return;
     setLoading(true);
     try {
-      console.log("🔢 [Verify] Đang gửi mã xác thực:", verification.code);
       const completeSignUp = await signUp.attemptEmailAddressVerification({
         code: verification.code,
       });
 
-      console.log("📡 [Verify] Trạng thái xác thực:", completeSignUp.status);
-
       if (completeSignUp.status === "complete") {
-        console.log("🗄️ [Verify] Đang lưu thông tin user vào database...");
         const response = await fetchAPI("/(api)/user", {
           method: "POST",
           body: JSON.stringify({
@@ -84,7 +84,6 @@ const SignUp = () => {
             phone: form.phone,
           }),
         });
-        console.log("📋 [Verify] Kết quả lưu database:", response);
 
         if (response.error) {
           throw new Error(response.error);
@@ -96,10 +95,6 @@ const SignUp = () => {
           state: "success",
         });
       } else {
-        console.error(
-          "⚠️ [Verify] Xác thực không hoàn tất:",
-          completeSignUp.status
-        );
         setVerification({
           ...verification,
           error: t("errors.tryAgain"),
@@ -107,7 +102,6 @@ const SignUp = () => {
         });
       }
     } catch (err: any) {
-      console.error("❌ [Verify] Lỗi xác thực:", JSON.stringify(err, null, 2));
       setVerification({
         ...verification,
         error: err.errors?.[0]?.longMessage || t("errors.somethingWentWrong"),
@@ -115,7 +109,6 @@ const SignUp = () => {
       });
     } finally {
       setLoading(false);
-      console.log("🏁 [Verify] Kết thúc xử lý onPressVerify");
     }
   };
 
@@ -125,80 +118,82 @@ const SignUp = () => {
     }
   }, [verification.state]);
 
-  console.log(
-    "🎨 [SignUp] Render state:",
-    verification.state,
-    "ShowSuccessModal:",
-    showSuccessModal
-  );
-
   return (
     <View className="flex-1 bg-general-500">
-      <ScrollView className="flex-1 bg-general-500">
-        <View className="flex-1 bg-general-500">
-          <View className="relative w-full h-[280px]">
-            <Image
-              source={images.signUpCar}
-              className="z-0 w-full h-[250px]"
-              resizeMode="contain"
-            />
-            <Text className="absolute -bottom-2 w-full text-2xl text-center text black font-JakartaSemiBold">
-              {t("auth.createAccount")}
-            </Text>
-          </View>
-          <View className="p-4">
-            <InputField
-              label={t("profile.name")}
-              placeholder={t("profile.name")}
-              icon="person-outline"
-              value={form.name}
-              onChangeText={(value) => setForm({ ...form, name: value })}
-            />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        className="flex-1"
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <ScrollView className="flex-1 bg-general-500">
+            <View className="flex-1 bg-general-500">
+              <View className="relative w-full h-[280px]">
+                <Image
+                  source={images.signUpCar}
+                  className="z-0 w-full h-[250px]"
+                  resizeMode="contain"
+                />
+                <Text className="absolute -bottom-2 w-full text-2xl text-center text black font-JakartaSemiBold">
+                  {t("auth.createAccount")}
+                </Text>
+              </View>
+              <View className="p-4">
+                <InputField
+                  label={t("profile.name")}
+                  placeholder={t("profile.name")}
+                  icon="person-outline"
+                  value={form.name}
+                  onChangeText={(value) => setForm({ ...form, name: value })}
+                />
 
-            <InputField
-              label={t("profile.phone") || "Phone"}
-              placeholder={t("profile.phone") || "0123456789"}
-              icon="call-outline"
-              value={form.phone}
-              keyboardType="phone-pad"
-              onChangeText={(value) => setForm({ ...form, phone: value })}
-            />
+                <InputField
+                  label={t("profile.phone") || "Phone"}
+                  placeholder={t("profile.phone") || "0123456789"}
+                  icon="call-outline"
+                  value={form.phone}
+                  keyboardType="phone-pad"
+                  onChangeText={(value) => setForm({ ...form, phone: value })}
+                />
 
-            <InputField
-              label={t("auth.email")}
-              placeholder={t("auth.email")}
-              icon="mail-outline"
-              value={form.email}
-              onChangeText={(value) => setForm({ ...form, email: value })}
-            />
+                <InputField
+                  label={t("auth.email")}
+                  placeholder={t("auth.email")}
+                  icon="mail-outline"
+                  value={form.email}
+                  onChangeText={(value) => setForm({ ...form, email: value })}
+                />
 
-            <InputField
-              label={t("auth.password")}
-              placeholder={t("auth.password")}
-              icon="lock-closed-outline"
-              secureTextEntry={true}
-              value={form.password}
-              onChangeText={(value) => setForm({ ...form, password: value })}
-            />
+                <InputField
+                  label={t("auth.password")}
+                  placeholder={t("auth.password")}
+                  icon="lock-closed-outline"
+                  secureTextEntry={true}
+                  value={form.password}
+                  onChangeText={(value) =>
+                    setForm({ ...form, password: value })
+                  }
+                />
 
-            <CustomButton
-              title={t("auth.signUp")}
-              onPress={onSignUpPress}
-              loading={loading}
-              className="mt-4"
-            />
+                <CustomButton
+                  title={t("auth.signUp")}
+                  onPress={onSignUpPress}
+                  loading={loading}
+                  className="mt-4"
+                />
 
-            <OAuth />
-            <Link
-              href="/sign-in"
-              className="mt-4 text-lg text-center text-general-200"
-            >
-              {t("auth.alreadyHaveAccount")}{" "}
-              <Text className="text-primary-600">{t("auth.signIn")}</Text>
-            </Link>
-          </View>
-        </View>
-      </ScrollView>
+                <OAuth />
+                <Link
+                  href="/sign-in"
+                  className="mt-4 text-lg text-center text-general-200"
+                >
+                  {t("auth.alreadyHaveAccount")}{" "}
+                  <Text className="text-primary-600">{t("auth.signIn")}</Text>
+                </Link>
+              </View>
+            </View>
+          </ScrollView>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
 
       {/* Modal for Verification OTP */}
       <Modal
@@ -227,13 +222,6 @@ const SignUp = () => {
                 setVerification({ ...verification, code })
               }
             />
-
-            {verification.error && (
-              <Text className="mt-1 text-sm text-red-500">
-                {verification.error}
-              </Text>
-            )}
-
             <CustomButton
               title={t("common.confirm")}
               onPress={onPressVerify}

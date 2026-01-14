@@ -294,7 +294,6 @@ export async function GET(request: Request) {
       }
     );
   } catch (error) {
-    console.error("Ride list error:", error);
     return new Response(
       JSON.stringify({ 
         error: "Lỗi máy chủ nội bộ",

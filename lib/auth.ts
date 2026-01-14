@@ -58,15 +58,6 @@ export const googleOAuth = async (startOAuthFlow: any) => {
       message: "An error occurred while signing in with Google",
     };
   } catch (error: any) {
-    console.error("❌ OAuth error details:", {
-      code: error.code,
-      status: error.status,
-      message: error?.errors?.[0]?.message,
-      errorMessage: error.message,
-      errorName: error.name,
-    });
-    
-    // Xử lý lỗi rate limit
     if (error.status === 429) {
       return {
         success: false,

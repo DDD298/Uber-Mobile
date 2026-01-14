@@ -43,7 +43,6 @@ export const generateAIResponse = async (
 
     return text || "Xin lỗi, AI tạm thời không khả dụng. Vui lòng thử lại sau.";
   } catch (error) {
-    console.error("AI API Error:", error);
     return "Xin lỗi, AI tạm thời không khả dụng. Vui lòng thử lại sau.";
   }
 };

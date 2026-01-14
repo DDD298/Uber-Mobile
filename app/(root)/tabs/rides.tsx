@@ -45,10 +45,7 @@ export default function RidesScreen() {
 
       // Log chuyến đi gần nhất
       if (response.data && response.data.length > 0) {
-        console.log("📍 Rides: Tổng số chuyến đi:", response.data.length);
-        console.log("🚗 Rides: Chuyến đi gần nhất:", response.data[0]);
       } else {
-        console.log("⚠️ Rides: Không có chuyến đi nào");
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : t("errors.networkError"));

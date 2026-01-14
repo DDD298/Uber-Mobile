@@ -6,6 +6,7 @@ export async function GET(request: Request) {
         const { searchParams } = new URL(request.url);
         const clerkId = searchParams.get('clerkId');
 
+
         if (!clerkId) {
             return Response.json(
                 { success: false, error: 'Missing clerkId parameter' },
@@ -13,25 +14,38 @@ export async function GET(request: Request) {
             );
         }
 
-        const users = await sql`
-            SELECT * FROM users 
-            WHERE clerk_id = ${clerkId}
-            LIMIT 1
-        `;
+        const allUsers = await sql`SELECT * FROM users`;
+        const user = allUsers.find((u: any) => u.clerk_id === clerkId);
 
-        if (users.length === 0) {
+        if (!user) {
             return Response.json(
-                { success: false, error: 'User not found' },
-                { status: 404 }
+                { success: true, data: null },
+                { status: 200 }
             );
         }
 
+        const ridesCount = await sql`
+            SELECT 
+                COUNT(*) AS total_rides,
+                COUNT(*) FILTER (WHERE ride_status = 'completed') AS completed_rides
+            FROM rides 
+            WHERE user_id = ${clerkId}
+        `;
+
+        const finalData = {
+            ...user,
+            total_rides: ridesCount[0].total_rides || "0",
+            completed_rides: ridesCount[0].completed_rides || "0"
+        };
+
+
+
         return Response.json(
-            { success: true, data: users[0] },
+            { success: true, data: finalData },
             { status: 200 }
         );
     } catch (error: any) {
-        console.error('Error fetching user:', error);
+
         return Response.json(
             { success: false, error: 'Internal server error', details: error.message },
             { status: 500 }
@@ -70,7 +84,7 @@ export async function POST(request: Request) {
     return new Response(JSON.stringify({data: response[0]}), {status: 200});
     }
     catch (error) {
-        console.error('Error creating user:', error);
+
         return Response.json({error: error}, {status: 500});
     }
 }

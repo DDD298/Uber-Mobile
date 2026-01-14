@@ -262,7 +262,6 @@ const BookRide = () => {
       </StripeProvider>
     );
   } catch (error) {
-    console.error("[BookRide] Render error:", error);
     return (
       <SafeAreaView className="flex-1 bg-general-500" edges={["top"]}>
         <PageHeader title={t("ride.rideDetails")} />
