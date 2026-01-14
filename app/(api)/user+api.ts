@@ -42,7 +42,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
     try {
     const sql = neon(`${process.env.DATABASE_URL}`);
-    const {name, email, clerkId} = await request.json();
+    const {name, email, clerkId, phone} = await request.json();
 
     if (!name || !email || !clerkId) {
         return Response.json(
@@ -51,16 +51,26 @@ export async function POST(request: Request) {
         )
     }
 
-    const  response = await sql`
+    const response = await sql`
         INSERT INTO users (
-        name, email, clerk_id
+            name, 
+            email, 
+            clerk_id,
+            phone
         )
-        VALUES (${name}, ${email}, ${clerkId})
+        VALUES (${name}, ${email}, ${clerkId}, ${phone || null})
+        ON CONFLICT (email) DO UPDATE
+        SET 
+            name = EXCLUDED.name,
+            clerk_id = EXCLUDED.clerk_id,
+            phone = EXCLUDED.phone
+        RETURNING *
     `;
 
-    return new Response(JSON.stringify({data: response}), {status: 200});
+    return new Response(JSON.stringify({data: response[0]}), {status: 200});
     }
     catch (error) {
+        console.error('Error creating user:', error);
         return Response.json({error: error}, {status: 500});
     }
 }

@@ -5,8 +5,8 @@ import { icons, images } from "@/constants";
 import { fetchAPI } from "@/lib/fetch";
 import { useSignUp } from "@clerk/clerk-expo";
 import { Link, router } from "expo-router";
-import { useState } from "react";
-import { Alert, Image, ScrollView, Text, View } from "react-native";
+import { useEffect, useState } from "react";
+import { Alert, Image, Modal, ScrollView, Text, View } from "react-native";
 import ReactNativeModal from "react-native-modal";
 import { useTranslation } from "react-i18next";
 
@@ -14,11 +14,13 @@ const SignUp = () => {
   const { t } = useTranslation();
   const { isLoaded, signUp, setActive } = useSignUp();
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
     name: "",
     email: "",
     password: "",
+    phone: "",
   });
 
   const [verification, setVerification] = useState({
@@ -28,45 +30,76 @@ const SignUp = () => {
   });
 
   const onSignUpPress = async () => {
-    if (!isLoaded) return;
+    console.log("🚀 [SignUp] Bắt đầu quá trình đăng ký...");
+    if (!isLoaded) {
+      console.log("⚠️ [SignUp] Clerk chưa tải xong");
+      return;
+    }
+    setLoading(true);
     try {
+      console.log("📧 [SignUp] Đang tạo tài khoản cho:", form.email);
       await signUp.create({
         emailAddress: form.email,
         password: form.password,
       });
+      console.log("🔑 [SignUp] Đang chuẩn bị xác thực email...");
       await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
+      console.log("✅ [SignUp] Chuyển trạng thái sang pending verification");
       setVerification({
         ...verification,
         state: "pending",
       });
     } catch (err: any) {
-      Alert.alert(t("common.error"), err.errors[0].longMessage);
+      console.error("❌ [SignUp] Lỗi đăng ký:", JSON.stringify(err, null, 2));
+      Alert.alert(
+        t("common.error"),
+        err.errors?.[0]?.longMessage || t("errors.somethingWentWrong")
+      );
+    } finally {
+      setLoading(false);
+      console.log("🏁 [SignUp] Kết thúc xử lý onSignUpPress");
     }
   };
 
   const onPressVerify = async () => {
+    console.log("🚀 [Verify] Bắt đầu xác thực mã...");
     if (!isLoaded) return;
+    setLoading(true);
     try {
+      console.log("🔢 [Verify] Đang gửi mã xác thực:", verification.code);
       const completeSignUp = await signUp.attemptEmailAddressVerification({
         code: verification.code,
       });
 
+      console.log("📡 [Verify] Trạng thái xác thực:", completeSignUp.status);
+
       if (completeSignUp.status === "complete") {
-        // Tạo user trong database
-        await fetchAPI("/(api)/user", {
+        console.log("🗄️ [Verify] Đang lưu thông tin user vào database...");
+        const response = await fetchAPI("/(api)/user", {
           method: "POST",
           body: JSON.stringify({
             name: form.name,
             email: form.email,
             clerkId: completeSignUp.createdUserId,
+            phone: form.phone,
           }),
         });
+        console.log("📋 [Verify] Kết quả lưu database:", response);
+
+        if (response.error) {
+          throw new Error(response.error);
+        }
+
         await setActive({ session: completeSignUp.createdSessionId });
         setVerification({
           ...verification,
           state: "success",
         });
       } else {
+        console.error(
+          "⚠️ [Verify] Xác thực không hoàn tất:",
+          completeSignUp.status
+        );
         setVerification({
           ...verification,
           error: t("errors.tryAgain"),
@@ -74,76 +107,110 @@ const SignUp = () => {
         });
       }
     } catch (err: any) {
+      console.error("❌ [Verify] Lỗi xác thực:", JSON.stringify(err, null, 2));
       setVerification({
         ...verification,
-        error: err.errors[0].longMessage,
+        error: err.errors?.[0]?.longMessage || t("errors.somethingWentWrong"),
         state: "failed",
       });
+    } finally {
+      setLoading(false);
+      console.log("🏁 [Verify] Kết thúc xử lý onPressVerify");
     }
   };
 
+  useEffect(() => {
+    if (verification.state === "success") {
+      setShowSuccessModal(true);
+    }
+  }, [verification.state]);
+
+  console.log(
+    "🎨 [SignUp] Render state:",
+    verification.state,
+    "ShowSuccessModal:",
+    showSuccessModal
+  );
+
   return (
-    <ScrollView className="flex-1 bg-general-500">
-      <View className="flex-1 bg-general-500">
-        <View className="relative w-full h-[280px]">
-          <Image
-            source={images.signUpCar}
-            className="z-0 w-full h-[250px]"
-            resizeMode="contain"
-          />
-          <Text className="absolute -bottom-2 w-full text-2xl text-center text black font-JakartaSemiBold">
-            {t("auth.createAccount")}
-          </Text>
+    <View className="flex-1 bg-general-500">
+      <ScrollView className="flex-1 bg-general-500">
+        <View className="flex-1 bg-general-500">
+          <View className="relative w-full h-[280px]">
+            <Image
+              source={images.signUpCar}
+              className="z-0 w-full h-[250px]"
+              resizeMode="contain"
+            />
+            <Text className="absolute -bottom-2 w-full text-2xl text-center text black font-JakartaSemiBold">
+              {t("auth.createAccount")}
+            </Text>
+          </View>
+          <View className="p-4">
+            <InputField
+              label={t("profile.name")}
+              placeholder={t("profile.name")}
+              icon="person-outline"
+              value={form.name}
+              onChangeText={(value) => setForm({ ...form, name: value })}
+            />
+
+            <InputField
+              label={t("profile.phone") || "Phone"}
+              placeholder={t("profile.phone") || "0123456789"}
+              icon="call-outline"
+              value={form.phone}
+              keyboardType="phone-pad"
+              onChangeText={(value) => setForm({ ...form, phone: value })}
+            />
+
+            <InputField
+              label={t("auth.email")}
+              placeholder={t("auth.email")}
+              icon="mail-outline"
+              value={form.email}
+              onChangeText={(value) => setForm({ ...form, email: value })}
+            />
+
+            <InputField
+              label={t("auth.password")}
+              placeholder={t("auth.password")}
+              icon="lock-closed-outline"
+              secureTextEntry={true}
+              value={form.password}
+              onChangeText={(value) => setForm({ ...form, password: value })}
+            />
+
+            <CustomButton
+              title={t("auth.signUp")}
+              onPress={onSignUpPress}
+              loading={loading}
+              className="mt-4"
+            />
+
+            <OAuth />
+            <Link
+              href="/sign-in"
+              className="mt-4 text-lg text-center text-general-200"
+            >
+              {t("auth.alreadyHaveAccount")}{" "}
+              <Text className="text-primary-600">{t("auth.signIn")}</Text>
+            </Link>
+          </View>
         </View>
-        <View className="p-4">
-          <InputField
-            label={t("profile.name")}
-            placeholder={t("profile.name")}
-            icon={icons.person}
-            value={form.name}
-            onChangeText={(value) => setForm({ ...form, name: value })}
-          />
+      </ScrollView>
 
-          <InputField
-            label={t("auth.email")}
-            placeholder={t("auth.email")}
-            icon={icons.email}
-            value={form.email}
-            onChangeText={(value) => setForm({ ...form, email: value })}
-          />
-
-          <InputField
-            label={t("auth.password")}
-            placeholder={t("auth.password")}
-            icon={icons.lock}
-            secureTextEntry={true}
-            value={form.password}
-            onChangeText={(value) => setForm({ ...form, password: value })}
-          />
-
-          <CustomButton
-            title={t("auth.signUp")}
-            onPress={onSignUpPress}
-            className="mt-4"
-          />
-
-          <OAuth />
-          <Link
-            href="/sign-in"
-            className="mt-4 text-lg text-center text-general-200"
-          >
-            {t("auth.alreadyHaveAccount")}{" "}
-            <Text className="text-primary-600">{t("auth.signIn")}</Text>
-          </Link>
-        </View>
-
-        <ReactNativeModal
-          isVisible={verification.state === "pending"}
-          onModalHide={() => {
-            if (verification.state === "success") setShowSuccessModal(true);
-          }}
+      {/* Modal for Verification OTP */}
+      <Modal
+        visible={verification.state === "pending"}
+        transparent={true}
+        animationType="fade"
+      >
+        <View
+          className="flex-1 justify-center items-center px-4"
+          style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
         >
-          <View className="bg-white px-7 py-9 rounded-2xl min-h-[300px]">
+          <View className="bg-white w-full px-7 py-9 rounded-2xl min-h-[300px]">
             <Text className="mb-2 text-2xl text-black font-JakartaBold">
               {t("auth.signUp")}
             </Text>
@@ -153,7 +220,7 @@ const SignUp = () => {
             <InputField
               label={t("common.confirm")}
               placeholder="*****"
-              icon={icons.lock}
+              icon="lock-closed-outline"
               value={verification.code}
               keyboardType="numeric"
               onChangeText={(code) =>
@@ -170,13 +237,24 @@ const SignUp = () => {
             <CustomButton
               title={t("common.confirm")}
               onPress={onPressVerify}
+              loading={loading}
               className="mt-4 bg-success-500"
             />
           </View>
-        </ReactNativeModal>
+        </View>
+      </Modal>
 
-        <ReactNativeModal isVisible={showSuccessModal}>
-          <View className="bg-white px-7 py-9 rounded-2xl min-h-[300px]">
+      {/* Modal for Success */}
+      <Modal
+        visible={showSuccessModal}
+        transparent={true}
+        animationType="slide"
+      >
+        <View
+          className="flex-1 justify-center items-center px-4"
+          style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+        >
+          <View className="bg-white w-full px-7 py-9 rounded-2xl min-h-[300px]">
             <Image
               source={images.check}
               className="w-[110px] h-[110px] mx-auto my-4"
@@ -196,9 +274,9 @@ const SignUp = () => {
               className="mt-4"
             />
           </View>
-        </ReactNativeModal>
-      </View>
-    </ScrollView>
+        </View>
+      </Modal>
+    </View>
   );
 };
 

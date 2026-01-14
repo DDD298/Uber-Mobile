@@ -63,7 +63,7 @@ const SignIn = () => {
           <InputField
             label={t("auth.email")}
             placeholder={t("auth.email")}
-            icon={icons.email}
+            icon="mail-outline"
             value={form.email}
             onChangeText={(value) => setForm({ ...form, email: value })}
           />
@@ -71,7 +71,7 @@ const SignIn = () => {
           <InputField
             label={t("auth.password")}
             placeholder={t("auth.password")}
-            icon={icons.lock}
+            icon="lock-closed-outline"
             secureTextEntry={true}
             value={form.password}
             onChangeText={(value) => setForm({ ...form, password: value })}
@@ -80,6 +80,7 @@ const SignIn = () => {
           <CustomButton
             title={t("auth.signIn")}
             onPress={onSignInPress}
+            loading={loading}
             className="mt-4"
           />
 

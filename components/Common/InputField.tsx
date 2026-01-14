@@ -41,15 +41,23 @@ const InputField = ({
             className={`flex flex-row justify-start items-center relative 
             bg-neutral-100 rounded-full border border-gray-100 focus:border-green-500  ${containerStyle}`}
           >
-            {icon && (
-              <Image
-                source={icon}
-                className={`w-6 h-6 ml-4 ${iconStyle}`}
-                style={
-                  iconStyle?.startsWith("#") ? { tintColor: iconStyle } : {}
-                }
-              />
-            )}
+            {icon &&
+              (typeof icon === "string" && !icon.startsWith("http") ? (
+                <Ionicons
+                  name={icon as any}
+                  size={20}
+                  color="#10B981"
+                  style={{ marginLeft: 16 }}
+                />
+              ) : (
+                <Image
+                  source={icon}
+                  className={`w-6 h-6 ml-4 ${iconStyle}`}
+                  style={
+                    iconStyle?.startsWith("#") ? { tintColor: iconStyle } : {}
+                  }
+                />
+              ))}
             <TextInput
               className={`rounded-full p-4 font-JakartaSemiBold text-[15px] flex-1 ${inputStyle} text-left`}
               secureTextEntry={secureTextEntry && !showPassword}

@@ -21,6 +21,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export default function ProfileScreen() {
   const { user } = useUser();
+  console.log(user);
   const { t } = useTranslation();
   const [isDriver, setIsDriver] = useState(false);
   const [driverId, setDriverId] = useState<number | null>(null);
