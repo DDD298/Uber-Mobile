@@ -16,7 +16,9 @@ const OAuth = () => {
       if (result.code === "session_exists" || result.code === "success") {
         router.push("/(root)/tabs/home");
       }
-    } catch (err) {}
+    } catch (err) {
+      console.error("❌ OAuth error:", err);
+    }
   }, []);
 
   return (

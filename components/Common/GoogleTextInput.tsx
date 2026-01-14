@@ -1,7 +1,7 @@
 import { Image, View, ActivityIndicator } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { icons } from "@/constants";
 import { GoogleInputProps } from "@/types/type";
@@ -17,7 +17,6 @@ const GoogleTextInput = ({
 }: GoogleInputProps) => {
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
-
   return (
     <View
       className={`flex relative z-50 flex-row justify-center items-center rounded-xl border-0 bg-neutral-100 ${containerStyle}`}
@@ -89,6 +88,9 @@ const GoogleTextInput = ({
           fields: "geometry,formatted_address",
         }}
         nearbyPlacesAPI="GooglePlacesSearch"
+        onFail={(error) => {
+          console.error("❌ GooglePlacesAutocomplete onFail:", error);
+        }}
         renderLeftButton={() => (
           <View className="justify-center items-center w-6 h-6">
             {isLoading ? (

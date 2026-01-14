@@ -51,16 +51,34 @@ export const googleOAuth = async (startOAuthFlow: any) => {
       }
     }
 
+    console.warn("⚠️ OAuth flow completed but no session created");
     return {
       success: false,
-      code: "success",
+      code: "no_session",
       message: "An error occurred while signing in with Google",
     };
   } catch (error: any) {
+    console.error("❌ OAuth error details:", {
+      code: error.code,
+      status: error.status,
+      message: error?.errors?.[0]?.message,
+      errorMessage: error.message,
+      errorName: error.name,
+    });
+    
+    // Xử lý lỗi rate limit
+    if (error.status === 429) {
+      return {
+        success: false,
+        code: "rate_limit",
+        message: "Bạn đã thử đăng nhập quá nhiều lần. Vui lòng đợi vài phút và thử lại.",
+      };
+    }
+    
     return {
       success: false,
-      code: error.code,
-      message: error?.errors[0]?.longMessage,
+      code: error.code || "unknown_error",
+      message: error?.errors?.[0]?.message || error.message || "Đã xảy ra lỗi khi đăng nhập với Google",
     };
   }
 };

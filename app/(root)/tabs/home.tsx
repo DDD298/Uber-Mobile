@@ -1,5 +1,6 @@
 import GoogleTextInput from "@/components/Common/GoogleTextInput";
-import Map from "@/components/Common/Map";
+import DriverMap from "@/components/Common/DriverMap";
+import PassengerMap from "@/components/Common/PassengerMap";
 import AdditionalServices from "@/components/Home/AdditionalServices";
 import Features from "@/components/Home/Features";
 import PolygonLuminary from "@/components/Home/PolygonLuminary";
@@ -236,28 +237,20 @@ export default function HomeScreen() {
               {t("home.whereTo")}
             </Text>
             <View className="flex flex-row items-center bg-transparent h-[300px] rounded-xl rounded-b-none overflow-hidden shadow-sm">
-              <Map
-                originLatitude={
-                  isDriver && lastRide && !storeDestinationLatitude
-                    ? Number(lastRide.origin_latitude)
-                    : undefined
-                }
-                originLongitude={
-                  isDriver && lastRide && !storeDestinationLatitude
-                    ? Number(lastRide.origin_longitude)
-                    : undefined
-                }
-                destinationLatitude={
-                  isDriver && lastRide && !storeDestinationLatitude
-                    ? Number(lastRide.destination_latitude)
-                    : undefined
-                }
-                destinationLongitude={
-                  isDriver && lastRide && !storeDestinationLatitude
-                    ? Number(lastRide.destination_longitude)
-                    : undefined
-                }
-              />
+              {isDriver && lastRide && !storeDestinationLatitude ? (
+                <DriverMap
+                  rideOriginLatitude={Number(lastRide.origin_latitude)}
+                  rideOriginLongitude={Number(lastRide.origin_longitude)}
+                  rideDestinationLatitude={Number(
+                    lastRide.destination_latitude
+                  )}
+                  rideDestinationLongitude={Number(
+                    lastRide.destination_longitude
+                  )}
+                />
+              ) : (
+                <PassengerMap />
+              )}
             </View>
           </View>
         </View>

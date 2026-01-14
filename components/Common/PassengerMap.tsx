@@ -13,19 +13,7 @@ import MapView, { Marker, PROVIDER_DEFAULT } from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
 import { useUser } from "@clerk/clerk-expo";
 
-interface MapProps {
-  originLatitude?: number;
-  originLongitude?: number;
-  destinationLatitude?: number;
-  destinationLongitude?: number;
-}
-
-const Map = ({
-  originLatitude: propOriginLatitude,
-  originLongitude: propOriginLongitude,
-  destinationLatitude: propDestinationLatitude,
-  destinationLongitude: propDestinationLongitude,
-}: MapProps) => {
+const PassengerMap = () => {
   const { user } = useUser();
   const {
     data: drivers,
@@ -41,21 +29,15 @@ const Map = ({
     destinationLongitude: storeDestinationLongitude,
   } = useLocationStore();
 
-  const userLatitude = propOriginLatitude
-    ? Number(propOriginLatitude)
-    : storeUserLatitude;
-  const userLongitude = propOriginLongitude
-    ? Number(propOriginLongitude)
-    : storeUserLongitude;
-  const destinationLatitude = propDestinationLatitude
-    ? Number(propDestinationLatitude)
-    : storeDestinationLatitude;
-  const destinationLongitude = propDestinationLongitude
-    ? Number(propDestinationLongitude)
-    : storeDestinationLongitude;
+  const userLatitude = storeUserLatitude;
+  const userLongitude = storeUserLongitude;
+  const destinationLatitude = storeDestinationLatitude;
+  const destinationLongitude = storeDestinationLongitude;
+
   const { selectedDriver, setDrivers } = useDriverStore();
   const [markers, setMarkers] = useState<MarkerData[]>([]);
   const [showMapAnyway, setShowMapAnyway] = useState(false);
+
   const region = calculateRegion({
     userLongitude,
     userLatitude,
@@ -122,6 +104,7 @@ const Map = ({
       </View>
     );
   }
+
   return (
     <MapView
       provider={PROVIDER_DEFAULT}
@@ -182,7 +165,10 @@ const Map = ({
               strokeWidth={4}
               precision="high"
               onError={(errorMessage) => {
-                console.warn("MapViewDirections Error:", errorMessage);
+                console.warn(
+                  "MapViewDirections Error (Passenger):",
+                  errorMessage
+                );
               }}
             />
           </>
@@ -191,4 +177,4 @@ const Map = ({
   );
 };
 
-export default Map;
+export default PassengerMap;

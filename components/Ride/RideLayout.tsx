@@ -1,4 +1,4 @@
-import Map from "@/components/Common/Map";
+import PassengerMap from "@/components/Common/PassengerMap";
 import PageHeader from "@/components/Common/PageHeader";
 import BottomSheet, {
   BottomSheetScrollView,
@@ -29,7 +29,7 @@ const RideLayout = ({
     <View className="flex-1 bg-general-500">
       <View className="flex-1 bg-green-500">
         {title && <PageHeader title={title} />}
-        <Map />
+        <PassengerMap />
       </View>
 
       <BottomSheet
