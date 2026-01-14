@@ -69,20 +69,27 @@ export default function HomeScreen() {
         if (driverRes.success && driverRes.data?.id) {
           setIsDriver(true);
 
-          // Fetch last ride for this user (as driver or passenger)
           const ridesRes = await fetchAPI(
-            `/(api)/ride/list?user_id=${user.id}&limit=1`,
+            `/(api)/ride/list?user_id=${user.id}&limit=10`,
             {
               method: "GET",
             }
           );
 
           if (ridesRes.success && ridesRes.data && ridesRes.data.length > 0) {
-            setLastRide(ridesRes.data[0]);
+            // Find the most recent ride that is NOT cancelled or no_show
+            const validRide = ridesRes.data.find(
+              (ride: any) =>
+                ride.ride_status !== "cancelled" &&
+                ride.ride_status !== "no_show"
+            );
+            setLastRide(validRide || null);
           } else {
-            // Clear last ride if no rides found
             setLastRide(null);
           }
+        } else {
+          setIsDriver(false);
+          setLastRide(null);
         }
       } catch (error: any) {
         if (error.message && error.message.includes("404")) {
@@ -97,7 +104,7 @@ export default function HomeScreen() {
     checkDriverAndFetchLastRide();
 
     // Set up interval to fetch every 4 seconds only if user is a driver
-    let intervalId: NodeJS.Timeout | null = null;
+    let intervalId: ReturnType<typeof setInterval> | null = null;
 
     // Check if driver after initial fetch, then start interval
     const startInterval = async () => {

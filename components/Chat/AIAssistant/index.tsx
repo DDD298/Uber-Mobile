@@ -1,37 +1,49 @@
-import Groq from "groq-sdk";
-
-const groq = new Groq({
-  apiKey: process.env.EXPO_PUBLIC_GROQ_API_KEY || "",
-});
-
 export const generateAIResponse = async (
   userMessage: string
 ): Promise<string> => {
   try {
-    const systemPrompt = `You are an AI assistant for MyApp app. Respond helpfully in Vietnamese/English, provide trip updates, safety tips, or escalate to human support. Keep responses concise and friendly. Context: User is using MyApp app for ride booking.`;
+    const systemPrompt = `You are an AI assistant for MyApp app. Respond helpfully in Vietnamese/English, provide trip updates, safety tips, or escalate to human support. Provide thorough, detailed, and informative responses. Avoid being too brief; instead, explain things clearly with context and helpful tips. Maintain a friendly and professional tone. Context: User is using MyApp app for ride booking.`;
 
-    const chatCompletion = await groq.chat.completions.create({
-      messages: [
-        {
-          role: "system",
-          content: systemPrompt,
+    // Use OpenRouter with Gemini Flash
+    const response = await fetch(
+      "https://openrouter.ai/api/v1/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${process.env.EXPO_PUBLIC_OPENROUTER_API_KEY}`,
+          "Content-Type": "application/json",
+          "HTTP-Referer": "https://myapp.com",
+          "X-Title": "MyApp Ride Booking",
         },
-        {
-          role: "user",
-          content: userMessage,
-        },
-      ],
-      model: "llama-3.3-70b-versatile", // Groq's fast and powerful model
-      temperature: 0.7,
-      max_tokens: 1024,
-    });
-
-    return (
-      chatCompletion.choices[0]?.message?.content ||
-      "Xin lỗi, AI tạm thời không khả dụng. Vui lòng thử lại sau."
+        body: JSON.stringify({
+          model: "google/gemini-2.5-flash",
+          messages: [
+            {
+              role: "system",
+              content: systemPrompt,
+            },
+            {
+              role: "user",
+              content: userMessage,
+            },
+          ],
+          temperature: 0.7,
+          max_tokens: 1024,
+          top_p: 0.9,
+        }),
+      }
     );
+
+    if (!response.ok) {
+      throw new Error(`OpenRouter API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const text = data.choices?.[0]?.message?.content;
+
+    return text || "Xin lỗi, AI tạm thời không khả dụng. Vui lòng thử lại sau.";
   } catch (error) {
-    console.error("Groq API Error:", error);
+    console.error("AI API Error:", error);
     return "Xin lỗi, AI tạm thời không khả dụng. Vui lòng thử lại sau.";
   }
 };
