@@ -39,21 +39,38 @@ export async function POST(request: Request) {
 
     // Check if driver already exists
     const existingDriver = await sql`
-      SELECT id, approval_status FROM drivers 
+      SELECT id, approval_status, license_image_url, car_image_url, profile_image_url 
+      FROM drivers 
       WHERE clerk_id = ${clerk_id} OR email = ${email}
       LIMIT 1
     `;
 
     if (existingDriver.length > 0) {
+      const updateResult = await sql`
+        UPDATE drivers SET
+          first_name = ${first_name},
+          last_name = ${last_name},
+          phone = ${phone},
+          license_number = ${license_number},
+          vehicle_type = ${vehicle_type},
+          car_seats = ${car_seats},
+          license_image_url = ${body.license_image_url || existingDriver[0].license_image_url},
+          car_image_url = ${body.car_image_url || existingDriver[0].car_image_url},
+          profile_image_url = ${body.profile_image_url || existingDriver[0].profile_image_url},
+          approval_status = 'pending',
+          updated_at = NOW()
+        WHERE id = ${existingDriver[0].id}
+        RETURNING id, approval_status
+      `;
+
       return Response.json(
         {
           success: true,
           data: {
-            driver_id: existingDriver[0].id,
-            approval_status: existingDriver[0].approval_status,
-            already_exists: true,
+            driver_id: updateResult[0].id,
+            approval_status: updateResult[0].approval_status,
           },
-          message: "Tài xế đã tồn tại. Bạn có thể cập nhật giấy tờ.",
+          message: "Cập nhật hồ sơ tài xế thành công. Đang chờ phê duyệt.",
         },
         { status: 200 }
       );

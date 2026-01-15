@@ -279,7 +279,8 @@
     "recentRatings": "Recent Ratings",
     "online": "Online",
     "offline": "Offline",
-    "statusOnlineOffline": "Operating Status"
+    "statusOnlineOffline": "Operating Status",
+    "editRegistration": "Edit & Resubmit"
   },
   "promo": {
     "availablePromoCodes": "Promo Codes",

@@ -281,7 +281,8 @@
     "recentRatings": "Đánh giá gần đây",
     "online": "Trực tuyến",
     "offline": "Ngoại tuyến",
-    "statusOnlineOffline": "Trạng thái hoạt động"
+    "statusOnlineOffline": "Trạng thái hoạt động",
+    "editRegistration": "Chỉnh sửa & Nộp lại"
   },
   "promo": {
     "availablePromoCodes": "Mã giảm giá",

@@ -32,6 +32,7 @@ export default function HomeScreen() {
   const { user } = useUser();
   const { signOut } = useAuth();
   const [loading, setLoading] = useState(true);
+  const [userData, setUserData] = useState<any>(null);
   const [hasPermissions, setHasPermissions] = useState(false);
   const insets = useSafeAreaInsets();
   const googleInputRef = useRef<any>(null);
@@ -55,6 +56,19 @@ export default function HomeScreen() {
   };
 
   useEffect(() => {
+    const fetchUserData = async () => {
+      if (!user?.id) return;
+      try {
+        const response = await fetchAPI(`/(api)/user?clerkId=${user.id}`, {
+          method: "GET",
+        });
+
+        if (response.success && response.data) {
+          setUserData(response.data);
+        }
+      } catch (error) {}
+    };
+
     const checkDriverAndFetchLastRide = async () => {
       if (!user?.id) return;
 
@@ -102,6 +116,7 @@ export default function HomeScreen() {
     };
 
     // Initial fetch
+    fetchUserData();
     checkDriverAndFetchLastRide();
 
     // Set up interval to fetch every 4 seconds only if user is a driver
@@ -120,11 +135,14 @@ export default function HomeScreen() {
         if (driverRes.success && driverRes.data?.id) {
           // Only start interval if user is a driver
           intervalId = setInterval(() => {
+            fetchUserData();
             checkDriverAndFetchLastRide();
           }, 4000);
         }
       } catch (error) {
         // Not a driver, no interval needed
+        // Still fetch user data once if not fetched
+        fetchUserData();
       }
     };
 
@@ -211,9 +229,10 @@ export default function HomeScreen() {
             <Text className="text-2xl capitalize font-JakartaExtraBold text-secondary-900">
               {t("home.greeting")}
               {", "}
-              {user?.firstName || user?.lastName
-                ? `${user?.firstName || ""} ${user?.lastName || ""}`.trim()
-                : user?.emailAddresses[0].emailAddress.split("@")[0]}
+              {userData?.name ||
+                (user?.firstName || user?.lastName
+                  ? `${user?.firstName || ""} ${user?.lastName || ""}`.trim()
+                  : user?.emailAddresses[0].emailAddress.split("@")[0])}
               {""}👋
             </Text>
             <TouchableOpacity

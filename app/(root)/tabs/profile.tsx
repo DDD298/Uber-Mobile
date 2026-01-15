@@ -53,15 +53,11 @@ export default function ProfileScreen() {
         }
       };
 
-      // Chạy ngay lập tức khi vào trang
       initProfile();
-
-      // Thiết lập interval để fetch liên tục sau mỗi 4s
       const intervalId = setInterval(() => {
         initProfile();
       }, 4000);
 
-      // Cleanup: Dừng fetch khi rời khỏi trang
       return () => {
         clearInterval(intervalId);
       };
@@ -210,11 +206,9 @@ export default function ProfileScreen() {
                 />
                 <Text className="mt-3 text-xl font-JakartaBold text-neutral-200">
                   {userData?.name ||
-                    (user?.firstName && user?.lastName
-                      ? `${user.firstName} ${user.lastName}`
-                      : user?.firstName ||
-                        user?.lastName ||
-                        t("common.notProvided"))}
+                    (user?.firstName || user?.lastName
+                      ? `${user?.firstName || ""} ${user?.lastName || ""}`.trim()
+                      : user?.emailAddresses[0].emailAddress.split("@")[0])}
                 </Text>
                 <Text className="mt-1 text-sm font-JakartaMedium text-neutral-200/80">
                   {user?.primaryEmailAddress?.emailAddress || ""}
@@ -316,19 +310,35 @@ export default function ProfileScreen() {
                   />
                 </View>
 
-                <CustomButton
-                  title={t("driver.viewProfile")}
-                  onPress={handleDriverAction}
-                  bgVariant="primary"
-                  IconRight={() => (
-                    <Ionicons
-                      name="person-outline"
-                      size={20}
-                      color="white"
-                      style={{ marginLeft: 8 }}
-                    />
-                  )}
-                />
+                {driverApprovalStatus === "rejected" ? (
+                  <CustomButton
+                    title={t("driver.editRegistration")}
+                    onPress={() => router.push("/(root)/driver-registration")}
+                    bgVariant="danger"
+                    IconRight={() => (
+                      <Ionicons
+                        name="create-outline"
+                        size={20}
+                        color="white"
+                        style={{ marginLeft: 8 }}
+                      />
+                    )}
+                  />
+                ) : (
+                  <CustomButton
+                    title={t("driver.viewProfile")}
+                    onPress={handleDriverAction}
+                    bgVariant="primary"
+                    IconRight={() => (
+                      <Ionicons
+                        name="person-outline"
+                        size={20}
+                        color="white"
+                        style={{ marginLeft: 8 }}
+                      />
+                    )}
+                  />
+                )}
               </View>
             </>
           ) : (
@@ -348,11 +358,9 @@ export default function ProfileScreen() {
                     </Text>
                     <Text className="text-base font-JakartaBold text-neutral-800">
                       {userData?.name ||
-                        (user?.firstName && user?.lastName
-                          ? `${user.firstName} ${user.lastName}`
-                          : user?.firstName ||
-                            user?.lastName ||
-                            t("common.notProvided"))}
+                        (user?.firstName || user?.lastName
+                          ? `${user?.firstName || ""} ${user?.lastName || ""}`.trim()
+                          : user?.emailAddresses[0].emailAddress.split("@")[0])}
                     </Text>
                   </View>
                 </View>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -38,6 +38,38 @@ export default function DriverRegistrationScreen() {
     car_image_url: null as string | null,
     profile_image_url: null as string | null,
   });
+
+  useEffect(() => {
+    const fetchDriverData = async () => {
+      if (!user?.id) return;
+      try {
+        const response = await fetchAPI(
+          `/(api)/driver/profile?clerk_id=${user.id}`,
+          { method: "GET" }
+        );
+
+        if (response.success && response.data) {
+          const d = response.data;
+          setForm({
+            phone: d.phone || "",
+            license_number: d.license_number || "",
+            vehicle_type: d.vehicle_type || "car",
+            car_seats: d.car_seats?.toString() || "4",
+            license_photo_uri: d.license_image_url || null,
+            vehicle_photo_uri: d.car_image_url || null,
+            profile_photo_uri: d.profile_image_url || null,
+            license_image_url: d.license_image_url || null,
+            car_image_url: d.car_image_url || null,
+            profile_image_url: d.profile_image_url || null,
+          });
+        }
+      } catch (error: any) {
+        console.error("Error fetching driver data:", error);
+      }
+    };
+
+    fetchDriverData();
+  }, [user?.id]);
 
   const [uploadingImage, setUploadingImage] = useState<{
     license: boolean;
