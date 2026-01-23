@@ -36,14 +36,12 @@ const Map = ({
   );
 
   useEffect(() => {
-    console.log("Map - Drivers data:", drivers);
     if (Array.isArray(drivers)) {
       const counts = drivers.reduce((acc: { [key: string]: number }, driver) => {
         const type = driver.vehicle_type || "Unknown";
         acc[type] = (acc[type] || 0) + 1;
         return acc;
       }, {});
-      console.log("Map - Vehicle type counts:", counts);
     }
     if (error) console.error("Map - Drivers fetch error:", error);
   }, [drivers, error]);

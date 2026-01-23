@@ -24,14 +24,12 @@ const PassengerMap = () => {
   );
 
   useEffect(() => {
-    console.log("PassengerMap - Drivers data:", drivers);
     if (Array.isArray(drivers)) {
       const counts = drivers.reduce((acc: { [key: string]: number }, driver) => {
         const type = driver.vehicle_type || "Unknown";
         acc[type] = (acc[type] || 0) + 1;
         return acc;
       }, {});
-      console.log("PassengerMap - Vehicle type counts:", counts);
     }
     if (error) console.error("PassengerMap - Drivers fetch error:", error);
   }, [drivers, error]);
